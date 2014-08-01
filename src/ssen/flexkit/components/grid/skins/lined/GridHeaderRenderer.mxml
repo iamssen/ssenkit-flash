@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:GridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:lined="ssen.flexkit.components.grid.skins.lined.*">
+	<fx:Script>
+		<![CDATA[
+			import spark.components.DataGrid;
+			import spark.components.GridColumnHeaderGroup;
+			import spark.components.gridClasses.GridColumn;
+
+			override public function prepare(hasBeenRecycled:Boolean):void {
+				super.prepare(hasBeenRecycled);
+
+				const column:GridColumn=this.column;
+				const dataGrid:DataGrid=(column && column.grid) ? column.grid.dataGrid : null;
+				const columnHeaderGroup:GridColumnHeaderGroup=(dataGrid) ? dataGrid.columnHeaderGroup : null;
+				const frame:int=column.sortDescending ? 1 : 2;
+
+				sortIndicator.visible=columnHeaderGroup.isSortIndicatorVisible(column.columnIndex);
+				selection.visible=sortIndicator.visible;
+				if (sortIndicator.visible) {
+					sortIndicator.gotoAndStop(frame);
+				}
+			}
+		]]>
+	</fx:Script>
+
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="hovered"/>
+		<s:State name="down"/>
+	</s:states>
+
+	<s:Rect left="0" right="0" top="0" bottom="0">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="0xffffff" color.hovered="0xf5f5f5" color.down="0xd8d8d8"/>
+				<s:GradientEntry color="0xe5e5e5" color.hovered="0xdcdcdc" color.down="0xf0f0f0"/>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+
+	<s:Rect id="selection" left="0" right="0" top="0" bottom="0">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="0xe0f4ff" color.hovered="0xd6eaf5" color.down="0xbaccd6"/>
+				<s:GradientEntry color="0xc9dbe5" color.hovered="0xbfd1db" color.down="0xd1e5f0"/>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+
+	<s:Label id="labelDisplay" verticalCenter="1" horizontalCenter="0" maxDisplayedLines="1"/>
+	<lined:GridHeaderRendererSortIndicator id="sortIndicator" x="{labelDisplay.x + labelDisplay.width + 3}" verticalCenter="0"/>
+
+</s:GridItemRenderer>

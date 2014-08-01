@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:GridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx"
+					xmlns:assets="ssen.theme.squared.assets.*" click="showHideToggle(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.IHierarchicalCollectionView;
+			import mx.utils.UIDUtil;
+			
+			import spark.components.DataGrid;
+			
+			import ssen.flexkit.components.grid.models.HierarchicalDataAdapter;
+
+			private var hierarchicalCollectionView:IHierarchicalCollectionView;
+
+			override public function prepare(flag:Boolean):void {
+				super.prepare(flag);
+
+				if (!data) {
+					return;
+				}
+
+				hierarchicalCollectionView=HierarchicalDataAdapter(grid.dataProvider).hierarchicalCollectionView;
+				const d:int=19;
+
+				// get status
+				var depth:int=data == DataGrid(owner).typicalItem ? 3 : hierarchicalCollectionView.getNodeDepth(data);
+				var isGroup:Boolean=isGroupData(data);
+
+				// depth
+				disclosure.x=((depth - 1) * d) + 10;
+				labelDisplay.setStyle("paddingLeft", ((depth - 1) * d) + 30);
+
+				if (isGroup) {
+					var uid:String=UIDUtil.getUID(data);
+
+					labelDisplay.text=data["GroupLabel"];
+					disclosure.visible=true;
+					currentState=(hierarchicalCollectionView.openNodes[uid]) ? "opened" : "closed";
+				} else {
+					labelDisplay.text=data[column.dataField];
+					disclosure.visible=false;
+				}
+			}
+
+			private function showHideToggle(event:MouseEvent):void {
+				var isGroup:Boolean=isGroupData(data);
+
+				if (isGroup) {
+					if (currentState === "closed") {
+						hierarchicalCollectionView.openNode(data);
+					} else {
+						hierarchicalCollectionView.closeNode(data)
+					}
+					hierarchicalCollectionView.refresh();
+				}
+			}
+
+			private function isGroupData(data:Object):Boolean {
+				return data.hasOwnProperty("children") && data.hasOwnProperty("GroupLabel");
+			}
+		]]>
+	</fx:Script>
+
+	<s:states>
+		<s:State name="closed"/>
+		<s:State name="opened"/>
+	</s:states>
+
+	<s:Group id="disclosure" width="13" height="13" verticalCenter="0">
+		<assets:DisclosureOpened includeIn="opened"/>
+		<assets:DisclosureClosed includeIn="closed"/>
+	</s:Group>
+
+	<s:Label id="labelDisplay" paddingTop="2" verticalAlign="middle" width="100%" height="100%" mouseEnabled="false" mouseChildren="false"/>
+</s:GridItemRenderer>

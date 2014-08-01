@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:primitives="ssen.flexkit.primitives.*" left="0" right="0" top="0" bottom="0">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+
+			import spark.components.supportClasses.SkinnableComponent;
+
+			private var _target:SkinnableComponent;
+
+			public function get target():SkinnableComponent {
+				return _target;
+			}
+
+			public function set target(value:SkinnableComponent):void {
+				_target=value;
+
+				if (_target.skin)
+					_target.skin.addEventListener(FlexEvent.UPDATE_COMPLETE, skinUpdateComplete, false, 0, true);
+			}
+
+			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
+				setActualSize(target.width, target.height);
+				super.updateDisplayList(target.width, target.height);
+			}
+
+			private function skinUpdateComplete(event:Event):void {
+				invalidateDisplayList();
+			}
+		]]>
+	</fx:Script>
+	<primitives:LineBox left="-2" right="-2" top="-2" bottom="-2" lineWeightTop="2" lineWeightRight="2" lineWeightBottom="2" lineWeightLeft="2">
+		<primitives:fill>
+			<s:SolidColor color="0x3690bf"/>
+		</primitives:fill>
+	</primitives:LineBox>
+</s:Group>

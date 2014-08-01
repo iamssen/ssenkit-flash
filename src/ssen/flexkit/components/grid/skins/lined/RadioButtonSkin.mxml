@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:fb="http://ns.adobe.com/flashbuilder/2009" alpha.disabledStates="0.5"
+			 xmlns:assets="ssen.theme.squared.assets.*" minWidth="16" minHeight="16">
+
+	<fx:Metadata>
+		<![CDATA[ 
+			[HostComponent("spark.components.supportClasses.ToggleButtonBase")]
+		]]>
+	</fx:Metadata>
+
+	<fx:Script>
+		<![CDATA[
+			private static const focusExclusions:Array=["labelDisplay"];
+
+			override public function get focusSkinExclusions():Array {
+				return focusExclusions;
+			};
+		]]>
+	</fx:Script>
+
+	<s:states>
+		<s:State name="up" stateGroups="normalStates"/>
+		<s:State name="over" stateGroups="normalStates"/>
+		<s:State name="down" stateGroups="normalStates"/>
+		<s:State name="disabled" stateGroups="normalStates, disabledStates"/>
+		<s:State name="upAndSelected" stateGroups="selectedStates"/>
+		<s:State name="overAndSelected" stateGroups="selectedStates"/>
+		<s:State name="downAndSelected" stateGroups="selectedStates"/>
+		<s:State name="disabledAndSelected" stateGroups="selectedStates, disabledStates"/>
+	</s:states>
+
+	<s:Group verticalCenter="0" horizontalCenter="0" minWidth="16" minHeight="16" maxWidth="16" maxHeight="16">
+		<assets:RadioNormal includeIn="normalStates"/>
+		<assets:RadioSelected includeIn="selectedStates"/>
+	</s:Group>
+
+</s:SparkSkin>

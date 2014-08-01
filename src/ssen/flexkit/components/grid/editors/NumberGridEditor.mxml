@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<editors:GridEditor xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:editors="ssen.flexkit.components.grid.editors.*">
+	<fx:Script>
+		<![CDATA[
+			import ssen.flexkit.components.grid.columns.NumberGridColumn;
+
+			override public function prepare():void {
+				super.prepare();
+
+				var numberColumn:NumberGridColumn=column as NumberGridColumn;
+
+				//---------------------------------------------
+				// BasicGridColumn properties
+				//---------------------------------------------
+				textInput.setStyle("textAlign", numberColumn.textAlign);
+
+				//---------------------------------------------
+				// NumberGridColumn properties
+				//---------------------------------------------
+				var minimum:int=(numberColumn.minimumField) ? data[numberColumn.minimumField] : int.MIN_VALUE;
+				var maximum:int=(numberColumn.maximumField) ? data[numberColumn.maximumField] : int.MAX_VALUE;
+
+				var restrict:String="0-9";
+
+				if (minimum < 0) {
+					restrict+="\-";
+				}
+
+				if (numberColumn.useDecimalPoint) {
+					restrict+=".";
+				}
+
+				textInput.restrict=restrict;
+			}
+
+			override public function get value():Object {
+				var num:Number=Number(textInput.text);
+
+				if (isNaN(num)) {
+					textInput.text=data[column.dataField];
+				} else {
+					var numberColumn:NumberGridColumn=column as NumberGridColumn;
+					var minimum:int=(numberColumn.minimumField) ? data[numberColumn.minimumField] : int.MIN_VALUE;
+					var maximum:int=(numberColumn.maximumField) ? data[numberColumn.maximumField] : int.MAX_VALUE;
+
+					if (num < minimum) {
+						num=minimum;
+						textInput.text=num.toString();
+					} else if (num > maximum) {
+						num=maximum;
+						textInput.text=num.toString();
+					}
+				}
+
+				return textInput.text;
+			}
+
+			override public function set value(newValue:Object):void {
+				textInput.text=newValue != null ? newValue.toString() : "";
+			}
+
+			override public function setFocus():void {
+				textInput.setFocus();
+				textInput.selectAll();
+			}
+		]]>
+	</fx:Script>
+
+	<s:TextInput id="textInput" top="1" right="1" bottom="1" left="1" textAlign="right" skinClass="ssen.flexkit.components.grid.skins.lined.TextInputSkin"
+				 focusSkin="ssen.flexkit.components.focus.skins.TransparentFocusSkin"/>
+</editors:GridEditor>

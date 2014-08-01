@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:GridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:editors="ssen.flexkit.components.grid.editors.*">
+	<fx:Script>
+		<![CDATA[
+			import ssen.common.MathUtils;
+
+			public override function set data(value:Object):void {
+				super.data=value;
+				setValue();
+			}
+
+			private function buttonChanged(event:Event):void {
+				setData();
+			}
+
+			private function buttonUpdateComplete(event:Event):void {
+				setValue();
+			}
+
+			override public function prepare(hasBeenRecycled:Boolean):void {
+				setValue();
+			}
+
+			override public function setFocus():void {
+				button.setFocus();
+			}
+
+			private function setValue():void {
+				button.selected=(data !== null && column !== null) ? data[column.dataField] : false;
+			}
+
+			private function setData():void {
+				if (data !== null && column !== null) {
+					data[column.dataField]=button.selected;
+				}
+			}
+
+			//==========================================================================================
+			// key move
+			//==========================================================================================
+			protected function buttonFocusIn(event:FocusEvent):void {
+				stage.addEventListener(KeyboardEvent.KEY_DOWN, gridKeyDownHandler, true);
+			}
+
+			protected function buttonFocusOut(event:FocusEvent):void {
+				stage.removeEventListener(KeyboardEvent.KEY_DOWN, gridKeyDownHandler, true);
+			}
+
+			private function gridKeyDownHandler(event:KeyboardEvent):void {
+				if (event.ctrlKey && event.altKey && MathUtils.rangeOf(event.keyCode, Keyboard.LEFT, Keyboard.DOWN)) {
+					var moved:Boolean;
+
+					if (event.keyCode === Keyboard.LEFT) {
+						moved=GridEditorHelper.moveToPrevColumnCell(column, rowIndex);
+					} else if (event.keyCode === Keyboard.RIGHT) {
+						moved=GridEditorHelper.moveToNextColumnCell(column, rowIndex);
+					} else if (event.keyCode === Keyboard.UP) {
+						moved=GridEditorHelper.moveToPrevRowCell(column, rowIndex);
+					} else if (event.keyCode === Keyboard.DOWN) {
+						moved=GridEditorHelper.moveToNextRowCell(column, rowIndex);
+					}
+
+					if (moved) {
+						event.preventDefault();
+						event.stopPropagation();
+						event.stopImmediatePropagation();
+					}
+				}
+			}
+		]]>
+	</fx:Script>
+
+	<s:CheckBox id="button" left="0" right="0" top="0" bottom="0" change="buttonChanged(event)" updateComplete="buttonUpdateComplete(event)" focusIn="buttonFocusIn(event)"
+				focusOut="buttonFocusOut(event)" skinClass="ssen.flexkit.components.grid.skins.lined.CheckBoxSkin"
+				focusSkin="ssen.flexkit.components.grid.skins.lined.FocusSkin"/>
+</s:GridItemRenderer>

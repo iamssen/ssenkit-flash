@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SparkButtonSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:fb="http://ns.adobe.com/flashbuilder/2009" minWidth="21"
+				   minHeight="21" alpha.disabled="0.5" xmlns:assets="ssen.theme.squared.assets.*" xmlns:primitives="ssen.flexkit.primitives.*">
+
+	<fx:Metadata>
+		<![CDATA[ 
+        	[HostComponent("spark.components.Button")]
+        ]]>
+	</fx:Metadata>
+
+	<s:states>
+		<s:State name="up"/>
+		<s:State name="over"/>
+		<s:State name="down"/>
+		<s:State name="disabled"/>
+	</s:states>
+
+	<s:Rect left="0" right="0" top="0" bottom="0">
+		<s:fill>
+			<s:SolidColor color="0x3690bf"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Rect left="4" right="4" top="4" bottom="4">
+		<s:fill>
+			<s:SolidColor color="0xffffff"/>
+		</s:fill>
+	</s:Rect>
+
+	<assets:DropDownArrow right="4" verticalCenter="0"/>
+
+</s:SparkButtonSkin>

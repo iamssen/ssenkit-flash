@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<editors:GridEditor xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:editors="ssen.flexkit.components.grid.editors.*">
+	<fx:Script>
+		<![CDATA[
+			import ssen.flexkit.components.grid.columns.NumberGridColumn;
+
+			override public function set value(newValue:Object):void {
+				numericStepper.value=newValue as Number;
+			}
+
+			override public function get value():Object {
+				return numericStepper.value;
+			}
+
+			override public function setFocus():void {
+				numericStepper.setFocus();
+			}
+
+			override public function prepare():void {
+				super.prepare();
+
+				var numberColumn:NumberGridColumn=column as NumberGridColumn;
+
+				//---------------------------------------------
+				// BasicGridColumn properties
+				//---------------------------------------------
+				numericStepper.setStyle("textAlign", numberColumn.textAlign);
+
+				//---------------------------------------------
+				// NumberGridColumn properties
+				//---------------------------------------------
+				numericStepper.minimum=(numberColumn.minimumField) ? data[numberColumn.minimumField] : int.MIN_VALUE;
+				numericStepper.maximum=(numberColumn.maximumField) ? data[numberColumn.maximumField] : int.MAX_VALUE;
+				numericStepper.value=data[numberColumn.dataField];
+			}
+		]]>
+	</fx:Script>
+	<s:NumericStepper id="numericStepper" top="1" right="1" bottom="1" left="1" skinClass="ssen.flexkit.components.grid.skins.lined.NumericStepperSkin"
+					  focusSkin="ssen.flexkit.components.focus.skins.TransparentFocusSkin"/>
+</editors:GridEditor>

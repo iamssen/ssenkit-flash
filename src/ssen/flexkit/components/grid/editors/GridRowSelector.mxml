@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:GridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark">
+	<fx:Script>
+		<![CDATA[
+			import ssen.common.MathUtils;
+
+			override public function prepare(hasBeenRecycled:Boolean):void {
+				super.prepare(hasBeenRecycled);
+
+				var selectedItems:Vector.<Object>=grid.dataGrid.selectedItems;
+
+				if (!selectedItems) {
+					radio.selected=false;
+					return;
+				}
+
+				radio.selected=(selectedItems.indexOf(data) > -1);
+			}
+
+			//==========================================================================================
+			// key move
+			//==========================================================================================
+			private function radioFocusIn(event:FocusEvent):void {
+				stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDown, true);
+			}
+
+			private function radioFocusOut(event:FocusEvent):void {
+				stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDown, true);
+			}
+
+			private function keyDown(event:KeyboardEvent):void {
+				if (event.ctrlKey && event.altKey && MathUtils.rangeOf(event.keyCode, Keyboard.LEFT, Keyboard.DOWN)) {
+					// 기본 ctrl + alt + 방향키 이동
+					var moved:Boolean;
+
+					if (event.keyCode === Keyboard.LEFT) {
+						moved=GridEditorHelper.moveToPrevColumnCell(column, rowIndex);
+					} else if (event.keyCode === Keyboard.RIGHT) {
+						moved=GridEditorHelper.moveToNextColumnCell(column, rowIndex);
+					} else if (event.keyCode === Keyboard.UP) {
+						moved=GridEditorHelper.moveToPrevRowCell(column, rowIndex);
+					} else if (event.keyCode === Keyboard.DOWN) {
+						moved=GridEditorHelper.moveToNextRowCell(column, rowIndex);
+					}
+
+					if (moved) {
+						event.preventDefault();
+						event.stopPropagation();
+						event.stopImmediatePropagation();
+					}
+				} else if (event.keyCode === Keyboard.UP) {
+					// radio 의 up 방향키 이동
+					if (GridEditorHelper.moveToPrevRowCell(column, rowIndex)) {
+						event.preventDefault();
+						event.stopPropagation();
+						event.stopImmediatePropagation();
+					}
+				} else if (event.keyCode === Keyboard.DOWN) {
+					// radio 의 down 방향키 이동
+					if (GridEditorHelper.moveToNextRowCell(column, rowIndex)) {
+						event.preventDefault();
+						event.stopPropagation();
+						event.stopImmediatePropagation();
+					}
+				}
+			}
+		]]>
+	</fx:Script>
+
+	<s:RadioButton id="radio" left="0" right="0" top="0" bottom="0" focusIn="radioFocusIn(event)" focusOut="radioFocusOut(event)"
+				   skinClass="ssen.flexkit.components.grid.skins.lined.RadioButtonSkin" focusSkin="ssen.flexkit.components.grid.skins.lined.FocusSkin"/>
+</s:GridItemRenderer>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:dropdown="ssen.flexkit.components.dropdown.*" alpha.disabled=".5">
+	<fx:Declarations>
+		<!--- popup container skin -->
+		<fx:Component id="popupContainerSkin">
+			<s:Skin alpha.disabled="0.5">
+				<fx:Metadata>
+					<![CDATA[
+						[HostComponent("spark.components.SkinnablePopUpContainer")]
+					]]>
+				</fx:Metadata>
+
+				<s:states>
+					<s:State name="normal"/>
+					<s:State name="disabled"/>
+					<s:State name="closed" stateGroups="closedGroup"/>
+					<s:State name="disabledAndClosed" stateGroups="closedGroup"/>
+				</s:states>
+
+				<s:BorderContainer id="popupAnchorContainer" borderColor="0x000000" borderWeight="1" left="0" right="0" top="0" bottom="0" visible.closedGroup="false">
+					<s:Group id="contentGroup" left="10" right="10" top="10" bottom="10">
+						<s:layout>
+							<s:BasicLayout/>
+						</s:layout>
+					</s:Group>
+				</s:BorderContainer>
+			</s:Skin>
+		</fx:Component>
+	</fx:Declarations>
+
+	<fx:Metadata>
+		[HostComponent("ssen.flexkit.components.dropdown.DropDownAnchor")]
+	</fx:Metadata>
+
+	<!-- states -->
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="disabled"/>
+	</s:states>
+
+	<s:Button id="openButton" left="0" right="0" top="0" bottom="0" focusEnabled="false" tabEnabled="false" label="{hostComponent.label}"/>
+
+	<dropdown:DropDownPopupAnchor id="popupAnchor" popUpPosition="below" left="0" right="0" top="-5" bottom="-5">
+		<s:BorderContainer id="popupAnchorContainer" borderColor="0x000000" borderWeight="1">
+			<s:backgroundFill>
+				<s:SolidColor color="0xffffff"/>
+			</s:backgroundFill>
+		</s:BorderContainer>
+	</dropdown:DropDownPopupAnchor>
+</s:Skin>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<editors:GridEditor xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:editors="ssen.flexkit.components.grid.editors.*">
+	<fx:Script>
+		<![CDATA[
+			import ssen.flexkit.components.grid.columns.BasicGridColumn;
+
+			override public function get value():Object {
+				return textInput.text;
+			}
+
+			override public function set value(newValue:Object):void {
+				textInput.text=newValue != null ? newValue.toString() : "";
+			}
+
+			override public function setFocus():void {
+				textInput.setFocus();
+				textInput.selectAll();
+			}
+
+			override public function prepare():void {
+				super.prepare();
+
+				var basic:BasicGridColumn=column as BasicGridColumn;
+				textInput.setStyle("textAlign", basic.textAlign);
+			}
+		]]>
+	</fx:Script>
+
+	<s:TextInput id="textInput" top="1" right="1" bottom="1" left="1" skinClass="ssen.flexkit.components.grid.skins.lined.TextInputSkin"
+				 focusSkin="ssen.flexkit.components.focus.skins.TransparentFocusSkin"/>
+</editors:GridEditor>

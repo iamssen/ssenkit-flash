@@ -7,3 +7,5 @@ bin-release/
 .actionScriptProperties
 .flexLibProperties
 .project
+
+node_modules
