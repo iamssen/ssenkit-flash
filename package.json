@@ -21,6 +21,7 @@
   "homepage": "https://github.com/iamssen/ssenkit.common",
   "dependencies": {
     "done-exec": "^0.1.0",
-    "flbuild": "^0.1.0"
+    "flbuild": "^0.1.0",
+    "gulp": "^3.8.7"
   }
 }
