@@ -1,5 +1,5 @@
 var Flbuild = require('flbuild')
-    , exec = require('done-exec')
+	, exec = require('done-exec')
     , gulp = require('gulp')
 
 var flbuild = new Flbuild()
@@ -20,16 +20,6 @@ gulp.task('ssenkit', function(done) {
 	})
 
 	build.createBuildCommand('$PROJECT_HOME/bin/ssenkit.swc', function(cmd) {
-		console.log(cmd)
-    	exec(cmd).run(done)
-	})
-})
-
-gulp.task('test', function(done) {
-	var build = flbuild.getApplicationCreator()
-	build.addLibraryDirectory('$FLEX_HOME/frameworks/libs/')
-
-	build.createBuildCommand('$PROJECT_HOME/src-incubator/HeaderWork.mxml', '$PROJECT_HOME/bin/HeaderWork.swf', function(cmd) {
 		console.log(cmd)
 		exec(cmd).run(done)
 	})
