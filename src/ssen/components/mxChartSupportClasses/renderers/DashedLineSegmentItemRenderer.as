@@ -1,28 +1,28 @@
-<mx:LineChart dataProvider="{data}"
-				  bottom="10"
-				  left="10"
-				  right="10"
-				  top="10"
-				  showDataTips="true">
-
-		<mx:seriesFilters>
-			<fx:Array/>
-		</mx:seriesFilters>
-
-		<mx:horizontalAxis>
-			<mx:CategoryAxis categoryField="label"/>
-		</mx:horizontalAxis>
-
-		<mx:series>
-			<mx:LineSeries displayName="LINE" xField="label" yField="value">
-				<mx:lineSegmentRenderer>
-					<fx:Component>
-						<chart:DashedLineSeriesItemRenderer dashedField="dash"/>
-					</fx:Component>
-				</mx:lineSegmentRenderer>
-			</mx:LineSeries>
-		</mx:series>
-	</mx:LineChart>
+//<mx:LineChart dataProvider="{data}"
+//				  bottom="10"
+//				  left="10"
+//				  right="10"
+//				  top="10"
+//				  showDataTips="true">
+//
+//		<mx:seriesFilters>
+//			<fx:Array/>
+//		</mx:seriesFilters>
+//
+//		<mx:horizontalAxis>
+//			<mx:CategoryAxis categoryField="label"/>
+//		</mx:horizontalAxis>
+//
+//		<mx:series>
+//			<mx:LineSeries displayName="LINE" xField="label" yField="value">
+//				<mx:lineSegmentRenderer>
+//					<fx:Component>
+//						<chart:DashedLineSeriesItemRenderer dashedField="dash"/>
+//					</fx:Component>
+//				</mx:lineSegmentRenderer>
+//			</mx:LineSeries>
+//		</mx:series>
+//	</mx:LineChart>
 	
 	
 package ssen.components.mxChartSupportClasses.renderers {
@@ -42,6 +42,8 @@ public class DashedLineSeriesItemRenderer extends ProgrammaticSkin implements ID
 
 	/** dashedLineFunction */
 	public function get dashedLineFunction():Function {
+		var l:AxisLabelRenderer=new AxisLabelRenderer();
+
 		return _dashedLineFunction;
 	}
 

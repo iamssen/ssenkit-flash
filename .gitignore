@@ -8,4 +8,7 @@ bin-release/
 .flexLibProperties
 .project
 
+.idea
+ssenkit.iml
+
 node_modules
