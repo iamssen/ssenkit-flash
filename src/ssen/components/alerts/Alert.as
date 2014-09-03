@@ -5,7 +5,7 @@ import flash.events.MouseEvent;
 import spark.components.Button;
 import spark.components.supportClasses.SkinnableComponent;
 
-public class Alert extends SkinnableComponent {
+public class Alert extends SkinnablePopupContainer {
 
 	[SkinPart(required="true")]
 	public var okButton:Button;
@@ -14,7 +14,7 @@ public class Alert extends SkinnableComponent {
 	public var title:String="";
 
 	[Bindable]
-	public var message:Object;
+	public var message:String;
 
 	override protected function getCurrentSkinState():String {
 		return super.getCurrentSkinState();
