@@ -1,4 +1,4 @@
-package ssen.flexkit.components.dropdown {
+package ssen.components.dropdownAnchor {
 
 import com.greensock.TweenLite;
 
@@ -21,7 +21,7 @@ import spark.components.supportClasses.SkinnableComponent;
 
 import ssen.common.IDisposable;
 import ssen.common.NullUtils;
-import ssen.flexkit.components.dropdown.skins.DropDownAnchorSkin;
+import ssen.components.dropdownAnchor.skins.DropDownAnchorSkin;
 
 [Event(name="open", type="flash.events.Event")]
 [Event(name="close", type="flash.events.Event")]

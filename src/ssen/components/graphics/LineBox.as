@@ -1,4 +1,4 @@
-package ssen.flexkit.primitives {
+package ssen.components.graphics {
 import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.geom.Point;
@@ -118,8 +118,9 @@ public class LineBox extends GraphicElement {
 	//==========================================================================================
 	/** @inheritDoc */
 	override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
-		if (!drawnDisplayObject || !(drawnDisplayObject is Sprite))
+		if (!drawnDisplayObject || !(drawnDisplayObject is Sprite)) {
 			return;
+		}
 
 		var dx:Number=drawX;
 		var dy:Number=drawY;

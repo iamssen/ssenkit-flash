@@ -1,35 +1,74 @@
-package ssen.flexkit.components.popup {
+package ssen.components.alerts {
 
 import flash.events.MouseEvent;
 
 import spark.components.Button;
-import spark.components.supportClasses.SkinnableComponent;
 
-public class Alert extends SkinnablePopupContainer {
-
-	[SkinPart(required="true")]
+public class Alert extends AlertBase {
+	//==========================================================================================
+	// skin parts
+	//==========================================================================================
+	[SkinPart]
 	public var okButton:Button;
 
-	[Bindable]
-	public var title:String="";
+	//==========================================================================================
+	// properties
+	//==========================================================================================
+	//---------------------------------------------
+	// okText
+	//---------------------------------------------
+	private var _okText:String;
 
-	[Bindable]
-	public var message:String;
-
-	override protected function getCurrentSkinState():String {
-		return super.getCurrentSkinState();
+	/** okText */
+	public function get okText():String {
+		return _okText;
 	}
 
+	public function set okText(value:String):void {
+		_okText=value;
+		invalidateOkText();
+	}
+
+	//==========================================================================================
+	// invalidate
+	//==========================================================================================
+	private var okTextChanged:Boolean;
+
+	protected function invalidateOkText():void {
+		if (_okText) {
+			okTextChanged=true;
+			invalidateProperties();
+		}
+	}
+
+	//==========================================================================================
+	// commit
+	//==========================================================================================
+	override protected function commitProperties():void {
+		super.commitProperties();
+
+		if (okTextChanged) {
+			commitOkText();
+			okTextChanged=false;
+		}
+	}
+
+	protected function commitOkText():void {
+		if (okButton) {
+			okButton.label=_okText;
+		}
+	}
+
+	//==========================================================================================
+	// implements skin
+	//==========================================================================================
 	override protected function partAdded(partName:String, instance:Object):void {
 		super.partAdded(partName, instance);
 
 		if (instance === okButton) {
+			invalidateOkText();
 			okButton.addEventListener(MouseEvent.CLICK, okHandler, false, 0, true);
 		}
-	}
-
-	private function okHandler(event:MouseEvent):void {
-		
 	}
 
 	override protected function partRemoved(partName:String, instance:Object):void {
@@ -38,6 +77,13 @@ public class Alert extends SkinnablePopupContainer {
 		}
 
 		super.partRemoved(partName, instance);
+	}
+
+	//==========================================================================================
+	// event handlers
+	//==========================================================================================
+	private function okHandler(event:MouseEvent):void {
+		close();
 	}
 }
 }

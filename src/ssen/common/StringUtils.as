@@ -1,4 +1,6 @@
 package ssen.common {
+	import flashx.textLayout.conversion.TextConverter;
+	import flashx.textLayout.elements.TextFlow;
 
 /** 문자열 관련 util */
 public class StringUtils {
@@ -48,6 +50,24 @@ public class StringUtils {
 			format=format.replace(new RegExp("\\{" + f + "\\}", "g"), args[f]);
 		}
 		return format;
+	}
+	
+	/** 문자열이 Rich Text Format 인지 확인한다 */
+	public static function isRichText(str:String):Boolean {
+		return str.indexOf("<") > -1;
+	}
+	
+	/** 문자열을 TextFlow로 전환한다 */
+	public static function convertTextFlow(str:String):TextFlow {
+		var textFlow:TextFlow;
+		
+		if (isRichText(str)) {
+			textFlow=TextConverter.importToFlow(str, TextConverter.TEXT_FIELD_HTML_FORMAT);
+		} else {
+			textFlow=TextConverter.importToFlow(str, TextConverter.PLAIN_TEXT_FORMAT);
+		}
+		
+		return textFlow;
 	}
 }
 }

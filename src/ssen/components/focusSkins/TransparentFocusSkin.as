@@ -1,4 +1,4 @@
-package ssen.flexkit.components.focus.skins {
+package ssen.components.focusSkins {
 import flash.display.Shape;
 
 public class TransparentFocusSkin extends Shape {

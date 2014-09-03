@@ -1,4 +1,4 @@
-package ssen.flexkit.components.dropdown {
+package ssen.components.dropdownAnchor {
 import flash.geom.Point;
 
 import spark.components.PopUpAnchor;

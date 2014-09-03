@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:dropdown="ssen.flexkit.components.dropdown.*" alpha.disabled=".5">
+<s:Skin xmlns:dropdownAnchor="ssen.components.dropdownAnchor.*" xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" alpha.disabled=".5">
 	<fx:Declarations>
 		<!--- popup container skin -->
 		<fx:Component id="popupContainerSkin">
@@ -17,8 +17,15 @@
 					<s:State name="disabledAndClosed" stateGroups="closedGroup"/>
 				</s:states>
 
-				<s:BorderContainer id="popupAnchorContainer" borderColor="0x000000" borderWeight="1" left="0" right="0" top="0" bottom="0" visible.closedGroup="false">
-					<s:Group id="contentGroup" left="10" right="10" top="10" bottom="10">
+				<s:BorderContainer id="popupAnchorContainer"
+								   borderColor="0x000000"
+								   bottom="0"
+								   left="0"
+								   right="0"
+								   top="0"
+								   borderWeight="1"
+								   visible.closedGroup="false">
+					<s:Group id="contentGroup" bottom="10" left="10" right="10" top="10">
 						<s:layout>
 							<s:BasicLayout/>
 						</s:layout>
@@ -29,7 +36,7 @@
 	</fx:Declarations>
 
 	<fx:Metadata>
-		[HostComponent("ssen.flexkit.components.dropdown.DropDownAnchor")]
+		[HostComponent("ssen.components.dropdownAnchor.DropDownAnchor")]
 	</fx:Metadata>
 
 	<!-- states -->
@@ -38,13 +45,25 @@
 		<s:State name="disabled"/>
 	</s:states>
 
-	<s:Button id="openButton" left="0" right="0" top="0" bottom="0" focusEnabled="false" tabEnabled="false" label="{hostComponent.label}"/>
+	<s:Button focusEnabled="false"
+			  id="openButton"
+			  label="{hostComponent.label}"
+			  bottom="0"
+			  left="0"
+			  right="0"
+			  top="0"
+			  tabEnabled="false"/>
 
-	<dropdown:DropDownPopupAnchor id="popupAnchor" popUpPosition="below" left="0" right="0" top="-5" bottom="-5">
+	<dropdownAnchor:DropDownPopupAnchor id="popupAnchor"
+										bottom="-5"
+										left="0"
+										right="0"
+										top="-5"
+										popUpPosition="below">
 		<s:BorderContainer id="popupAnchorContainer" borderColor="0x000000" borderWeight="1">
 			<s:backgroundFill>
 				<s:SolidColor color="0xffffff"/>
 			</s:backgroundFill>
 		</s:BorderContainer>
-	</dropdown:DropDownPopupAnchor>
+	</dropdownAnchor:DropDownPopupAnchor>
 </s:Skin>

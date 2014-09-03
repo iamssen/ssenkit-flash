@@ -1,4 +1,4 @@
-package ssen.components.core {
+package ssen.components.graphics {
 import flash.display.DisplayObject;
 import flash.display.Graphics;
 import flash.display.Shape;
