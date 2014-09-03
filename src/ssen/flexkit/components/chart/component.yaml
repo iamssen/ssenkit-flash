@@ -1,4 +1,0 @@
-namespace : "http://ssen.name/ns/fl"
-components : 
-- "CartesianChartElement"
-- "ColumnSeriesRendererBaseElement"
