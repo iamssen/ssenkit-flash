@@ -4,7 +4,7 @@ import flash.events.MouseEvent;
 
 import spark.components.Button;
 
-public class Alert extends AlertBase {
+public class Alert extends RichTextAlertBase {
 	//==========================================================================================
 	// skin parts
 	//==========================================================================================
@@ -14,6 +14,11 @@ public class Alert extends AlertBase {
 	//==========================================================================================
 	// properties
 	//==========================================================================================
+	//----------------------------------------------------------------
+	// callbacks
+	//----------------------------------------------------------------
+	public var closeCallback:Function;
+
 	//---------------------------------------------
 	// okText
 	//---------------------------------------------
@@ -25,7 +30,7 @@ public class Alert extends AlertBase {
 	}
 
 	public function set okText(value:String):void {
-		_okText=value;
+		_okText = value;
 		invalidateOkText();
 	}
 
@@ -36,7 +41,7 @@ public class Alert extends AlertBase {
 
 	protected function invalidateOkText():void {
 		if (_okText) {
-			okTextChanged=true;
+			okTextChanged = true;
 			invalidateProperties();
 		}
 	}
@@ -44,24 +49,26 @@ public class Alert extends AlertBase {
 	//==========================================================================================
 	// commit
 	//==========================================================================================
+	/** @private */
 	override protected function commitProperties():void {
 		super.commitProperties();
 
 		if (okTextChanged) {
 			commitOkText();
-			okTextChanged=false;
+			okTextChanged = false;
 		}
 	}
 
 	protected function commitOkText():void {
 		if (okButton) {
-			okButton.label=_okText;
+			okButton.label = _okText;
 		}
 	}
 
 	//==========================================================================================
 	// implements skin
 	//==========================================================================================
+	/** @private */
 	override protected function partAdded(partName:String, instance:Object):void {
 		super.partAdded(partName, instance);
 
@@ -71,6 +78,7 @@ public class Alert extends AlertBase {
 		}
 	}
 
+	/** @private */
 	override protected function partRemoved(partName:String, instance:Object):void {
 		if (instance === okButton) {
 			okButton.removeEventListener(MouseEvent.CLICK, okHandler);
@@ -84,6 +92,16 @@ public class Alert extends AlertBase {
 	//==========================================================================================
 	private function okHandler(event:MouseEvent):void {
 		close();
+	}
+
+	//==========================================================================================
+	// override
+	//==========================================================================================
+	/** @private */
+	override protected function applyCallback(args:Array = null):void {
+		if (closeCallback !== null) {
+			closeCallback();
+		}
 	}
 }
 }

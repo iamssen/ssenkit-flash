@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:fills="ssen.components.fills.*" enterFrame="enterFrameHandler(event)">
+
+	<fx:Script>
+		<![CDATA[
+		[Bindable]
+		private var translate:Number = 0;
+
+		private function enterFrameHandler(event:Event):void {
+			translate += 0.05;
+		}
+		]]>
+	</fx:Script>
+
+	<s:Rect width="100%" height="100%">
+		<s:fill>
+			<s:SolidColor color="#ff0000"/>
+		</s:fill>
+	</s:Rect>
+
+	<s:Group horizontalCenter="0" verticalCenter="0">
+		<s:layout>
+			<s:TileLayout requestedRowCount="2" requestedColumnCount="2" horizontalGap="0" verticalGap="0"
+						  columnWidth="200" rowHeight="200"/>
+		</s:layout>
+
+		<s:Rect>
+			<s:fill>
+				<fills:Stripe angle="0" translate="{translate}">
+					<fills:StripeEntry color="#000000" alpha="0.3" size="10"/>
+					<fills:StripeEntry color="#000000" alpha="0.1" size="15"/>
+				</fills:Stripe>
+			</s:fill>
+		</s:Rect>
+
+		<s:Rect>
+			<s:fill>
+				<fills:Stripe angle="90" translate="{translate}">
+					<fills:StripeEntry color="#000000" alpha="0.3" size="10"/>
+					<fills:StripeEntry color="#000000" alpha="0.1" size="15"/>
+				</fills:Stripe>
+			</s:fill>
+		</s:Rect>
+
+		<s:Rect>
+			<s:fill>
+				<fills:Stripe angle="45" translate="{translate}">
+					<fills:StripeEntry color="#000000" alpha="0.3" size="10"/>
+					<fills:StripeEntry color="#000000" alpha="0.1" size="15"/>
+				</fills:Stripe>
+			</s:fill>
+		</s:Rect>
+
+		<s:Rect>
+			<s:fill>
+				<fills:Stripe angle="135" translate="{translate}">
+					<fills:StripeEntry color="#000000" alpha="0.3" size="10"/>
+					<fills:StripeEntry color="#000000" alpha="0.1" size="15"/>
+				</fills:Stripe>
+			</s:fill>
+		</s:Rect>
+
+	</s:Group>
+
+</s:Group>

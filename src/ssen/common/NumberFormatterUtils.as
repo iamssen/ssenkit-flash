@@ -9,9 +9,9 @@ public class NumberFormatterUtils {
 	 * @param n 대상 숫자
 	 * @param precision 강제로 유지시킬 소숫점 자리수
 	 */
-	public static function percentage(n:Number, precision:int=0):String {
+	public static function percentage(n:Number, precision:int = 0):String {
 		if (precision > 0) {
-			n=Math.round(n * Math.pow(10, precision)) / Math.pow(10, precision);
+			n = Math.round(n * Math.pow(10, precision)) / Math.pow(10, precision);
 			return wrap(n.toFixed(2));
 		}
 
@@ -24,9 +24,9 @@ public class NumberFormatterUtils {
 	 * @param n 대상 숫자
 	 * @param precision 강제로 유지시킬 소숫점 자리수
 	 */
-	public static function hm(n:Number, precision:int=0):String {
+	public static function hm(n:Number, precision:int = 0):String {
 		if (precision > 0) {
-			n=Math.round(n / (Math.pow(10, 8 - precision)));
+			n = Math.round(n / (Math.pow(10, 8 - precision)));
 			return wrap(getFormatter().format(n / Math.pow(10, precision)));
 		}
 
@@ -86,13 +86,13 @@ public class NumberFormatterUtils {
 	public static function fluidNum(n:Number, min:Number, max:Number, interval:Number):String {
 		// TODO 관련된 공식들의 이론을 파악해야 한다.
 		// [ ] Math.LN10
-		var precision:Number=0;
-		var decimal:Number=Math.abs(interval) - Math.floor(Math.abs(interval));
-		precision=decimal == 0 ? 1 : -Math.floor(Math.log(decimal) / Math.LN10);
-		decimal=Math.abs(min) - Math.floor(Math.abs(min));
-		precision=Math.max(precision, decimal == 0 ? 1 : -Math.floor(Math.log(decimal) / Math.LN10));
-		var roundBase:Number=Math.pow(10, precision);
-		var roundedValue:Number=Math.round(n * roundBase) / roundBase;
+		var precision:Number = 0;
+		var decimal:Number = Math.abs(interval) - Math.floor(Math.abs(interval));
+		precision = decimal == 0 ? 1 : -Math.floor(Math.log(decimal) / Math.LN10);
+		decimal = Math.abs(min) - Math.floor(Math.abs(min));
+		precision = Math.max(precision, decimal == 0 ? 1 : -Math.floor(Math.log(decimal) / Math.LN10));
+		var roundBase:Number = Math.pow(10, precision);
+		var roundedValue:Number = Math.round(n * roundBase) / roundBase;
 
 		return num(roundedValue);
 	}
@@ -109,7 +109,7 @@ public class NumberFormatterUtils {
 
 	private static function getFormatter():NumberFormatter {
 		if (!formatter) {
-			formatter=new NumberFormatter;
+			formatter = new NumberFormatter;
 		}
 
 		return formatter;

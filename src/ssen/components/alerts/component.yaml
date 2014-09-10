@@ -2,8 +2,6 @@ namespace: "http://ssen.name/ns/ssen"
 components:
 - Alert
 - Confirm
-- Notification
 skins:
 - AlertSkin
 - ConfirmSkin
-- NotificationSkin

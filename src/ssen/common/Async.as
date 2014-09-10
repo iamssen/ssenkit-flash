@@ -3,12 +3,24 @@ package ssen.common {
 /** 비동기 로직 작성을 도와주는 유틸 */
 public class Async {
 	/** 최대 대기 시간 */
-	public static var timeout:int=1000;
+	public static var timeout:int = 1000;
 
+	/**
+	 * 같은 task를 실행하고, 조건에 의해서 실행을 멈춘다.
+	 * @param test `function():boolean`
+	 * @param task `function(callback:function):void`
+	 * @param callback `function(error:error):void`
+	 */
 	public static function whilst(test:Function, task:Function, callback:Function):void {
 		new Whilist().execute(test, task, callback);
 	}
 
+	/**
+	 * 같은 task를 실행하고, 특정 횟수만큼 반복한다.
+	 * @param loop
+	 * @param task
+	 * @param callback
+	 */
 	public static function times(loop:int, task:Function, callback:Function):void {
 		new Times().execute(loop, task, callback);
 	}
@@ -34,6 +46,7 @@ public class Async {
 	}
 }
 }
+
 import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
@@ -48,11 +61,11 @@ class Whilist {
 	private var f:int;
 
 	public function execute(test:Function, task:Function, callback:Function):void {
-		this.f=-1;
-		this.test=test;
-		this.task=task;
-		this.callback=callback;
-		this.values=[];
+		this.f = -1;
+		this.test = test;
+		this.task = task;
+		this.callback = callback;
+		this.values = [];
 
 		next();
 	}
@@ -61,7 +74,7 @@ class Whilist {
 		if (test()) {
 			// 0 : execute
 			f++;
-			var executer:Executer=new Executer;
+			var executer:Executer = new Executer;
 			executer.exec(task, result);
 		} else {
 			// 2 : complete callback
@@ -83,9 +96,9 @@ class Whilist {
 	}
 
 	private function dispose():void {
-		task=null;
-		callback=null;
-		values=null;
+		task = null;
+		callback = null;
+		values = null;
 	}
 }
 
@@ -96,47 +109,47 @@ class Times {
 	private var executers:Array;
 
 	public function execute(loop:int, task:Function, callback:Function):void {
-		this.loop=loop;
-		this.task=task;
-		this.callback=callback;
-		this.executers=[];
-		this.executers.length=loop;
+		this.loop = loop;
+		this.task = task;
+		this.callback = callback;
+		this.executers = [];
+		this.executers.length = loop;
 
-		var i:int=-1;
-		var imax:int=loop;
+		var i:int = -1;
+		var imax:int = loop;
 		var executer:Executer;
 
 		// 0 : execute all
 		while (++i < imax) {
-			executer=new Executer;
-			executer.times=true;
-			executer.index=i;
+			executer = new Executer;
+			executer.times = true;
+			executer.index = i;
 			executer.exec(task, next);
 		}
 	}
 
 	private function next(executer:Executer):void {
 		// 1 : keep executer
-		executers[executer.index]=executer;
+		executers[executer.index] = executer;
 
 		// 2 : complete
 		if (--loop === 0) {
 			var error:Error;
-			var values:Array=[];
+			var values:Array = [];
 
-			var f:int=-1;
-			var fmax:int=executers.length;
+			var f:int = -1;
+			var fmax:int = executers.length;
 			var executer:Executer;
 
 			// read error and values
 			while (++f < fmax) {
-				executer=executers[f];
+				executer = executers[f];
 
 				if (error !== null && executer.error !== null) {
-					error=executer.error;
+					error = executer.error;
 				}
 
-				values[executer.index]=executer.value;
+				values[executer.index] = executer.value;
 			}
 
 			// callback
@@ -146,9 +159,9 @@ class Times {
 	}
 
 	private function dispose():void {
-		task=null;
-		callback=null;
-		executers=null;
+		task = null;
+		callback = null;
+		executers = null;
 	}
 }
 
@@ -160,11 +173,11 @@ class TimesSeries {
 	private var values:Array;
 
 	public function execute(loop:int, task:Function, callback:Function):void {
-		this.f=-1;
-		this.fmax=loop;
-		this.task=task;
-		this.callback=callback;
-		this.values=[];
+		this.f = -1;
+		this.fmax = loop;
+		this.task = task;
+		this.callback = callback;
+		this.values = [];
 
 		next();
 	}
@@ -172,9 +185,9 @@ class TimesSeries {
 	private function next():void {
 		if (++f < fmax) {
 			// 0 : execute 
-			var executer:Executer=new Executer;
-			executer.times=true;
-			executer.index=f;
+			var executer:Executer = new Executer;
+			executer.times = true;
+			executer.index = f;
 			executer.exec(task, result);
 		} else {
 			// 2 : complete callback
@@ -190,15 +203,15 @@ class TimesSeries {
 			callback(executer.error, values);
 			dispose();
 		} else {
-			values[executer.index]=executer.value;
+			values[executer.index] = executer.value;
 			next();
 		}
 	}
 
 	private function dispose():void {
-		task=null;
-		callback=null;
-		values=null;
+		task = null;
+		callback = null;
+		values = null;
 	}
 }
 
@@ -209,12 +222,12 @@ class SeriesBase {
 
 	protected function setTasks(tasks:*):void {
 		if (tasks is Vector.<Function>) {
-			this.tasks=tasks;
+			this.tasks = tasks;
 		} else if (tasks is Array) {
-			this.tasks=Vector.<Function>(tasks);
+			this.tasks = Vector.<Function>(tasks);
 		} else {
-			this.tasks=new Vector.<Function>;
-			this.keys=new Vector.<String>;
+			this.tasks = new Vector.<Function>;
+			this.keys = new Vector.<String>;
 
 			for (var key:String in tasks) {
 				this.tasks.push(tasks[key]);
@@ -230,49 +243,49 @@ class SeriesBase {
 
 	private function getObjectedValues(executers:Array):Array {
 		var error:Error;
-		var values:Object={};
+		var values:Object = {};
 
-		var f:int=-1;
-		var fmax:int=executers.length;
+		var f:int = -1;
+		var fmax:int = executers.length;
 		var executer:Executer;
 
 		while (++f < fmax) {
-			executer=executers[f];
+			executer = executers[f];
 
 			if (error !== null && executer.error !== null) {
-				error=executer.error;
+				error = executer.error;
 			}
 
-			values[keys[executer.index]]=executer.value;
+			values[keys[executer.index]] = executer.value;
 		}
 
 		return [error, values];
 	}
 
 	private function getArrayedValues(executers:Array):Array {
-		var error:Error;
-		var values:Array=[];
+		var error:Error = null;
+		var values:Array = [];
 
-		var f:int=-1;
-		var fmax:int=executers.length;
+		var f:int = -1;
+		var fmax:int = executers.length;
 		var executer:Executer;
 
 		while (++f < fmax) {
-			executer=executers[f];
+			executer = executers[f];
 
 			if (error !== null && executer.error !== null) {
-				error=executer.error;
+				error = executer.error;
 			}
 
-			values[executer.index]=executer.value;
+			values[executer.index] = executer.value;
 		}
 
 		return [error, values];
 	}
 
 	protected function dispose():void {
-		tasks=null;
-		keys=null;
+		tasks = null;
+		keys = null;
 	}
 }
 
@@ -283,30 +296,30 @@ class Parallel extends SeriesBase {
 
 	public function execute(tasks:*, callback:Function):void {
 		this.setTasks(tasks);
-		this.callback=callback;
-		this.executers=[];
-		this.loop=this.tasks.length;
+		this.callback = callback;
+		this.executers = [];
+		this.loop = this.tasks.length;
 
-		var i:int=-1;
-		var imax:int=this.tasks.length;
+		var i:int = -1;
+		var imax:int = this.tasks.length;
 		var executer:Executer;
 
 		// 0 : execute all
 		while (++i < imax) {
-			executer=new Executer;
-			executer.index=i;
+			executer = new Executer;
+			executer.index = i;
 			executer.exec(this.tasks[i], next);
 		}
 	}
 
 	private function next(executer:Executer):void {
 		// 1 : keep executer
-		executers[executer.index]=executer;
+		executers[executer.index] = executer;
 
 		// 2 : complete
 		if (--loop === 0) {
 			try {
-				var result:Array=makeValues(executers);
+				var result:Array = makeValues(executers);
 				callback(result[0], result[1]);
 			} catch (error:Error) {
 				callback(error);
@@ -317,8 +330,8 @@ class Parallel extends SeriesBase {
 
 	override protected function dispose():void {
 		super.dispose();
-		callback=null;
-		executers=null;
+		callback = null;
+		executers = null;
 	}
 }
 
@@ -330,11 +343,11 @@ class Series extends SeriesBase {
 
 	public function execute(tasks:*, callback:Function):void {
 		this.setTasks(tasks);
-		this.callback=callback;
-		this.executers=[];
+		this.callback = callback;
+		this.executers = [];
 
-		this.f=-1;
-		this.fmax=this.tasks.length;
+		this.f = -1;
+		this.fmax = this.tasks.length;
 
 		next();
 	}
@@ -342,14 +355,14 @@ class Series extends SeriesBase {
 	private function next():void {
 		if (++f < fmax) {
 			// 0 : execute 
-			var executer:Executer=new Executer;
-			executer.index=f;
+			var executer:Executer = new Executer;
+			executer.index = f;
 			executer.exec(tasks[f], result);
 		} else {
 			// 2 : complete callback
 			try {
-				var result:Array=makeValues(executers);
-				callback(result[0], result[1]);
+				var resultArr:Array = makeValues(executers);
+				callback(resultArr[0], resultArr[1]);
 			} catch (error:Error) {
 				callback(error);
 			}
@@ -364,15 +377,15 @@ class Series extends SeriesBase {
 			callback(executer.error);
 			dispose();
 		} else {
-			executers[executer.index]=executer;
+			executers[executer.index] = executer;
 			next();
 		}
 	}
 
 	override protected function dispose():void {
 		super.dispose();
-		callback=null;
-		executers=null;
+		callback = null;
+		executers = null;
 	}
 }
 
@@ -386,12 +399,12 @@ class ParallelLimit extends SeriesBase {
 
 	public function execute(tasks:*, limit:int, callback:Function):void {
 		this.setTasks(tasks);
-		this.callback=callback;
-		this.executers=[];
-		this.limit=limit;
+		this.callback = callback;
+		this.executers = [];
+		this.limit = limit;
 
-		this.f=0;
-		this.fmax=this.tasks.length;
+		this.f = 0;
+		this.fmax = this.tasks.length;
 
 		next();
 	}
@@ -399,22 +412,22 @@ class ParallelLimit extends SeriesBase {
 	private function next():void {
 		if (f < fmax) {
 			// 0 : execute
-			loop=(limit < fmax - f) ? limit : fmax - f;
+			loop = (limit < fmax - f) ? limit : fmax - f;
 
-			var i:int=loop;
+			var i:int = loop;
 			var executer:Executer;
 
 			while (--i >= 0) {
-				executer=new Executer;
-				executer.index=f;
+				executer = new Executer;
+				executer.index = f;
 				executer.exec(this.tasks[f], result);
 				f++;
 			}
 		} else {
 			// 3 : complete callback
 			try {
-				var result:Array=makeValues(executers);
-				callback(result[0], result[1]);
+				var resultArr:Array = makeValues(executers);
+				callback(resultArr[0], resultArr[1]);
 			} catch (error:Error) {
 				callback(error);
 			}
@@ -424,7 +437,7 @@ class ParallelLimit extends SeriesBase {
 
 	private function result(executer:Executer):void {
 		// 1 : keep executer
-		executers[executer.index]=executer;
+		executers[executer.index] = executer;
 
 		// 2 : limit complete
 		if (--loop === 0) {
@@ -434,8 +447,8 @@ class ParallelLimit extends SeriesBase {
 
 	override protected function dispose():void {
 		super.dispose();
-		callback=null;
-		executers=null;
+		callback = null;
+		executers = null;
 	}
 }
 
@@ -444,24 +457,24 @@ class Waterfall {
 	private var fmax:uint;
 	private var tasks:Vector.<Function>;
 	private var callback:Function;
-	private var tid:int=-1;
+	private var tid:int = -1;
 
 	public function execute(tasks:Vector.<Function>, callback:Function):void {
-		this.f=-1;
-		this.fmax=tasks.length;
-		this.tasks=tasks;
-		this.callback=callback;
+		this.f = -1;
+		this.fmax = tasks.length;
+		this.tasks = tasks;
+		this.callback = callback;
 
 		next();
 	}
 
-	private function next(... args):void {
+	private function next(...args):void {
 		if (++f < fmax) {
 			try {
 				// 0 : execute
 				args.push(result);
 				tasks[f].apply(null, args);
-				tid=setTimeout(timeout, Async.timeout);
+				tid = setTimeout(timeout, Async.timeout);
 			} catch (error:Error) {
 				// exception
 				callback(error);
@@ -478,7 +491,7 @@ class Waterfall {
 		callback(new Error(StringUtils.formatToString("timeout {0}ms", Async.timeout)));
 	}
 
-	private function result(error:Error, ... params):void {
+	private function result(error:Error, ...params):void {
 		if (tid > -1) {
 			clearTimeout(tid);
 		}
@@ -493,8 +506,8 @@ class Waterfall {
 	}
 
 	private function dispose():void {
-		tasks=null;
-		callback=null;
+		tasks = null;
+		callback = null;
 	}
 }
 
@@ -505,10 +518,10 @@ class Executer {
 	public var value:*;
 
 	private var next:Function;
-	private var tid:int=-1;
+	private var tid:int = -1;
 
 	public function exec(task:Function, next:Function):void {
-		this.next=next;
+		this.next = next;
 
 		try {
 			if (times) {
@@ -516,9 +529,9 @@ class Executer {
 			} else {
 				task(callback);
 			}
-			tid=setTimeout(timeout, Async.timeout);
+			tid = setTimeout(timeout, Async.timeout);
 		} catch (error:Error) {
-			this.error=error;
+			this.error = error;
 			next(this);
 		}
 	}
@@ -527,12 +540,12 @@ class Executer {
 		callback(new Error(StringUtils.formatToString("timeout {0}ms", Async.timeout)));
 	}
 
-	private function callback(error:Error=null, value:*=null):void {
+	private function callback(error:Error = null, value:* = null):void {
 		if (tid > -1) {
 			clearTimeout(tid);
 		}
-		this.error=error;
-		this.value=value;
+		this.error = error;
+		this.value = value;
 
 		next(this);
 	}

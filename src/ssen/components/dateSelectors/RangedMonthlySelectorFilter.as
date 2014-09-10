@@ -1,4 +1,4 @@
-package ssen.flexkit.components.input {
+package ssen.components.dateSelectors {
 import flash.events.Event;
 import flash.events.EventDispatcher;
 
@@ -8,7 +8,7 @@ public class RangedMonthlySelectorFilter extends EventDispatcher implements IMon
 	//---------------------------------------------
 	// from
 	//---------------------------------------------
-	private var _from:int=198007;
+	private var _from:int = 198007;
 
 	/** from */
 	public function get from():int {
@@ -16,14 +16,14 @@ public class RangedMonthlySelectorFilter extends EventDispatcher implements IMon
 	}
 
 	public function set from(value:int):void {
-		_from=value;
+		_from = value;
 		dispatchEvent(new Event("filterChanged"));
 	}
 
 	//---------------------------------------------
 	// to
 	//---------------------------------------------
-	private var _to:int=210001;
+	private var _to:int = 210001;
 
 	/** to */
 	public function get to():int {
@@ -31,7 +31,7 @@ public class RangedMonthlySelectorFilter extends EventDispatcher implements IMon
 	}
 
 	public function set to(value:int):void {
-		_to=value;
+		_to = value;
 		dispatchEvent(new Event("filterChanged"));
 	}
 

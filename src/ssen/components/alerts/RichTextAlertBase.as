@@ -1,16 +1,22 @@
 package ssen.components.alerts {
+import com.greensock.TweenLite;
+import com.greensock.easing.Quad;
+
 import flash.display.DisplayObjectContainer;
 import flash.events.MouseEvent;
 
 import mx.core.FlexGlobals;
+import mx.managers.PopUpManager;
 
 import spark.components.Button;
 import spark.components.RichText;
-import spark.components.SkinnablePopUpContainer;
+import spark.components.supportClasses.SkinnableComponent;
 
 import ssen.common.StringUtils;
 
-public class AlertBase extends SkinnablePopUpContainer {
+[SkinState("normal")]
+
+public class RichTextAlertBase extends SkinnableComponent {
 	//==========================================================================================
 	// skin parts
 	//==========================================================================================
@@ -26,6 +32,33 @@ public class AlertBase extends SkinnablePopUpContainer {
 	//==========================================================================================
 	// properties
 	//==========================================================================================
+	//----------------------------------------------------------------
+	// style
+	//----------------------------------------------------------------
+	public var openDuration:Number = 0.5;
+	public var openEase:Function = Quad.easeOut;
+
+	public var closeDuration:Number = 0.5;
+	public var closeEase:Function = Quad.easeOut;
+
+	//----------------------------------------------------------------
+	// properties
+	//----------------------------------------------------------------
+	//---------------------------------------------
+	// type
+	//---------------------------------------------
+	private var _type:String;
+
+	/** type */
+	public function get type():String {
+		return _type;
+	}
+
+	public function set type(value:String):void {
+		_type = value;
+		// TODO
+	}
+
 	//---------------------------------------------
 	// title
 	//---------------------------------------------
@@ -37,7 +70,7 @@ public class AlertBase extends SkinnablePopUpContainer {
 	}
 
 	public function set title(value:String):void {
-		_title=value;
+		_title = value;
 		invalidateTitle();
 	}
 
@@ -52,17 +85,52 @@ public class AlertBase extends SkinnablePopUpContainer {
 	}
 
 	public function set message(value:String):void {
-		_message=value;
+		_message = value;
 		invalidateMessage();
 	}
 
 	//==========================================================================================
 	// methods
 	//==========================================================================================
-	public function openCenter(modal:Boolean=false):void {
-		var app:DisplayObjectContainer=FlexGlobals.topLevelApplication as DisplayObjectContainer;
-		open(app, modal);
+	final protected function getGlobalContainer():DisplayObjectContainer {
+		return FlexGlobals.topLevelApplication as DisplayObjectContainer;
+	}
+
+	//----------------------------------------------------------------
+	// open
+	//----------------------------------------------------------------
+	final public function open():void {
+		addPopup();
+	}
+
+	protected function addPopup():void {
+		alpha = 0;
+		PopUpManager.addPopUp(this, getGlobalContainer(), true);
+		TweenLite.to(this, openDuration, {alpha: 1, ease: openEase});
 		invalidateCenter();
+	}
+
+	//----------------------------------------------------------------
+	// close
+	//----------------------------------------------------------------
+	final public function close(...args:Array):void {
+		applyCallback(args);
+		closePopup(removePopup);
+	}
+
+	private function removePopup():void {
+		PopUpManager.removePopUp(this);
+	}
+
+	protected function closePopup(removePopup:Function):void {
+		if (closeDuration > 0) {
+			TweenLite.to(this, closeDuration, {alpha: 0, ease: closeEase, onComplete: removePopup});
+		} else {
+			removePopup();
+		}
+	}
+
+	protected function applyCallback(args:Array = null):void {
 	}
 
 	//==========================================================================================
@@ -73,66 +141,71 @@ public class AlertBase extends SkinnablePopUpContainer {
 	private var alignCenter:Boolean;
 
 	protected function invalidateTitle():void {
-		titleChanged=true;
+		titleChanged = true;
 		invalidateProperties();
 	}
 
 	protected function invalidateMessage():void {
-		messageChanged=true;
+		messageChanged = true;
 		invalidateProperties();
 	}
 
 	protected function invalidateCenter():void {
-		alignCenter=true;
+		alignCenter = true;
 		invalidateSize();
 	}
 
 	//==========================================================================================
 	// commit
 	//==========================================================================================
+	/** @private */
 	override protected function measure():void {
 		super.measure();
 
 		if (alignCenter) {
-			var w:Number=getExplicitOrMeasuredWidth();
-			var h:Number=getExplicitOrMeasuredHeight();
+			var w:Number = getExplicitOrMeasuredWidth();
+			var h:Number = getExplicitOrMeasuredHeight();
 
-			x=int((stage.stageWidth - w) / 2);
-			y=int((stage.stageHeight - h) / 2);
+			x = int((stage.stageWidth - w) / 2);
+			y = int((stage.stageHeight - h) / 2);
 
-			alignCenter=false;
+			alignCenter = false;
 		}
 	}
 
+	/** @private */
 	override protected function commitProperties():void {
 		super.commitProperties();
 
 		if (titleChanged) {
 			commitTitle();
-			titleChanged=false;
+			titleChanged = false;
 		}
 
 		if (messageChanged) {
 			commitMessage();
-			messageChanged=false;
+			messageChanged = false;
 		}
 	}
 
 	protected function commitTitle():void {
 		if (titleText) {
-			titleText.textFlow=StringUtils.convertTextFlow(_title);
+			titleText.textFlow = StringUtils.convertTextFlow(_title);
+			invalidateCenter();
 		}
 	}
 
 	protected function commitMessage():void {
 		if (messageText) {
-			messageText.textFlow=StringUtils.convertTextFlow(_message);
+			messageText.textFlow = StringUtils.convertTextFlow(_message);
+			invalidateCenter();
 		}
 	}
 
 	//==========================================================================================
 	// open
 	//==========================================================================================
+	/** @private */
 	override protected function partAdded(partName:String, instance:Object):void {
 		super.partAdded(partName, instance);
 
@@ -145,6 +218,7 @@ public class AlertBase extends SkinnablePopUpContainer {
 		}
 	}
 
+	/** @private */
 	override protected function partRemoved(partName:String, instance:Object):void {
 		if (instance === closeButton && closeButton.hasEventListener(MouseEvent.CLICK)) {
 			closeButton.removeEventListener(MouseEvent.CLICK, closeButtonClickHandler);

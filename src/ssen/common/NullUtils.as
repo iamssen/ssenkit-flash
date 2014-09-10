@@ -21,7 +21,7 @@ public class NullUtils {
 	}
 
 	/** @copy StringUtils#blankTo() */
-	public static function blankTo(value:*, defaultValue:String, checkSpaces:Boolean=false):String {
+	public static function blankTo(value:*, defaultValue:String, checkSpaces:Boolean = false):String {
 		return StringUtils.blankTo(value, defaultValue, checkSpaces);
 	}
 

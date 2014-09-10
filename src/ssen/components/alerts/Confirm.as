@@ -4,7 +4,7 @@ import flash.events.MouseEvent;
 
 import spark.components.Button;
 
-public class Confirm extends AlertBase {
+public class Confirm extends RichTextAlertBase {
 	//==========================================================================================
 	// skin parts
 	//==========================================================================================
@@ -17,6 +17,12 @@ public class Confirm extends AlertBase {
 	//==========================================================================================
 	// properties
 	//==========================================================================================
+	//----------------------------------------------------------------
+	// callbacks
+	//----------------------------------------------------------------
+	public var confirm:Function;
+	public var cancel:Function;
+
 	//---------------------------------------------
 	// confirmText
 	//---------------------------------------------
@@ -28,7 +34,7 @@ public class Confirm extends AlertBase {
 	}
 
 	public function set confirmText(value:String):void {
-		_confirmText=value;
+		_confirmText = value;
 		invalidateConfirmText();
 	}
 
@@ -43,7 +49,7 @@ public class Confirm extends AlertBase {
 	}
 
 	public function set cancelText(value:String):void {
-		_cancelText=value;
+		_cancelText = value;
 		invalidateCancelText();
 	}
 
@@ -55,14 +61,14 @@ public class Confirm extends AlertBase {
 
 	protected function invalidateConfirmText():void {
 		if (_confirmText) {
-			confirmTextChanged=true;
+			confirmTextChanged = true;
 			invalidateProperties();
 		}
 	}
 
 	protected function invalidateCancelText():void {
 		if (_cancelText) {
-			cancelTextChanged=true;
+			cancelTextChanged = true;
 			invalidateProperties();
 		}
 	}
@@ -75,24 +81,24 @@ public class Confirm extends AlertBase {
 
 		if (confirmTextChanged) {
 			commitConfirmText();
-			confirmTextChanged=false;
+			confirmTextChanged = false;
 		}
 
 		if (cancelTextChanged) {
 			commitCancelText();
-			cancelTextChanged=false;
+			cancelTextChanged = false;
 		}
 	}
 
 	protected function commitConfirmText():void {
 		if (confirmButton) {
-			confirmButton.label=_confirmText;
+			confirmButton.label = _confirmText;
 		}
 	}
 
 	protected function commitCancelText():void {
 		if (cancelText) {
-			cancelButton.label=_cancelText;
+			cancelButton.label = _cancelText;
 		}
 	}
 
@@ -129,7 +135,16 @@ public class Confirm extends AlertBase {
 	}
 
 	private function confirmButtonClickHandler(event:MouseEvent):void {
-		close(true, true);
+		close(true);
+	}
+
+	/** @private */
+	override protected function applyCallback(args:Array = null):void {
+		if (args.length > 0 && args[0] === true) {
+			confirm();
+		} else {
+			cancel();
+		}
 	}
 }
 }
