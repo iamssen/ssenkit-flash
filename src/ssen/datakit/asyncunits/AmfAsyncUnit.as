@@ -5,6 +5,8 @@ import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
 import mx.rpc.remoting.RemoteObject;
 
+import ssen.common.IAsyncUnit;
+
 
 public class AmfAsyncUnit implements IAsyncUnit {
 	public var channelId:String;

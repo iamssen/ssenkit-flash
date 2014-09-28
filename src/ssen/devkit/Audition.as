@@ -1,5 +1,8 @@
 package ssen.devkit {
 import flash.display.Sprite;
+import flash.utils.getTimer;
+
+import mx.formatters.NumberFormatter;
 
 import ssen.common.StringUtils;
 
@@ -10,8 +13,10 @@ public class Audition {
 	private var numPlots:int;
 	private var errors:int;
 
+	private var numberFormatter:NumberFormatter = new NumberFormatter;
+
 	public function Audition() {
-		plots=new Vector.<Plot>;
+		plots = new Vector.<Plot>;
 	}
 
 	public function add(actor:Class):void {
@@ -23,16 +28,16 @@ public class Audition {
 		trace("Audition start");
 		trace("---------------------------------------------");
 
-		errors=0;
-		currentPlot=-1;
-		numPlots=plots.length;
+		errors = 0;
+		currentPlot = -1;
+		numPlots = plots.length;
 
 		runPlot();
 	}
 
 	private function runPlot():void {
 		if (++currentPlot < numPlots) {
-			var plot:Plot=plots[currentPlot];
+			var plot:Plot = plots[currentPlot];
 			plot.run(runPlot, printResult);
 		} else {
 			completePlot();
@@ -53,26 +58,26 @@ public class Audition {
 
 	protected function printResult(result:Result):void {
 		if (result.success) {
-			trace(".");
+			trace(StringUtils.formatToString("✓ {0} {1}ms", result.method, numberFormatter.format(getTimer() - result.begin)));
 		} else {
 			errors++;
 
-			var stackTrace:String=result.error.getStackTrace();
-			var index:int=stackTrace.indexOf("	at SyncAct/act()");
+			var stackTrace:String = result.error.getStackTrace();
+			var index:int = stackTrace.indexOf("	at SyncAct/act()");
 
 			if (index === -1) {
-				index=stackTrace.indexOf("	at AsyncAct/act()");
+				index = stackTrace.indexOf("	at AsyncAct/act()");
 			}
 
-			var lines:Array=stackTrace.substr(0, index).split("\n");
-			var nlines:Vector.<String>=new Vector.<String>;
+			var lines:Array = stackTrace.substr(0, index).split("\n");
+			var nlines:Vector.<String> = new Vector.<String>;
 
 			var line:String;
 
-			var f:int=-1;
-			var fmax:int=lines.length;
+			var f:int = -1;
+			var fmax:int = lines.length;
 			while (++f < fmax) {
-				line=lines[f];
+				line = lines[f];
 
 				if (line.indexOf("at ssen.devkit::Should") === -1) {
 					nlines.push(line);
@@ -85,8 +90,10 @@ public class Audition {
 	}
 }
 }
+
 import flash.utils.describeType;
 import flash.utils.getQualifiedClassName;
+import flash.utils.getTimer;
 import flash.utils.setTimeout;
 
 class Plot {
@@ -107,88 +114,88 @@ class Plot {
 	private var numActs:int;
 
 	public function Plot(actor:Class) {
-		this.actor=actor;
+		this.actor = actor;
 	}
 
 	public function run(callback:Function, resultCallback:Function):void {
 		if (!makeActs()) {
 			callback();
 		} else {
-			this.callback=callback;
-			this.resultCallback=resultCallback;
+			this.callback = callback;
+			this.resultCallback = resultCallback;
 			runActs();
 		}
 	}
 
 	private function makeActs():Boolean {
-		var spec:XML=describeType(actor);
+		var spec:XML = describeType(actor);
 
 		var metadatas:XMLList;
 
-		metadatas=spec..metadata.(@name.toString().toLowerCase() == "test");
+		metadatas = spec..metadata.(@name.toString().toLowerCase() == "test");
 		if (metadatas.length() === 0) {
 			return false;
 		}
 
-		var f:int=-1;
-		var fmax:int=metadatas.length();
+		var f:int = -1;
+		var fmax:int = metadatas.length();
 
-		acts=new Vector.<Act>(fmax, true);
+		acts = new Vector.<Act>(fmax, true);
 
 		while (++f < fmax) {
-			acts[f]=getSingleAct(metadatas[f]);
+			acts[f] = getSingleAct(metadatas[f]);
 		}
 
-		metadatas=spec..metadata.(@name.toString().toLowerCase() == "before");
+		metadatas = spec..metadata.(@name.toString().toLowerCase() == "before");
 		if (metadatas.length() > 0) {
-			before=getSingleAct(metadatas[0]);
+			before = getSingleAct(metadatas[0]);
 		}
 
-		metadatas=spec..metadata.(@name.toString().toLowerCase() == "beforeeach");
+		metadatas = spec..metadata.(@name.toString().toLowerCase() == "beforeeach");
 		if (metadatas.length() > 0) {
-			beforeEach=getSingleAct(metadatas[0]);
+			beforeEach = getSingleAct(metadatas[0]);
 		}
 
-		metadatas=spec..metadata.(@name.toString().toLowerCase() == "after");
+		metadatas = spec..metadata.(@name.toString().toLowerCase() == "after");
 		if (metadatas.length() > 0) {
-			after=getSingleAct(metadatas[0]);
+			after = getSingleAct(metadatas[0]);
 		}
 
-		metadatas=spec..metadata.(@name.toString().toLowerCase() == "aftereach");
+		metadatas = spec..metadata.(@name.toString().toLowerCase() == "aftereach");
 		if (metadatas.length() > 0) {
-			afterEach=getSingleAct(metadatas[0]);
+			afterEach = getSingleAct(metadatas[0]);
 		}
 
 		return true;
 	}
 
 	private function getSingleAct(metadata:XML):Act {
-		var member:XML=metadata.parent();
+		var member:XML = metadata.parent();
 
 		if (member.name() != "method") {
 			return null;
 		}
 
-		var params:XMLList=member.parameter;
+		var params:XMLList = member.parameter;
 		var act:Act;
 
 		if (params.length() === 0) {
-			var sync:SyncAct=new SyncAct;
-			act=sync;
+			var sync:SyncAct = new SyncAct;
+			act = sync;
 		} else if (params.length() === 1 && params[0].@type == "Function") {
-			var async:AsyncAct=new AsyncAct;
-			act=async;
+			var async:AsyncAct = new AsyncAct;
+			act = async;
 		}
 
-		act.method=member.@name;
+		act.method = member.@name;
 
 		return act;
 	}
 
 	private function runActs():void {
-		actorInstance=new actor();
-		currentAct=-1;
-		numActs=acts.length;
+		actorInstance = new actor();
+		currentAct = -1;
+		numActs = acts.length;
 
 		runBefore();
 	}
@@ -238,8 +245,8 @@ class Plot {
 	}
 
 	private function sequence(act:Act, next:Function):void {
-		setTimeout(function():void {
-			act.act(actorInstance, function(result:Result):void {
+		setTimeout(function ():void {
+			act.act(actorInstance, function (result:Result):void {
 				resultCallback(result);
 				next();
 			});
@@ -261,15 +268,15 @@ class Act {
 
 class SyncAct extends Act {
 	override public function act(actor:Object, callback:Function):void {
-		var result:Result=new Result;
-		result.method=getMethod(actor, method);
+		var result:Result = new Result;
+		result.method = getMethod(actor, method);
 
 		try {
 			actor[method]();
 			callback(result);
 		} catch (err:Error) {
-			result.success=false;
-			result.error=err;
+			result.success = false;
+			result.error = err;
 			callback(result);
 		}
 	}
@@ -278,35 +285,41 @@ class SyncAct extends Act {
 class AsyncAct extends Act {
 	override public function act(actor:Object, callback:Function):void {
 		var resulted:Boolean;
-		var result:Result=new Result;
-		result.method=getMethod(actor, method);
+		var result:Result = new Result;
+		result.method = getMethod(actor, method);
 
 		try {
-			actor[method](function(err:Error=null):void {
+			actor[method](function (err:Error = null):void {
 				if (err) {
-					result.success=false;
-					result.error=err;
+					result.success = false;
+					result.error = err;
 				}
 				if (!resulted) {
 					callback(result);
-					resulted=true;
+					resulted = true;
 				}
 			});
 		} catch (err:Error) {
-			result.success=false;
-			result.error=err;
+			result.success = false;
+			result.error = err;
 			if (!resulted) {
 				callback(result);
-				resulted=true;
+				resulted = true;
 			}
 		}
 	}
 }
 
 class Result {
-	public var success:Boolean=true;
+	public var success:Boolean = true;
 
 	public var error:Error;
 
 	public var method:String;
+
+	public var begin:int;
+
+	public function Result() {
+		begin = getTimer();
+	}
 }

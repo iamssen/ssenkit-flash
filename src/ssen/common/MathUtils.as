@@ -50,22 +50,33 @@ public class MathUtils {
 		return value;
 	}
 
+	/**
+	 * 값이 min 과 max 사이에 있는지 확인한다
+	 * @param value 체크할 값
+	 * @param min
+	 * @param max
+	 */
 	public static function rangeOf(value:Number, min:Number, max:Number):Boolean {
 		return value >= min && value <= max;
 	}
 
-	public static function rotate(angle:Number, rotate:Number = NaN):Number {
-		if (!isNaN(rotate)) {
-			angle += rotate;
+	/**
+	 * 각도를 회전하면서, 결과값을 360도 이내의 값이 되도록 조절해준다
+	 * @param deg 각도
+	 * @param rotateDeg 회전할 각도
+	 */
+	public static function rotate(deg:Number, rotateDeg:Number = NaN):Number {
+		if (!isNaN(rotateDeg)) {
+			deg += rotateDeg;
 		}
 
-		angle = angle % 360;
+		deg = deg % 360;
 
-		if (angle < 0) {
-			angle = 360 - angle;
+		if (deg < 0) {
+			deg = 360 - deg;
 		}
 
-		return angle;
+		return deg;
 	}
 }
 }

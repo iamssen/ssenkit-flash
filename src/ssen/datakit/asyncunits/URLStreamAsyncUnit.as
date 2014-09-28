@@ -5,6 +5,8 @@ import flash.events.IOErrorEvent;
 import flash.events.SecurityErrorEvent;
 import flash.net.URLStream;
 
+import ssen.common.IAsyncUnit;
+
 /** URLStream 을 AyncUnit 으로 작동되도록 해주는 기능 */
 public class URLStreamAsyncUnit implements IAsyncUnit {
 	private var _stream:URLStream;

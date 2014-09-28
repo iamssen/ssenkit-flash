@@ -2,6 +2,8 @@ package ssen.datakit.asyncunits {
 import flash.utils.clearTimeout;
 import flash.utils.setTimeout;
 
+import ssen.common.IAsyncUnit;
+
 
 public class SetTimeoutAsyncUnit implements IAsyncUnit {
 	private var id:uint;
