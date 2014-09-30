@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:graphics="ssen.components.graphics.*" xmlns:fills="ssen.components.fills.*">
+
+	<fx:Script>
+		<![CDATA[
+		import ssen.common.MathUtils;
+		]]>
+	</fx:Script>
+
+	<s:Group horizontalCenter="0" verticalCenter="0">
+		<s:layout>
+			<s:TileLayout requestedRowCount="2" requestedColumnCount="2"
+						  horizontalGap="10" verticalGap="10"
+						  columnWidth="160" rowHeight="160" />
+		</s:layout>
+
+		<graphics:LineBox left="10" right="10" top="10" bottom="10"
+						  lineWeightTop="40" lineWeightBottom="40"
+						  lineWeightLeft="40" lineWeightRight="40">
+			<graphics:fill>
+				<fills:Stripe angle="135">
+					<fills:StripeEntry color="#000000" alpha="0.3" size="10" />
+					<fills:StripeEntry color="#000000" alpha="0.1" size="15" />
+				</fills:Stripe>
+			</graphics:fill>
+		</graphics:LineBox>
+
+		<graphics:LineBox left="10" right="10" top="10" bottom="10"
+						  lineWeightTop="30" lineWeightBottom="30"
+						  lineWeightLeft="30" lineWeightRight="30">
+			<graphics:fill>
+				<s:SolidColor color="0xe58273" />
+			</graphics:fill>
+		</graphics:LineBox>
+
+		<graphics:LineBox left="10" right="10" top="10" bottom="10"
+						  lineWeightTop="20" lineWeightBottom="20"
+						  lineWeightLeft="20" lineWeightRight="20">
+			<graphics:fill>
+				<s:LinearGradient rotation="90">
+					<s:GradientEntry color="0x8086e2" />
+					<s:GradientEntry color="0xc6d2fb" />
+				</s:LinearGradient>
+			</graphics:fill>
+		</graphics:LineBox>
+
+		<graphics:LineBox left="10" right="10" top="10" bottom="10"
+						  lineWeightTop="10" lineWeightBottom="10"
+						  lineWeightLeft="10" lineWeightRight="10">
+			<graphics:fill>
+				<s:SolidColor color="{MathUtils.rand(0x000000, 0xffffff)}" />
+			</graphics:fill>
+		</graphics:LineBox>
+
+	</s:Group>
+</s:Group>

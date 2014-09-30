@@ -3,5 +3,7 @@
 			   xmlns:devkit="ssen.devkit.*" frameRate="60">
 	<devkit:ShowcaseContainer>
 		<devkit:Showcase type="ssen.components.fills.Showcase__Stripe" description="Fill : Stripe"/>
+		<devkit:Showcase type="ssen.components.fills.Showcase__Dotted" description="Fill : Dotted"/>
+		<devkit:Showcase type="ssen.components.graphics.Showcase__LineBox" description="Graphic : LineBox"/>
 	</devkit:ShowcaseContainer>
 </s:Application>

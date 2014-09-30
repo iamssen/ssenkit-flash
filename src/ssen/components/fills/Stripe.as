@@ -86,7 +86,7 @@ public class Stripe extends EventDispatcher implements IFill {
 
 	//==========================================================================================
 	// create bitmap source
-	// SOMEDAY : DPI multi scale
+	// TODO DPI multiple scale
 	//==========================================================================================
 	//---------------------------------------------
 	// inavalidate source
@@ -130,7 +130,7 @@ public class Stripe extends EventDispatcher implements IFill {
 		source = bitmap;
 	}
 
-	private function getTotalSize(entry:Vector.<StripeEntry>):int {
+	private static function getTotalSize(entry:Vector.<StripeEntry>):int {
 		var f:int = entry.length;
 		var total:int = 0;
 		while (--f >= 0) {

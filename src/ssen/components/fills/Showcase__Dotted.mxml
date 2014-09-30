@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:fills="ssen.components.fills.*">
+
+	<s:Group horizontalCenter="0" verticalCenter="0">
+		<s:layout>
+			<s:TileLayout requestedRowCount="2" requestedColumnCount="2"
+						  horizontalGap="0" verticalGap="0"
+						  columnWidth="200" rowHeight="200" />
+		</s:layout>
+
+		<s:Rect>
+			<s:fill>
+				<fills:Dotted backgroundColor="0xF7D281" dotColor="0xFFF1BB"
+							  dotSize="4" dotGap="13" />
+			</s:fill>
+		</s:Rect>
+
+		<s:Rect>
+			<s:fill>
+				<fills:Dotted backgroundColor="0xf2fcff" dotColor="0x84e0d3" subDotColor="0x91bee0"
+							  dotSize="8" subDotSize="6" dotGap="12" />
+			</s:fill>
+		</s:Rect>
+
+		<s:Rect>
+			<s:fill>
+				<fills:Dotted backgroundColor="0x30b1ff" dotColor="#3DD6FF"
+							  dotSize="14" dotGap="20" />
+			</s:fill>
+		</s:Rect>
+
+		<s:Rect>
+			<s:fill>
+				<fills:Dotted backgroundColor="#FFFF69" dotColor="0xffe0b7" subDotColor="0xffb9de"
+							  dotSize="5" subDotSize="3" dotGap="20" />
+			</s:fill>
+		</s:Rect>
+
+	</s:Group>
+</s:Group>
