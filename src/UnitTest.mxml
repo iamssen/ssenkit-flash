@@ -5,12 +5,12 @@
 		<![CDATA[
 		import mx.events.FlexEvent;
 
-		import ssen.common.AsyncTest;
+		import ssen.common.Test__Async;
 		import ssen.devkit.Audition;
 
 		private function init(event:FlexEvent):void {
 			var audition:Audition = new Audition();
-			audition.add(AsyncTest);
+			audition.add(Test__Async);
 			audition.start(this);
 		}
 		]]>

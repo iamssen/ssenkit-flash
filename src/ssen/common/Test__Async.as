@@ -3,7 +3,7 @@ import flash.utils.setTimeout;
 
 [Exclude]
 
-public class AsyncTest {
+public class Test__Async {
 
 	private static const MAX:int = 100;
 	private static const LIMIT:int = 10;
@@ -72,17 +72,17 @@ public class AsyncTest {
 	//----------------------------------------------------------------
 	[Test]
 	public function series(done:Function):void {
-		tasksTest(done, Async.series(new <Function>[task0, task1, task2, task3, task4, task5, task6, task7]));
+		tasksTest(done, Async.run(new <Function>[task0, task1, task2, task3, task4, task5, task6, task7], AsyncFlow.SERIES));
 	}
 
 	[Test]
 	public function parallel(done:Function):void {
-		tasksTest(done, Async.parallel(new <Function>[task0, task1, task2, task3, task4, task5, task6, task7]));
+		tasksTest(done, Async.run(new <Function>[task0, task1, task2, task3, task4, task5, task6, task7], AsyncFlow.PARALLEL));
 	}
 
 	[Test]
 	public function limit(done:Function):void {
-		tasksTest(done, Async.limit(new <Function>[task0, task1, task2, task3, task4, task5, task6, task7], LIMIT));
+		tasksTest(done, Async.run(new <Function>[task0, task1, task2, task3, task4, task5, task6, task7], AsyncFlow.PARALLEL_LIMIT, LIMIT));
 	}
 
 	//==========================================================================================
@@ -137,18 +137,18 @@ public class AsyncTest {
 	//----------------------------------------------------------------
 	[Test]
 	public function eachSeries(done:Function):void {
-		eachTest(done, Async.eachSeries(getEachItems(), eachTask));
+		eachTest(done, Async.each(getEachItems(), eachTask, AsyncFlow.SERIES));
 
 	}
 
 	[Test]
 	public function eachParallel(done:Function):void {
-		eachTest(done, Async.eachParallel(getEachItems(), eachTask));
+		eachTest(done, Async.each(getEachItems(), eachTask, AsyncFlow.PARALLEL));
 	}
 
 	[Test]
 	public function eachLimit(done:Function):void {
-		eachTest(done, Async.eachLimit(getEachItems(), eachTask, LIMIT));
+		eachTest(done, Async.each(getEachItems(), eachTask, AsyncFlow.PARALLEL_LIMIT, LIMIT));
 	}
 
 	//==========================================================================================
@@ -202,17 +202,17 @@ public class AsyncTest {
 	//----------------------------------------------------------------
 	[Test]
 	public function mapSeries(done:Function):void {
-		mapTest(done, Async.mapSeries(getMapItems(), mapTask));
+		mapTest(done, Async.map(getMapItems(), mapTask, AsyncFlow.SERIES));
 	}
 
 	[Test]
 	public function mapParallel(done:Function):void {
-		mapTest(done, Async.mapParallel(getMapItems(), mapTask));
+		mapTest(done, Async.map(getMapItems(), mapTask, AsyncFlow.PARALLEL));
 	}
 
 	[Test]
 	public function mapLimit(done:Function):void {
-		mapTest(done, Async.mapLimit(getMapItems(), mapTask, LIMIT));
+		mapTest(done, Async.map(getMapItems(), mapTask, AsyncFlow.PARALLEL_LIMIT, LIMIT));
 	}
 
 	//==========================================================================================
@@ -244,19 +244,19 @@ public class AsyncTest {
 	[Test]
 	public function timesSeries(done:Function):void {
 		n = 0;
-		timesTest(done, Async.timesSeries(MAX, timesTask));
+		timesTest(done, Async.times(MAX, timesTask, AsyncFlow.SERIES));
 	}
 
 	[Test]
 	public function timesParallel(done:Function):void {
 		n = 0;
-		timesTest(done, Async.timesParallel(MAX, timesTask));
+		timesTest(done, Async.times(MAX, timesTask, AsyncFlow.PARALLEL));
 	}
 
 	[Test]
 	public function timesLimit(done:Function):void {
 		n = 0;
-		timesTest(done, Async.timesLimit(MAX, timesTask, LIMIT));
+		timesTest(done, Async.times(MAX, timesTask, AsyncFlow.PARALLEL_LIMIT, LIMIT));
 	}
 
 	//==========================================================================================

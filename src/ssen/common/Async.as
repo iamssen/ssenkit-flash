@@ -1,12 +1,17 @@
 package ssen.common {
 
+/**
+ * 비동기 함수 실행 유틸
+ *
+ * @includeDocument Async.md
+ * @includeDocument AsyncFlow.md
+ * @see AsyncFlow
+ */
 public class Async {
 
-	//==========================================================================================
-	// only series functions
-	//==========================================================================================
 	/**
-	 * 조건에 의해서 실행을 멈춘다.
+	 * test 조건에 의해서 task 들을 반복 실행한다 (while)
+	 *
 	 * @param test `():Boolean`
 	 * @param task `(result:(*), fault:(Error)):void`
 	 */
@@ -14,79 +19,65 @@ public class Async {
 		return new SeriesRunner().run(new WhileTaskIterator(test, task));
 	}
 
-	//==========================================================================================
-	// each
-	//==========================================================================================
 	/**
-	 * items의 갯수만큼 "순차적으로" task를 실행한다.
+	 * items의 갯수만큼 task를 실행한다 (for each)
+	 *
 	 * @param test `():Boolean`
 	 * @param task `(item:Object, result:(*), fault:(Error)):void`
+	 * @param flow `AsyncFlow` 실행 방식
+	 * @param limitCount `flow`가 `AsyncFlow.PARALLEL_LIMIT`일 경우에만 적용된다
 	 */
-	public static function eachSeries(items:Array, task:Function):IAsyncUnit {
-		return new SeriesRunner().run(new EachTaskIterator(items, task));
-	}
-
-	/**
-	 * items의 갯수만큼 "일괄적으로" task를 실행한다.
-	 * @param test `():Boolean`
-	 * @param task `(item:Object, result:(*), fault:(Error)):void`
-	 */
-	public static function eachParallel(items:Array, task:Function):IAsyncUnit {
-		return new ParallelRunner().run(new EachTaskIterator(items, task));
+	public static function each(items:Array, task:Function, flow:String = "parallelLimit", limitCount:int = 5):IAsyncUnit {
+		return runTask(new EachTaskIterator(items, task), flow, limitCount);
 	}
 
 	/**
-	 * items의 갯수만큼 "특정 갯수를 순차적으로" task를 실행한다.
+	 * count 만큼 task를 실행한다 (for)
+	 *
 	 * @param test `():Boolean`
-	 * @param task `(item:Object, result:(*), fault:(Error)):void`
+	 * @param task `(index:int, result:(*), fault:(Error)):void`
+	 * @param flow `AsyncFlow` 실행 방식
+	 * @param limitCount `flow`가 `AsyncFlow.PARALLEL_LIMIT`일 경우에만 적용된다
 	 */
-	public static function eachLimit(items:Array, task:Function, executeCount:int = 4):IAsyncUnit {
-		return new LimitRunner(executeCount).run(new EachTaskIterator(items, task));
+	public static function times(count:int, task:Function, flow:String = "parallelLimit", limitCount:int = 5):IAsyncUnit {
+		return runTask(new TimesTaskIterator(count, task), flow, limitCount);
+	}
+
+	/**
+	 * map의 갯수만큼 task를 실행한다 (for in)
+	 *
+	 * @param test `():Boolean`
+	 * @param task `(key:String, value:Object, result:(*), fault:(Error)):void`
+	 * @param flow `AsyncFlow` 실행 방식
+	 * @param limitCount `flow`가 `AsyncFlow.PARALLEL_LIMIT`일 경우에만 적용된다
+	 */
+	public static function map(map:Object, task:Function, flow:String = "parallelLimit", limitCount:int = 5):IAsyncUnit {
+		return runTask(new MapTaskIterator(map, task), flow, limitCount);
+	}
+
+	/**
+	 * task들을 실행한다
+	 *
+	 * @param tasks `(result:(*), fault:(Error)):void`
+	 * @param flow `AsyncFlow` 실행 방식
+	 * @param limitCount `flow`가 `AsyncFlow.PARALLEL_LIMIT`일 경우에만 적용된다
+	 */
+	public static function run(tasks:Vector.<Function>, flow:String = "parallelLimit", limitCount:int = 5):IAsyncUnit {
+		return runTask(new TaskIterator(tasks), flow, limitCount);
 	}
 
 	//==========================================================================================
-	// times
+	// utils
 	//==========================================================================================
-	public static function timesSeries(count:int, task:Function):IAsyncUnit {
-		return new SeriesRunner().run(new TimesTaskIterator(count, task));
-	}
-
-	public static function timesParallel(count:int, task:Function):IAsyncUnit {
-		return new ParallelRunner().run(new TimesTaskIterator(count, task));
-	}
-
-	public static function timesLimit(count:int, task:Function, executeCount:int = 4):IAsyncUnit {
-		return new LimitRunner(executeCount).run(new TimesTaskIterator(count, task));
-	}
-
-	//==========================================================================================
-	// map
-	//==========================================================================================
-	public static function mapSeries(map:Object, task:Function):IAsyncUnit {
-		return new SeriesRunner().run(new MapTaskIterator(map, task));
-	}
-
-	public static function mapParallel(map:Object, task:Function):IAsyncUnit {
-		return new ParallelRunner().run(new MapTaskIterator(map, task));
-	}
-
-	public static function mapLimit(map:Object, task:Function, executeCount:int = 4):IAsyncUnit {
-		return new LimitRunner(executeCount).run(new MapTaskIterator(map, task));
-	}
-
-	//==========================================================================================
-	// basic control
-	//==========================================================================================
-	public static function series(tasks:Vector.<Function>):IAsyncUnit {
-		return new SeriesRunner().run(new TaskIterator(tasks));
-	}
-
-	public static function parallel(tasks:Vector.<Function>):IAsyncUnit {
-		return new ParallelRunner().run(new TaskIterator(tasks));
-	}
-
-	public static function limit(tasks:Vector.<Function>, executeCount:int = 4):IAsyncUnit {
-		return new LimitRunner(executeCount).run(new TaskIterator(tasks));
+	private static function runTask(taskIterator:ITaskIterator, flow:String, limitCount:int):IAsyncUnit {
+		switch (flow) {
+			case AsyncFlow.SERIES:
+				return new SeriesRunner().run(taskIterator);
+			case AsyncFlow.PARALLEL:
+				return new ParallelRunner().run(taskIterator);
+			default:
+				return new LimitRunner(limitCount).run(taskIterator);
+		}
 	}
 }
 }
