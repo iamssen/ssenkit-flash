@@ -1,4 +1,4 @@
-package ssen.common {
+package ssen.text {
 import mx.core.EmbeddedFont;
 import mx.core.IEmbeddedFontRegistry;
 import mx.core.Singleton;

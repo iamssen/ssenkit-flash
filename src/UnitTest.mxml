@@ -7,10 +7,12 @@
 
 		import ssen.common.Test__Async;
 		import ssen.devkit.Audition;
+		import ssen.drawing.Test__CustomTypeConstructPerformance;
 
 		private function init(event:FlexEvent):void {
 			var audition:Audition = new Audition();
 			audition.add(Test__Async);
+			audition.add(Test__CustomTypeConstructPerformance);
 			audition.start(this);
 		}
 		]]>

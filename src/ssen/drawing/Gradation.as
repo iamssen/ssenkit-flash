@@ -1,4 +1,4 @@
-package ssen.drawingkit {
+package ssen.drawing {
 import com.greensock.easing.Linear;
 
 public class Gradation {
@@ -33,7 +33,7 @@ public class Gradation {
 	 * @param step 나눌 단계수
 	 * @param ease Easing function
 	 */
-	public static function getGradationColors(start:RGB, end:RGB, step:int, ease:Function=null):Vector.<RGB> {
+	public static function createGradationColors(start:RGB, end:RGB, step:int, ease:Function=null):Vector.<RGB> {
 		if (ease === null) {
 			ease=Linear.easeNone;
 		}

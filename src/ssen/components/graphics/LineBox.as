@@ -1,4 +1,5 @@
 package ssen.components.graphics {
+
 import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.geom.Point;
@@ -25,8 +26,8 @@ public class LineBox extends GraphicElement {
 	}
 
 	public function set fill(value:IFill):void {
-		var oldValue:IFill=_fill;
-		_fill=value;
+		var oldValue:IFill = _fill;
+		_fill = value;
 		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
 			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "fill", oldValue, _fill));
 		}
@@ -36,7 +37,7 @@ public class LineBox extends GraphicElement {
 	//---------------------------------------------
 	// lineWeightLeft
 	//---------------------------------------------
-	private var _lineWeightLeft:int;
+	private var _lineWeightLeft:int = 10;
 
 	/** lineWeightLeft */
 	[Bindable]
@@ -45,8 +46,8 @@ public class LineBox extends GraphicElement {
 	}
 
 	public function set lineWeightLeft(value:int):void {
-		var oldValue:int=_lineWeightLeft;
-		_lineWeightLeft=value;
+		var oldValue:int = _lineWeightLeft;
+		_lineWeightLeft = value;
 		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
 			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "lineWeightLeft", oldValue, _lineWeightLeft));
 		}
@@ -56,7 +57,7 @@ public class LineBox extends GraphicElement {
 	//---------------------------------------------
 	// lineWeightRight
 	//---------------------------------------------
-	private var _lineWeightRight:int;
+	private var _lineWeightRight:int = 10;
 
 	/** lineWeightRight */
 	[Bindable]
@@ -65,8 +66,8 @@ public class LineBox extends GraphicElement {
 	}
 
 	public function set lineWeightRight(value:int):void {
-		var oldValue:int=_lineWeightRight;
-		_lineWeightRight=value;
+		var oldValue:int = _lineWeightRight;
+		_lineWeightRight = value;
 		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
 			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "lineWeightRight", oldValue, _lineWeightRight));
 		}
@@ -76,7 +77,7 @@ public class LineBox extends GraphicElement {
 	//---------------------------------------------
 	// lineWeightTop
 	//---------------------------------------------
-	private var _lineWeightTop:int;
+	private var _lineWeightTop:int = 10;
 
 	/** lineWeightTop */
 	[Bindable]
@@ -85,8 +86,8 @@ public class LineBox extends GraphicElement {
 	}
 
 	public function set lineWeightTop(value:int):void {
-		var oldValue:int=_lineWeightTop;
-		_lineWeightTop=value;
+		var oldValue:int = _lineWeightTop;
+		_lineWeightTop = value;
 		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
 			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "lineWeightTop", oldValue, _lineWeightTop));
 		}
@@ -96,7 +97,7 @@ public class LineBox extends GraphicElement {
 	//---------------------------------------------
 	// lineWeightBottom
 	//---------------------------------------------
-	private var _lineWeightBottom:int;
+	private var _lineWeightBottom:int = 10;
 
 	/** lineWeightBottom */
 	[Bindable]
@@ -105,8 +106,8 @@ public class LineBox extends GraphicElement {
 	}
 
 	public function set lineWeightBottom(value:int):void {
-		var oldValue:int=_lineWeightBottom;
-		_lineWeightBottom=value;
+		var oldValue:int = _lineWeightBottom;
+		_lineWeightBottom = value;
 		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
 			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "lineWeightBottom", oldValue, _lineWeightBottom));
 		}
@@ -122,15 +123,16 @@ public class LineBox extends GraphicElement {
 			return;
 		}
 
-		var dx:Number=drawX;
-		var dy:Number=drawY;
+		var dx:Number = drawX;
+		var dy:Number = drawY;
 
-		var g:Graphics=(drawnDisplayObject as Sprite).graphics;
-		var outerRect:Rectangle=new Rectangle(dx, dy, unscaledWidth, unscaledHeight);
-		var outerPoint:Point=new Point(dx, dy);
-		var innerRect:Rectangle=new Rectangle(dx + _lineWeightLeft, dy + _lineWeightTop, unscaledWidth - _lineWeightLeft - _lineWeightRight,
-											  unscaledHeight - _lineWeightTop - _lineWeightBottom);
-		var innerPoint:Point=new Point(dx + _lineWeightLeft, dy + _lineWeightTop);
+		var g:Graphics = (drawnDisplayObject as Sprite).graphics;
+		var outerRect:Rectangle = new Rectangle(dx, dy, unscaledWidth, unscaledHeight);
+		var outerPoint:Point = new Point(dx, dy);
+		var innerRect:Rectangle = new Rectangle(dx + _lineWeightLeft,
+						dy + _lineWeightTop,
+						unscaledWidth - _lineWeightLeft - _lineWeightRight,
+						unscaledHeight - _lineWeightTop - _lineWeightBottom);
 
 		g.lineStyle(0, 0, 0);
 

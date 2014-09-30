@@ -1,4 +1,5 @@
-package ssen.flexkit.components.renderers {
+package ssen.components.itemRenderers {
+
 import flash.display.DisplayObject;
 import flash.display.Graphics;
 import flash.display.Shape;
@@ -27,8 +28,8 @@ public class RichTextItemRenderer extends RichText implements IItemRenderer {
 	}
 
 	public function set data(value:Object):void {
-		var oldValue:Object=_data;
-		_data=value;
+		var oldValue:Object = _data;
+		_data = value;
 
 		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
 			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "data", oldValue, _data));
@@ -46,7 +47,7 @@ public class RichTextItemRenderer extends RichText implements IItemRenderer {
 	}
 
 	public function set dragging(value:Boolean):void {
-		_dragging=value;
+		_dragging = value;
 	}
 
 	//---------------------------------------------
@@ -61,8 +62,8 @@ public class RichTextItemRenderer extends RichText implements IItemRenderer {
 	}
 
 	public function set itemIndex(value:int):void {
-		var oldValue:int=_itemIndex;
-		_itemIndex=value;
+		var oldValue:int = _itemIndex;
+		_itemIndex = value;
 
 		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
 			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "itemIndex", oldValue, _itemIndex));
@@ -81,8 +82,8 @@ public class RichTextItemRenderer extends RichText implements IItemRenderer {
 	}
 
 	public function set label(value:String):void {
-		var oldValue:String=_label;
-		_label=value;
+		var oldValue:String = _label;
+		_label = value;
 
 		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
 			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "label", oldValue, _label));
@@ -101,8 +102,8 @@ public class RichTextItemRenderer extends RichText implements IItemRenderer {
 	}
 
 	public function set selected(value:Boolean):void {
-		var oldValue:Boolean=_selected;
-		_selected=value;
+		var oldValue:Boolean = _selected;
+		_selected = value;
 
 		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
 			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "selected", oldValue, _selected));
@@ -121,8 +122,8 @@ public class RichTextItemRenderer extends RichText implements IItemRenderer {
 	}
 
 	public function set showsCaret(value:Boolean):void {
-		var oldValue:Boolean=_showsCaret;
-		_showsCaret=value;
+		var oldValue:Boolean = _showsCaret;
+		_showsCaret = value;
 
 		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
 			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "showsCaret", oldValue, _showsCaret));
@@ -139,12 +140,12 @@ public class RichTextItemRenderer extends RichText implements IItemRenderer {
 	private var hovered:Boolean;
 
 	private function rolloutHandler(event:MouseEvent):void {
-		hovered=false;
+		hovered = false;
 		invalidateDisplayList();
 	}
 
 	private function rolloverHandler(event:MouseEvent):void {
-		hovered=true;
+		hovered = true;
 		invalidateDisplayList();
 	}
 
@@ -154,13 +155,13 @@ public class RichTextItemRenderer extends RichText implements IItemRenderer {
 	override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 		super.updateDisplayList(unscaledWidth, unscaledHeight);
 
-		var key:String=hovered ? "backgroundHover" : "background";
+		var key:String = hovered ? "backgroundHover" : "background";
 
-		var backgroundColor:uint=getStyle(key + "Color") || 0xffffff;
-		var backgroundAlpha:Number=getStyle(key + "Alpha") || 1;
-		var lineColor:uint=getStyle("lineColor") || 0x444444;
+		var backgroundColor:uint = getStyle(key + "Color") || 0xffffff;
+		var backgroundAlpha:Number = getStyle(key + "Alpha") || 1;
+		var lineColor:uint = getStyle("lineColor") || 0x444444;
 
-		var g:Graphics=getBackgroundShape().graphics;
+		var g:Graphics = getBackgroundShape().graphics;
 
 		g.clear();
 
@@ -177,14 +178,14 @@ public class RichTextItemRenderer extends RichText implements IItemRenderer {
 
 	protected function getBackgroundShape():Shape {
 		if (!backgroundShape) {
-			var f:int=numChildren;
+			var f:int = numChildren;
 			var display:DisplayObject;
 
 			while (--f >= 0) {
-				display=getChildAt(f);
+				display = getChildAt(f);
 
 				if (display is Shape) {
-					backgroundShape=display as Shape;
+					backgroundShape = display as Shape;
 				}
 			}
 		}
