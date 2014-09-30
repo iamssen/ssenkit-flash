@@ -1,4 +1,4 @@
-package ssen.drawingkit.text {
+package ssen.text {
 import flash.geom.Rectangle;
 import flash.text.engine.TextLine;
 
@@ -9,16 +9,6 @@ import flashx.textLayout.factory.TruncationOptions;
 import flashx.textLayout.formats.TextLayoutFormat;
 
 public class TextLineFactory {
-	private static var _textLineFactory:TextFlowTextLineFactory;
-
-	private static function getTextLineFactory():TextFlowTextLineFactory {
-		if (!_textLineFactory) {
-			_textLineFactory=new TextFlowTextLineFactory;
-			_textLineFactory.compositionBounds=new Rectangle(0, 0, 1000, 100);
-		}
-
-		return _textLineFactory;
-	}
 
 	public static function createTextLine(str:String, format:TextLayoutFormat, truncationOptions:TruncationOptions=null):TextLine {
 		var textLine:TextLine;
@@ -56,6 +46,23 @@ public class TextLineFactory {
 		}
 
 		return TextConverter.importToFlow(str, TextConverter.PLAIN_TEXT_FORMAT);
+	}
+
+	//==========================================================================================
+	// utils
+	//==========================================================================================
+	//----------------------------------------------------------------
+	// reuseble text line factory
+	//----------------------------------------------------------------
+	private static var _textLineFactory:TextFlowTextLineFactory;
+
+	private static function getTextLineFactory():TextFlowTextLineFactory {
+		if (!_textLineFactory) {
+			_textLineFactory=new TextFlowTextLineFactory;
+			_textLineFactory.compositionBounds=new Rectangle(0, 0, 1000, 100);
+		}
+
+		return _textLineFactory;
 	}
 }
 }

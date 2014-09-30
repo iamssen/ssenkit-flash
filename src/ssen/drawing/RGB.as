@@ -1,4 +1,4 @@
-package ssen.drawingkit {
+package ssen.drawing {
 import ssen.common.StringUtils;
 
 public class RGB {

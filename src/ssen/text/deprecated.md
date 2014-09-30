@@ -1,14 +1,4 @@
-package ssen.drawingkit.text {
-import flash.geom.Rectangle;
-import flash.text.engine.TextLine;
-
-import flashx.textLayout.compose.TextLineRecycler;
-import flashx.textLayout.elements.TextFlow;
-import flashx.textLayout.factory.StringTextLineFactory;
-import flashx.textLayout.formats.TextLayoutFormat;
-
-/** Text Styler */
-public class TextStyler {
+```as3
 	public static function getTextLayoutFormat(font:IFont, fontColor:uint, fontSize:int, letterSpacing:Number=0, textAlign:String="left",
 											   verticalAlign:String="top", paddingLeft:int=0, paddingRight:int=0, paddingTop:int=0,
 											   paddingBottom:int=0):TextLayoutFormat {
@@ -66,5 +56,4 @@ public class TextStyler {
 		
 		return rect;
 	}
-}
-}
+```
