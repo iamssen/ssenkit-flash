@@ -1,0 +1,5 @@
+namespace: "http://ns.ssen.name/ssen"
+components:
+- SimpleHorizontalScrollBar
+- SimpleVerticalScrollBar
+- SimpleScroller

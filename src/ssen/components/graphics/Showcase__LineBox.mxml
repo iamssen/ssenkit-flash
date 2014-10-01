@@ -15,8 +15,7 @@
 						  columnWidth="160" rowHeight="160" />
 		</s:layout>
 
-		<graphics:LineBox left="10" right="10" top="10" bottom="10"
-						  lineWeightTop="40" lineWeightBottom="40"
+		<graphics:LineBox lineWeightTop="40" lineWeightBottom="40"
 						  lineWeightLeft="40" lineWeightRight="40">
 			<graphics:fill>
 				<fills:Stripe angle="135">
@@ -26,16 +25,14 @@
 			</graphics:fill>
 		</graphics:LineBox>
 
-		<graphics:LineBox left="10" right="10" top="10" bottom="10"
-						  lineWeightTop="30" lineWeightBottom="30"
+		<graphics:LineBox lineWeightTop="30" lineWeightBottom="30"
 						  lineWeightLeft="30" lineWeightRight="30">
 			<graphics:fill>
 				<s:SolidColor color="0xe58273" />
 			</graphics:fill>
 		</graphics:LineBox>
 
-		<graphics:LineBox left="10" right="10" top="10" bottom="10"
-						  lineWeightTop="20" lineWeightBottom="20"
+		<graphics:LineBox lineWeightTop="20" lineWeightBottom="20"
 						  lineWeightLeft="20" lineWeightRight="20">
 			<graphics:fill>
 				<s:LinearGradient rotation="90">
@@ -45,8 +42,7 @@
 			</graphics:fill>
 		</graphics:LineBox>
 
-		<graphics:LineBox left="10" right="10" top="10" bottom="10"
-						  lineWeightTop="10" lineWeightBottom="10"
+		<graphics:LineBox lineWeightTop="10" lineWeightBottom="10"
 						  lineWeightLeft="10" lineWeightRight="10">
 			<graphics:fill>
 				<s:SolidColor color="{MathUtils.rand(0x000000, 0xffffff)}" />

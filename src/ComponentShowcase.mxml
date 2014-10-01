@@ -2,8 +2,13 @@
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:devkit="ssen.devkit.*" frameRate="60">
 	<devkit:ShowcaseContainer>
-		<devkit:Showcase type="ssen.components.fills.Showcase__Stripe" description="Fill : Stripe"/>
-		<devkit:Showcase type="ssen.components.fills.Showcase__Dotted" description="Fill : Dotted"/>
-		<devkit:Showcase type="ssen.components.graphics.Showcase__LineBox" description="Graphic : LineBox"/>
+		<devkit:Showcase type="ssen.components.fills.Showcase__Stripe" description="Fill : Stripe" />
+		<devkit:Showcase type="ssen.components.fills.Showcase__Dotted" description="Fill : Dotted" />
+		<devkit:Showcase type="ssen.components.graphics.Showcase__LineBox" description="Graphic : LineBox" />
+		<devkit:Showcase type="ssen.components.dropdownAnchor.Showcase__DropDownAnchor"
+						 description="Container : DropDownAnchor" />
+		<devkit:Showcase type="ssen.components.scroll.Showcase__SimpleScrollBars"
+						 description="Container : SimpleScrollBar" />
+		<devkit:Showcase type="ssen.text.Showcase__HtmlLabel" description="Text : HtmlLabel" />
 	</devkit:ShowcaseContainer>
 </s:Application>

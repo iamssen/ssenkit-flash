@@ -1,7 +1,8 @@
-package ssen.flexkit.components.scroll {
+package ssen.components.scroll {
+
 import spark.components.HScrollBar;
 
-import ssen.flexkit.components.scroll.skins.SimpleHorizontalScrollBarSkin;
+import ssen.components.scroll.snippets.SimpleHorizontalScrollBarSkin;
 
 [Style(name="thumbColor", inherit="yes", type="uint", format="Color")]
 [Style(name="thumbAlpha", inherit="yes", type="Number", format="Number")]

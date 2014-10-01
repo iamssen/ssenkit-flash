@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:scroll="ssen.components.scroll.*">
+
+	<s:Group horizontalCenter="0" verticalCenter="0">
+		<s:layout>
+			<s:TileLayout requestedRowCount="2" requestedColumnCount="2"
+						  horizontalGap="5" verticalGap="5"
+						  columnWidth="200" rowHeight="200" />
+		</s:layout>
+
+		<s:Group>
+			<scroll:SimpleScroller width="100%" height="100%">
+				<s:Group>
+					<scroll:Showcase__SimpleScrollBars_Content width="500" height="500" />
+				</s:Group>
+			</scroll:SimpleScroller>
+		</s:Group>
+
+		<s:Group>
+			<scroll:SimpleScroller width="100%" height="100%"
+								   thumbInsideMargin="4"
+								   thumbOutsideMargin="4"
+								   thumbStartMargin="2"
+								   thumbEndMargin="2"
+								   trackColor="#5c6791"
+								   trackAlpha="1"
+								   thumbColor="#ffffff"
+								   thumbAlpha="0.6"
+								   thumbOverColor="#ffffff"
+								   thumbOverAlpha="0.8"
+								   thumbDownColor="#ffffff"
+								   thumbDownAlpha="1">
+				<s:Group>
+					<scroll:Showcase__SimpleScrollBars_Content width="500" height="500" />
+				</s:Group>
+			</scroll:SimpleScroller>
+		</s:Group>
+
+		<s:Group>
+			<scroll:SimpleScroller width="100%" height="100%"
+								   trackPosition="outside"
+								   thumbInsideMargin="3"
+								   thumbOutsideMargin="0"
+								   thumbStartMargin="0"
+								   thumbEndMargin="0">
+				<s:Group>
+					<scroll:Showcase__SimpleScrollBars_Content width="500" height="500" />
+				</s:Group>
+			</scroll:SimpleScroller>
+		</s:Group>
+
+		<s:Group>
+			<scroll:SimpleScroller width="100%" height="100%"
+								   thumbInsideMargin="0"
+								   thumbOutsideMargin="0"
+								   thumbStartMargin="0"
+								   thumbEndMargin="0"
+								   thumbColor="#ffffff"
+								   thumbAlpha="1"
+								   thumbOverColor="#000000"
+								   thumbOverAlpha="1"
+								   thumbDownColor="#000000"
+								   thumbDownAlpha="1">
+				<s:Group>
+					<scroll:Showcase__SimpleScrollBars_Content width="500" height="500" />
+				</s:Group>
+			</scroll:SimpleScroller>
+		</s:Group>
+	</s:Group>
+</s:Group>

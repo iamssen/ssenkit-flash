@@ -1,37 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:primitives="ssen.flexkit.primitives.*" left="0" right="0" top="0" bottom="0">
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:graphics="ssen.components.graphics.*"
+
+		 left="0" right="0" top="0" bottom="0">
 	<fx:Script>
 		<![CDATA[
-			import mx.events.FlexEvent;
+		import mx.events.FlexEvent;
 
-			import spark.components.supportClasses.SkinnableComponent;
+		import spark.components.supportClasses.SkinnableComponent;
 
-			private var _target:SkinnableComponent;
+		private var _target:SkinnableComponent;
 
-			public function get target():SkinnableComponent {
-				return _target;
-			}
+		public function get target():SkinnableComponent {
+			return _target;
+		}
 
-			public function set target(value:SkinnableComponent):void {
-				_target=value;
+		public function set target(value:SkinnableComponent):void {
+			_target = value;
 
-				if (_target.skin)
-					_target.skin.addEventListener(FlexEvent.UPDATE_COMPLETE, skinUpdateComplete, false, 0, true);
-			}
+			if (_target.skin)
+				_target.skin.addEventListener(FlexEvent.UPDATE_COMPLETE, skinUpdateComplete, false, 0, true);
+		}
 
-			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
-				setActualSize(target.width, target.height);
-				super.updateDisplayList(target.width, target.height);
-			}
+		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
+			setActualSize(target.width, target.height);
+			super.updateDisplayList(target.width, target.height);
+		}
 
-			private function skinUpdateComplete(event:Event):void {
-				invalidateDisplayList();
-			}
+		private function skinUpdateComplete(event:Event):void {
+			invalidateDisplayList();
+		}
 		]]>
 	</fx:Script>
-	<primitives:LineBox left="0" right="0" top="0" bottom="0" lineWeightTop="4" lineWeightRight="4" lineWeightBottom="4" lineWeightLeft="4">
-		<primitives:fill>
-			<s:SolidColor color="0x3690bf"/>
-		</primitives:fill>
-	</primitives:LineBox>
+	<graphics:LineBox left="0" right="0" top="0" bottom="0" lineWeightTop="4" lineWeightRight="4" lineWeightBottom="4"
+						lineWeightLeft="4">
+		<graphics:fill>
+			<s:SolidColor color="0x3690bf" />
+		</graphics:fill>
+	</graphics:LineBox>
 </s:Group>

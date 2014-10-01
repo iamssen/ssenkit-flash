@@ -1,0 +1,267 @@
+package ssen.text {
+
+import flash.display.DisplayObjectContainer;
+import flash.display.Sprite;
+import flash.text.engine.FontLookup;
+import flash.text.engine.TextLine;
+
+import flashx.textLayout.compose.ISWFContext;
+import flashx.textLayout.factory.TruncationOptions;
+import flashx.textLayout.formats.ITextLayoutFormat;
+import flashx.textLayout.formats.TextAlign;
+
+import mx.core.FlexGlobals;
+import mx.core.UIComponent;
+
+import ssen.common.StringUtils;
+import ssen.ssen_internal;
+
+use namespace ssen_internal;
+
+public class HtmlLabel extends Sprite {
+	//==========================================================================================
+	// properties
+	//==========================================================================================
+	//----------------------------------------------------------------
+	// text source properties
+	//----------------------------------------------------------------
+	//---------------------------------------------
+	// text
+	//---------------------------------------------
+	private var _text:String;
+
+	/** text */
+	public function get text():String {
+		return _text;
+	}
+
+	public function set text(value:String):void {
+		_text = value;
+		invalidate_text();
+	}
+
+	//---------------------------------------------
+	// format
+	//---------------------------------------------
+	private var _format:ITextLayoutFormat;
+
+	/** format */
+	public function get format():ITextLayoutFormat {
+		return _format;
+	}
+
+	public function set format(value:ITextLayoutFormat):void {
+		_format = value;
+		invalidate_text();
+	}
+
+	//---------------------------------------------
+	// truncationOptions
+	//---------------------------------------------
+	private var _truncationOptions:TruncationOptions;
+
+	/** truncationOptions */
+	public function get truncationOptions():TruncationOptions {
+		return _truncationOptions;
+	}
+
+	public function set truncationOptions(value:TruncationOptions):void {
+		_truncationOptions = value;
+		invalidate_text();
+	}
+
+	//----------------------------------------------------------------
+	// text align properties
+	//----------------------------------------------------------------
+	//---------------------------------------------
+	// textAlign
+	//---------------------------------------------
+	private var _textAlign:String = "left";
+
+	/** textAlign */
+	public function get textAlign():String {
+		return _textAlign;
+	}
+
+	public function set textAlign(value:String):void {
+		_textAlign = value;
+		invalidate_position();
+	}
+
+	private var textLineCache:TextLineCache;
+	ssen_internal var textLines:Vector.<TextLine>;
+
+	public function HtmlLabel() {
+		textLineCache = new TextLineCache;
+	}
+
+	//---------------------------------------------
+	// width
+	//---------------------------------------------
+	private var _width:Number;
+
+	/** width */
+	override public function get width():Number {
+		return _width;
+	}
+
+	override public function set width(value:Number):void {
+	}
+
+	//---------------------------------------------
+	// height
+	//---------------------------------------------
+	private var _height:Number;
+
+	/** height */
+	override public function get height():Number {
+		return _height;
+	}
+
+	override public function set height(value:Number):void {
+	}
+
+	//==========================================================================================
+	// validation
+	//==========================================================================================
+	//----------------------------------------------------------------
+	// invalidation
+	//----------------------------------------------------------------
+	//---------------------------------------------
+	// inavalidate text
+	//---------------------------------------------
+	private var textChanged:Boolean;
+
+	final protected function invalidate_text():void {
+		textChanged = true;
+	}
+
+	//---------------------------------------------
+	// inavalidate position
+	//---------------------------------------------
+	private var positionChanged:Boolean;
+
+	final protected function invalidate_position():void {
+		positionChanged = true;
+	}
+
+	//---------------------------------------------
+	// commit text
+	//---------------------------------------------
+	protected function commit_text():void {
+		textLineCache.clear();
+		textLines = null;
+
+		if (!StringUtils.isBlank(_text)) {
+			var swfContext:ISWFContext;
+
+			if (_format && _format.fontLookup === FontLookup.EMBEDDED_CFF) {
+				var component:UIComponent;
+
+				if (parent) {
+					var display:DisplayObjectContainer = this;
+
+					while (display.parent) {
+						if (display.parent is UIComponent) {
+							component = display.parent as UIComponent;
+							break;
+						}
+						display = display.parent;
+					}
+				} else {
+					component = FlexGlobals.topLevelApplication as UIComponent;
+				}
+
+				if (component) {
+					swfContext = EmbededFontUtils.getSwfContext(component, _format.fontFamily);
+				}
+			}
+
+
+			textLines = TextLineFactory.createTextLines(_text, _format, _truncationOptions, swfContext);
+			textLineCache.add(textLines);
+
+			var f:int = textLines.length;
+			var textLine:TextLine;
+			while (--f >= 0) {
+				textLine = textLines[f];
+				textLine.y += textLine.ascent;
+				addChild(textLine);
+			}
+		}
+
+		invalidate_position();
+	}
+
+	//---------------------------------------------
+	// commit position
+	//---------------------------------------------
+	protected function commit_position():void {
+		if (!textLines || textLines.length === 0) {
+			_width = 0;
+			_height = 0;
+			return;
+		}
+
+		var f:int;
+		var fmax:int;
+		var textLine:TextLine;
+
+		var x:Number;
+		var xmax:Number = Number.MIN_VALUE;
+		var y:Number;
+		var ymax:Number = Number.MIN_VALUE;
+
+		f = -1;
+		fmax = textLines.length;
+		while (++f < fmax) {
+			textLine = textLines[f];
+
+			x = textLine.width;
+			if (x > xmax) {
+				xmax = x;
+			}
+
+			y = textLine.y + textLine.height;
+			if (y > ymax) {
+				ymax = y;
+			}
+		}
+
+		f = -1;
+		fmax = textLines.length;
+		while (++f < fmax) {
+			textLine = textLines[f];
+
+			switch (_textAlign) {
+				case TextAlign.RIGHT:
+					textLine.x = xmax - textLine.width;
+					break;
+				case TextAlign.CENTER:
+					textLine.x = (xmax - textLine.width) / 2;
+					break;
+				default:
+					textLine.x = 0;
+			}
+		}
+
+		_width = xmax;
+		_height = ymax;
+	}
+
+	//==========================================================================================
+	// commit
+	//==========================================================================================
+	public function validateNow():void {
+		if (textChanged) {
+			commit_text();
+			textChanged = false;
+		}
+
+		if (positionChanged) {
+			commit_position();
+			positionChanged = false;
+		}
+	}
+}
+}

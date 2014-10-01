@@ -89,8 +89,6 @@ public class ShowcaseContainer extends SkinnableComponent {
 		if (instance === dropdownList) {
 			dropdownList.addEventListener(IndexChangeEvent.CHANGE, indexChangedHandler);
 
-			trace("ShowcaseContainer.partAdded()", _showcase);
-
 			if (_showcase) {
 				dropdownList.dataProvider = new VectorCollection(_showcase);
 				dropdownList.selectedIndex = getLastIndex();

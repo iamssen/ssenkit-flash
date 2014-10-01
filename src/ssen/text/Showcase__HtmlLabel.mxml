@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+
+		 addedToStage="init(event)">
+	<fx:Script>
+		<![CDATA[
+		import flashx.textLayout.formats.TextAlign;
+		import flashx.textLayout.formats.TextLayoutFormat;
+
+		private function init(event:Event):void {
+			var label:HtmlLabel;
+			var format:TextLayoutFormat;
+
+			label = new HtmlLabel;
+			label.text = "<font size='15'><b>HELLO WORLD</b></font><br/>test <font color='#eeeeee'>label</font>";
+			label.textAlign = TextAlign.CENTER;
+			label.validateNow();
+			label.x = 30;
+			label.y = 30;
+
+			trace("Showcase__HtmlLabel.init()", label.width, label.height);
+
+			container.addChild(label);
+		}
+		]]>
+	</fx:Script>
+
+	<s:SpriteVisualElement id="container" />
+</s:Group>

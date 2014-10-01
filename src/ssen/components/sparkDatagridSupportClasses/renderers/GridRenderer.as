@@ -1,9 +1,10 @@
-package ssen.flexkit.components.grid.renderers {
-import spark.components.gridClasses.GridColumn;
+package ssen.components.sparkDatagridSupportClasses.renderers {
 
 import flashx.textLayout.formats.VerticalAlign;
 
-import ssen.flexkit.components.grid.columns.BasicGridColumn;
+import spark.components.gridClasses.GridColumn;
+
+import ssen.components.sparkDatagridSupportClasses.columns.BasicGridColumn;
 
 public class GridRenderer extends GraphicsLabelGridRenderer {
 	public function GridRenderer() {
@@ -15,9 +16,9 @@ public class GridRenderer extends GraphicsLabelGridRenderer {
 	}
 
 	override public function set column(value:GridColumn):void {
-		super.column=value;
+		super.column = value;
 
-		var column:BasicGridColumn=value as BasicGridColumn;
+		var column:BasicGridColumn = value as BasicGridColumn;
 		setStyle("textAlign", column.textAlign);
 	}
 }

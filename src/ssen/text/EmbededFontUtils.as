@@ -1,11 +1,14 @@
 package ssen.text {
+
+import flashx.textLayout.compose.ISWFContext;
+
 import mx.core.EmbeddedFont;
 import mx.core.IEmbeddedFontRegistry;
 import mx.core.Singleton;
 import mx.core.UIComponent;
 import mx.core.mx_internal;
 
-import flashx.textLayout.compose.ISWFContext;
+import ssen.common.StringUtils;
 
 use namespace mx_internal;
 
@@ -26,30 +29,30 @@ public class EmbededFontUtils {
 	// read flex embeded font registry
 	//==========================================================================================
 	private static function readFonts():void {
-		var infos:Object={};
-		var names:Vector.<String>=new Vector.<String>;
+		var infos:Object = {};
+		var names:Vector.<String> = new Vector.<String>;
 
-		var fontRegistry:IEmbeddedFontRegistry=IEmbeddedFontRegistry(Singleton.getInstance("mx.core::IEmbeddedFontRegistry"));
-		var fonts:Array=fontRegistry.getFonts();
+		var fontRegistry:IEmbeddedFontRegistry = IEmbeddedFontRegistry(Singleton.getInstance("mx.core::IEmbeddedFontRegistry"));
+		var fonts:Array = fontRegistry.getFonts();
 		var font:EmbeddedFont;
 		var info:Info;
 
-		var f:int=-1;
-		var fmax:int=fonts.length;
+		var f:int = -1;
+		var fmax:int = fonts.length;
 
 		while (++f < fmax) {
-			font=fonts[f];
-			info=new Info;
+			font = fonts[f];
+			info = new Info;
 
-			info.bold=font.bold;
-			info.italic=font.italic;
+			info.bold = font.bold;
+			info.italic = font.italic;
 
-			infos[font.fontName]=info;
+			infos[font.fontName] = info;
 			names.push(font.fontName);
 		}
 
-		fontInfos=infos;
-		fontNames=names;
+		fontInfos = infos;
+		fontNames = names;
 	}
 
 	//==========================================================================================
@@ -63,12 +66,23 @@ public class EmbededFontUtils {
 		return fontNames.slice();
 	}
 
-	public static function getSwfContext(component:UIComponent, fontName:String):ISWFContext {
+	public static function getSwfContext(component:UIComponent, fontFamily:String):ISWFContext {
 		if (!fontInfos) {
 			readFonts();
 		}
 
-		var info:Info=fontInfos[fontName];
+		var fontName:String;
+
+		if (fontFamily.indexOf(",") > -1) {
+			var arr:Array = fontFamily.split(",");
+			if (arr.length > 0) {
+				fontName = StringUtils.clearBlank(arr[0]);
+			}
+		} else {
+			fontName = fontFamily;
+		}
+
+		var info:Info = fontInfos[fontName];
 		return (info) ? component.getFontContext(fontName, info.bold, info.italic) as ISWFContext : null;
 	}
 }

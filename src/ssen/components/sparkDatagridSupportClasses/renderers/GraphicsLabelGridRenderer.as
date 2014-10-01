@@ -1,4 +1,5 @@
-package ssen.flexkit.components.grid.renderers {
+package ssen.components.sparkDatagridSupportClasses.renderers {
+
 import flash.events.Event;
 
 import mx.events.FlexEvent;
@@ -13,9 +14,9 @@ public class GraphicsLabelGridRenderer extends Label implements IGridItemRendere
 	private var helper:GraphicsGridRendererHelper;
 
 	public function GraphicsLabelGridRenderer() {
-		helper=new GraphicsGridRendererHelper;
-		helper.draw=draw;
-		helper.clear=clear;
+		helper = new GraphicsGridRendererHelper;
+		helper.draw = draw;
+		helper.clear = clear;
 	}
 
 	/** @inheritDoc */
@@ -56,7 +57,7 @@ public class GraphicsLabelGridRenderer extends Label implements IGridItemRendere
 	//  data
 	//----------------------------------
 
-	private var _data:Object=null;
+	private var _data:Object = null;
 
 	[Bindable("dataChange")]  // compatible with FlexEvent.DATA_CHANGE
 
@@ -87,10 +88,10 @@ public class GraphicsLabelGridRenderer extends Label implements IGridItemRendere
 		if (_data == value)
 			return;
 
-		_data=value;
-		helper.dataChanged=true;
+		_data = value;
+		helper.dataChanged = true;
 
-		const eventType:String="dataChange";
+		const eventType:String = "dataChange";
 		if (hasEventListener(eventType))
 			dispatchEvent(new FlexEvent(eventType));
 	}
@@ -102,7 +103,7 @@ public class GraphicsLabelGridRenderer extends Label implements IGridItemRendere
 	//  column
 	//----------------------------------
 
-	private var _column:GridColumn=null;
+	private var _column:GridColumn = null;
 
 	[Bindable("columnChanged")]
 
@@ -130,8 +131,8 @@ public class GraphicsLabelGridRenderer extends Label implements IGridItemRendere
 		if (_column == value)
 			return;
 
-		_column=value;
-		helper.columnChanged=true;
+		_column = value;
+		helper.columnChanged = true;
 
 		dispatchChangeEvent("columnChanged");
 	}
@@ -161,7 +162,7 @@ public class GraphicsLabelGridRenderer extends Label implements IGridItemRendere
 	 * @private
 	 * storage for the down property
 	 */
-	private var _down:Boolean=false;
+	private var _down:Boolean = false;
 
 	/**
 	 * @inheritDoc
@@ -184,14 +185,14 @@ public class GraphicsLabelGridRenderer extends Label implements IGridItemRendere
 		if (value == _down)
 			return;
 
-		_down=value;
+		_down = value;
 	}
 
 	//----------------------------------
 	//  dragging
 	//----------------------------------
 
-	private var _dragging:Boolean=false;
+	private var _dragging:Boolean = false;
 
 	[Bindable("draggingChanged")]
 
@@ -214,7 +215,7 @@ public class GraphicsLabelGridRenderer extends Label implements IGridItemRendere
 		if (_dragging == value)
 			return;
 
-		_dragging=value;
+		_dragging = value;
 		dispatchChangeEvent("draggingChanged");
 	}
 
@@ -240,7 +241,7 @@ public class GraphicsLabelGridRenderer extends Label implements IGridItemRendere
 	//  hovered
 	//----------------------------------
 
-	private var _hovered:Boolean=false;
+	private var _hovered:Boolean = false;
 
 	/**
 	 * @inheritDoc
@@ -263,7 +264,7 @@ public class GraphicsLabelGridRenderer extends Label implements IGridItemRendere
 		if (value == _hovered)
 			return;
 
-		_hovered=value;
+		_hovered = value;
 	}
 
 	//---------------------------------------------
@@ -276,8 +277,8 @@ public class GraphicsLabelGridRenderer extends Label implements IGridItemRendere
 	}
 
 	public function set label(value:String):void {
-		var oldValue:String=text;
-		text=value;
+		var oldValue:String = text;
+		text = value;
 		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
 			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "label", oldValue, text));
 		}
@@ -286,7 +287,7 @@ public class GraphicsLabelGridRenderer extends Label implements IGridItemRendere
 	//----------------------------------
 	//  rowIndex
 	//----------------------------------
-	private var _rowIndex:int=-1;
+	private var _rowIndex:int = -1;
 
 	[Bindable("rowIndexChanged")]
 
@@ -314,7 +315,7 @@ public class GraphicsLabelGridRenderer extends Label implements IGridItemRendere
 		if (_rowIndex == value)
 			return;
 
-		_rowIndex=value;
+		_rowIndex = value;
 		dispatchChangeEvent("rowIndexChanged");
 	}
 
@@ -322,7 +323,7 @@ public class GraphicsLabelGridRenderer extends Label implements IGridItemRendere
 	//  selected
 	//----------------------------------
 
-	private var _selected:Boolean=false;
+	private var _selected:Boolean = false;
 
 	[Bindable("selectedChanged")]
 
@@ -350,7 +351,7 @@ public class GraphicsLabelGridRenderer extends Label implements IGridItemRendere
 		if (_selected == value)
 			return;
 
-		_selected=value;
+		_selected = value;
 		dispatchChangeEvent("selectedChanged");
 	}
 

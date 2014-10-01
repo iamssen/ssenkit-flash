@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:dropdownAnchor="ssen.components.dropdownAnchor.*"
+		xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:skins="ssen.components.dropdownAnchor.snippets.*"
+
+		alpha.disabled=".5">
+
+	<fx:Metadata>
+		[HostComponent("ssen.components.dropdownAnchor.DropDownAnchor")]
+	</fx:Metadata>
+
+	<fx:Declarations>
+		<!-- popup container skin -->
+		<fx:Component id="popupContainerSkin">
+			<skins:DropDownAnchorPopupContainerSkin />
+		</fx:Component>
+	</fx:Declarations>
+
+	<!-- states -->
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="disabled" />
+	</s:states>
+
+	<s:Button focusEnabled="false"
+			  id="openButton"
+			  label="{hostComponent.label}"
+			  bottom="0"
+			  left="0"
+			  right="0"
+			  top="0"
+			  tabEnabled="false" />
+
+	<dropdownAnchor:DropDownPopupAnchor id="popupAnchor"
+										bottom="-5"
+										left="0"
+										right="0"
+										top="-5"
+										popUpPosition="below">
+		<s:BorderContainer id="popupAnchorContainer" borderColor="0x000000" borderWeight="1">
+			<s:backgroundFill>
+				<s:SolidColor color="0xffffff" />
+			</s:backgroundFill>
+		</s:BorderContainer>
+	</dropdownAnchor:DropDownPopupAnchor>
+</s:Skin>

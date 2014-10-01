@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark">
+
+	<fx:Metadata>
+		<![CDATA[
+		[HostComponent("spark.components.Scroller")]
+		]]>
+	</fx:Metadata>
+
+	<fx:Script>
+		<![CDATA[
+		import spark.layouts.supportClasses.LayoutBase;
+
+		override public function beginHighlightBitmapCapture():Boolean {
+			var needUpdate:Boolean = super.beginHighlightBitmapCapture();
+			graphics.beginFill(0);
+			graphics.drawRect(0, 0, width, height);
+			graphics.endFill();
+
+			return needUpdate;
+		}
+
+		override public function endHighlightBitmapCapture():Boolean {
+			var needUpdate:Boolean = super.endHighlightBitmapCapture();
+			graphics.clear();
+
+			return needUpdate;
+		}
+
+		//---------------------------------------------
+		// layout
+		//---------------------------------------------
+		private var _layout:LayoutBase;
+
+		/** @inheritDoc */
+		override public function get layout():LayoutBase {
+			if (!_layout) {
+				_layout = new SimpleScrollerLayout;
+			}
+			return _layout;
+		}
+
+		override public function set layout(value:LayoutBase):void {
+			if (!_layout) {
+				_layout = new SimpleScrollerLayout;
+			}
+
+			super.layout = _layout;
+		}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<fx:Component id="verticalScrollBarFactory">
+			<s:VScrollBar visible="false" skinClass="ssen.components.scroll.snippets.SimpleVerticalScrollBarSkin" />
+		</fx:Component>
+
+		<fx:Component id="horizontalScrollBarFactory">
+			<s:HScrollBar visible="false" skinClass="ssen.components.scroll.snippets.SimpleHorizontalScrollBarSkin" />
+		</fx:Component>
+
+	</fx:Declarations>
+
+</s:SparkSkin>

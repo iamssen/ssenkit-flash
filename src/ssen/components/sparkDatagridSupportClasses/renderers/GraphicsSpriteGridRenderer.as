@@ -1,4 +1,5 @@
-package ssen.flexkit.components.grid.renderers {
+package ssen.components.sparkDatagridSupportClasses.renderers {
+
 import flash.events.Event;
 
 import mx.core.UIComponent;
@@ -10,33 +11,33 @@ import spark.components.gridClasses.IGridItemRenderer;
 
 public class GraphicsSpriteGridRenderer extends UIComponent implements IGridItemRenderer {
 	private var helper:GraphicsGridRendererHelper;
-	
+
 	public function GraphicsSpriteGridRenderer() {
-		helper=new GraphicsGridRendererHelper;
-		helper.draw=draw;
-		helper.clear=clear;
+		helper = new GraphicsGridRendererHelper;
+		helper.draw = draw;
+		helper.clear = clear;
 	}
-	
+
 	/** @inheritDoc */
 	public function discard(willBeRecycled:Boolean):void {
 		helper.discard(willBeRecycled);
 	}
-	
+
 	/** @inheritDoc */
 	public function prepare(hasBeenRecycled:Boolean):void {
 		helper.prepare(hasBeenRecycled);
 	}
-	
+
 	override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 		helper.setSize(unscaledWidth, unscaledHeight);
 	}
-	
+
 	protected function clear(willBeRecycled:Boolean):void {
-		
+
 	}
-	
+
 	protected function draw(hasBeenRecycled:Boolean, dataChanged:Boolean, columnChanged:Boolean, sizeChanged:Boolean):void {
-		
+
 	}
 
 	//==========================================================================================
@@ -54,7 +55,7 @@ public class GraphicsSpriteGridRenderer extends UIComponent implements IGridItem
 	//  data
 	//----------------------------------
 
-	private var _data:Object=null;
+	private var _data:Object = null;
 
 	[Bindable("dataChange")]  // compatible with FlexEvent.DATA_CHANGE
 
@@ -85,10 +86,10 @@ public class GraphicsSpriteGridRenderer extends UIComponent implements IGridItem
 		if (_data == value)
 			return;
 
-		_data=value;
-		helper.dataChanged=true;
+		_data = value;
+		helper.dataChanged = true;
 
-		const eventType:String="dataChange";
+		const eventType:String = "dataChange";
 		if (hasEventListener(eventType))
 			dispatchEvent(new FlexEvent(eventType));
 	}
@@ -100,7 +101,7 @@ public class GraphicsSpriteGridRenderer extends UIComponent implements IGridItem
 	//  column
 	//----------------------------------
 
-	private var _column:GridColumn=null;
+	private var _column:GridColumn = null;
 
 	[Bindable("columnChanged")]
 
@@ -128,8 +129,8 @@ public class GraphicsSpriteGridRenderer extends UIComponent implements IGridItem
 		if (_column == value)
 			return;
 
-		_column=value;
-		helper.columnChanged=true;
+		_column = value;
+		helper.columnChanged = true;
 
 		dispatchChangeEvent("columnChanged");
 	}
@@ -159,7 +160,7 @@ public class GraphicsSpriteGridRenderer extends UIComponent implements IGridItem
 	 * @private
 	 * storage for the down property
 	 */
-	private var _down:Boolean=false;
+	private var _down:Boolean = false;
 
 	/**
 	 * @inheritDoc
@@ -182,14 +183,14 @@ public class GraphicsSpriteGridRenderer extends UIComponent implements IGridItem
 		if (value == _down)
 			return;
 
-		_down=value;
+		_down = value;
 	}
 
 	//----------------------------------
 	//  dragging
 	//----------------------------------
 
-	private var _dragging:Boolean=false;
+	private var _dragging:Boolean = false;
 
 	[Bindable("draggingChanged")]
 
@@ -212,7 +213,7 @@ public class GraphicsSpriteGridRenderer extends UIComponent implements IGridItem
 		if (_dragging == value)
 			return;
 
-		_dragging=value;
+		_dragging = value;
 		dispatchChangeEvent("draggingChanged");
 	}
 
@@ -238,7 +239,7 @@ public class GraphicsSpriteGridRenderer extends UIComponent implements IGridItem
 	//  hovered
 	//----------------------------------
 
-	private var _hovered:Boolean=false;
+	private var _hovered:Boolean = false;
 
 	/**
 	 * @inheritDoc
@@ -261,7 +262,7 @@ public class GraphicsSpriteGridRenderer extends UIComponent implements IGridItem
 		if (value == _hovered)
 			return;
 
-		_hovered=value;
+		_hovered = value;
 	}
 
 	//----------------------------------
@@ -279,7 +280,7 @@ public class GraphicsSpriteGridRenderer extends UIComponent implements IGridItem
 	//----------------------------------
 	//  rowIndex
 	//----------------------------------
-	private var _rowIndex:int=-1;
+	private var _rowIndex:int = -1;
 
 	[Bindable("rowIndexChanged")]
 
@@ -307,7 +308,7 @@ public class GraphicsSpriteGridRenderer extends UIComponent implements IGridItem
 		if (_rowIndex == value)
 			return;
 
-		_rowIndex=value;
+		_rowIndex = value;
 		dispatchChangeEvent("rowIndexChanged");
 	}
 
@@ -315,7 +316,7 @@ public class GraphicsSpriteGridRenderer extends UIComponent implements IGridItem
 	//  selected
 	//----------------------------------
 
-	private var _selected:Boolean=false;
+	private var _selected:Boolean = false;
 
 	[Bindable("selectedChanged")]
 
@@ -343,7 +344,7 @@ public class GraphicsSpriteGridRenderer extends UIComponent implements IGridItem
 		if (_selected == value)
 			return;
 
-		_selected=value;
+		_selected = value;
 		dispatchChangeEvent("selectedChanged");
 	}
 
