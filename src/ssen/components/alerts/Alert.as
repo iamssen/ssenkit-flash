@@ -4,6 +4,8 @@ import flash.events.MouseEvent;
 
 import spark.components.Button;
 
+import ssen.components.alerts.snippets.AlertSkin;
+
 public class Alert extends RichTextAlertBase {
 	//==========================================================================================
 	// skin parts
@@ -22,7 +24,7 @@ public class Alert extends RichTextAlertBase {
 	//---------------------------------------------
 	// okText
 	//---------------------------------------------
-	private var _okText:String;
+	private var _okText:String = "OK";
 
 	/** okText */
 	public function get okText():String {
@@ -37,7 +39,7 @@ public class Alert extends RichTextAlertBase {
 	//==========================================================================================
 	// invalidate
 	//==========================================================================================
-	private var okTextChanged:Boolean;
+	private var okTextChanged:Boolean = true;
 
 	protected function invalidateOkText():void {
 		if (_okText) {
@@ -92,6 +94,10 @@ public class Alert extends RichTextAlertBase {
 	//==========================================================================================
 	private function okHandler(event:MouseEvent):void {
 		close();
+	}
+
+	public function Alert() {
+		setStyle("skinClass", AlertSkin);
 	}
 
 	//==========================================================================================

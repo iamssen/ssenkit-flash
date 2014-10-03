@@ -1,7 +1,6 @@
 package ssen.text {
 
 import flash.display.DisplayObjectContainer;
-import flash.display.Sprite;
 import flash.text.engine.FontLookup;
 import flash.text.engine.TextLine;
 
@@ -9,19 +8,24 @@ import flashx.textLayout.compose.ISWFContext;
 import flashx.textLayout.factory.TruncationOptions;
 import flashx.textLayout.formats.ITextLayoutFormat;
 import flashx.textLayout.formats.TextAlign;
+import flashx.textLayout.formats.TextLayoutFormat;
 
 import mx.core.FlexGlobals;
 import mx.core.UIComponent;
+
+import spark.core.SpriteVisualElement;
 
 import ssen.common.StringUtils;
 import ssen.ssen_internal;
 
 use namespace ssen_internal;
 
-public class HtmlLabel extends Sprite {
+public class HtmlLabel extends SpriteVisualElement {
 	//==========================================================================================
 	// properties
 	//==========================================================================================
+	ssen_internal static var defaultFormat:ITextLayoutFormat;
+
 	//----------------------------------------------------------------
 	// text source properties
 	//----------------------------------------------------------------
@@ -88,13 +92,6 @@ public class HtmlLabel extends Sprite {
 		invalidate_position();
 	}
 
-	private var textLineCache:TextLineCache;
-	ssen_internal var textLines:Vector.<TextLine>;
-
-	public function HtmlLabel() {
-		textLineCache = new TextLineCache;
-	}
-
 	//---------------------------------------------
 	// width
 	//---------------------------------------------
@@ -119,6 +116,27 @@ public class HtmlLabel extends Sprite {
 	}
 
 	override public function set height(value:Number):void {
+	}
+
+	//==========================================================================================
+	// constructor
+	//==========================================================================================
+	private var textLineCache:TextLineCache;
+
+	/** @private */
+	ssen_internal var textLines:Vector.<TextLine>;
+
+	public function HtmlLabel() {
+		textLineCache = new TextLineCache;
+
+		if (!defaultFormat) {
+			var format:TextLayoutFormat = new TextLayoutFormat;
+			format.fontFamily = "_sans";
+			format.fontSize = 12;
+			defaultFormat = format;
+		}
+
+		_format = defaultFormat;
 	}
 
 	//==========================================================================================
@@ -156,6 +174,9 @@ public class HtmlLabel extends Sprite {
 			var swfContext:ISWFContext;
 
 			if (_format && _format.fontLookup === FontLookup.EMBEDDED_CFF) {
+				//---------------------------------------------
+				// get ui component context
+				//---------------------------------------------
 				var component:UIComponent;
 
 				if (parent) {
@@ -168,15 +189,19 @@ public class HtmlLabel extends Sprite {
 						}
 						display = display.parent;
 					}
-				} else {
+				}
+
+				if (!component) {
 					component = FlexGlobals.topLevelApplication as UIComponent;
 				}
 
+				//---------------------------------------------
+				// get swf context
+				//---------------------------------------------
 				if (component) {
 					swfContext = EmbededFontUtils.getSwfContext(component, _format.fontFamily);
 				}
 			}
-
 
 			textLines = TextLineFactory.createTextLines(_text, _format, _truncationOptions, swfContext);
 			textLineCache.add(textLines);
@@ -185,12 +210,9 @@ public class HtmlLabel extends Sprite {
 			var textLine:TextLine;
 			while (--f >= 0) {
 				textLine = textLines[f];
-				textLine.y += textLine.ascent;
 				addChild(textLine);
 			}
 		}
-
-		invalidate_position();
 	}
 
 	//---------------------------------------------
@@ -222,11 +244,17 @@ public class HtmlLabel extends Sprite {
 				xmax = x;
 			}
 
-			y = textLine.y + textLine.height;
+			y = textLine.y + textLine.height - textLine.ascent;
 			if (y > ymax) {
 				ymax = y;
 			}
 		}
+
+		_width = xmax;
+		_height = ymax;
+
+		//		graphics.clear();
+		//		graphics.beginFill(0x000000, 0.3);
 
 		f = -1;
 		fmax = textLines.length;
@@ -243,10 +271,13 @@ public class HtmlLabel extends Sprite {
 				default:
 					textLine.x = 0;
 			}
+
+			//			graphics.drawRect(textLine.x, textLine.y - textLine.ascent, textLine.width, textLine.height);
 		}
 
-		_width = xmax;
-		_height = ymax;
+		//		graphics.endFill();
+
+
 	}
 
 	//==========================================================================================
@@ -256,12 +287,19 @@ public class HtmlLabel extends Sprite {
 		if (textChanged) {
 			commit_text();
 			textChanged = false;
+			positionChanged = true;
 		}
 
 		if (positionChanged) {
 			commit_position();
 			positionChanged = false;
 		}
+
+		invalidateSize();
+
+		//		graphics.beginFill(0x000000, 0.1);
+		//		graphics.drawRect(0, 0, _width, _height);
+		//		graphics.endFill();
 	}
 }
 }

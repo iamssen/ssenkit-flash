@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		xmlns:core="ssen.components.core.*"
+		xmlns:graphics="ssen.components.graphics.*"
+
+		minWidth="76"
+		minHeight="76">
+
+	<fx:Metadata>
+        <![CDATA[
+		[HostComponent("ssen.components.alerts.Alert")]
+		]]>
+    </fx:Metadata>
+
+	<s:layout>
+		<s:VerticalLayout gap="0" />
+	</s:layout>
+
+	<s:Group width="100%" height="100%">
+		<s:Rect left="0" right="0" top="0" bottom="0">
+			<s:fill>
+				<s:SolidColor color="#FFAC1A" />
+			</s:fill>
+		</s:Rect>
+
+		<s:VGroup paddingLeft="80" paddingRight="80" paddingTop="30" paddingBottom="30" gap="20"
+				  horizontalAlign="center" verticalAlign="middle">
+			<graphics:SVGImage id="symbolImage" />
+			<s:RichText id="messageText" color="#ffffff" lineHeight="130%" />
+		</s:VGroup>
+
+		<core:TransparentElement id="moveArea" left="0" right="0" top="0" bottom="0" />
+	</s:Group>
+
+	<s:Group width="100%" height="30">
+		<s:Rect left="0" right="0" top="0" bottom="0">
+			<s:fill>
+				<s:SolidColor color="#EF991B" />
+			</s:fill>
+		</s:Rect>
+
+		<s:Button id="okButton" verticalCenter="0" horizontalCenter="0" />
+	</s:Group>
+</s:Skin>

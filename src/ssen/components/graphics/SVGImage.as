@@ -1,9 +1,13 @@
 package ssen.components.graphics {
+
 import flash.display.DisplayObject;
 import flash.display.Graphics;
 import flash.display.Shape;
+import flash.geom.Point;
+import flash.geom.Rectangle;
 
 import mx.core.UIComponent;
+import mx.graphics.IFill;
 
 public class SVGImage extends UIComponent {
 
@@ -21,7 +25,7 @@ public class SVGImage extends UIComponent {
 	}
 
 	public function set paddingLeft(value:int):void {
-		_paddingLeft=value;
+		_paddingLeft = value;
 		invalidateSize();
 	}
 
@@ -36,7 +40,7 @@ public class SVGImage extends UIComponent {
 	}
 
 	public function set paddingRight(value:int):void {
-		_paddingRight=value;
+		_paddingRight = value;
 		invalidateSize();
 	}
 
@@ -51,7 +55,7 @@ public class SVGImage extends UIComponent {
 	}
 
 	public function set paddingTop(value:int):void {
-		_paddingTop=value;
+		_paddingTop = value;
 		invalidateSize();
 	}
 
@@ -66,22 +70,22 @@ public class SVGImage extends UIComponent {
 	}
 
 	public function set paddingBottom(value:int):void {
-		_paddingBottom=value;
+		_paddingBottom = value;
 		invalidateSize();
 	}
 
 	//---------------------------------------------
-	// colorOverlay
+	// fill
 	//---------------------------------------------
-	private var _colorOverlay:int=-1;
+	private var _fill:IFill;
 
-	/** colorOverlay */
-	public function get colorOverlay():int {
-		return _colorOverlay;
+	/** fill */
+	public function get fill():IFill {
+		return _fill;
 	}
 
-	public function set colorOverlay(value:int):void {
-		_colorOverlay=value;
+	public function set fill(value:IFill):void {
+		_fill = value;
 		invalidateProperties();
 	}
 
@@ -96,15 +100,15 @@ public class SVGImage extends UIComponent {
 	}
 
 	public function set source(value:*):void {
-		_source=value;
+		_source = value;
 
 		if (primitive) {
 			removeChild(primitive);
-			primitive=null;
+			primitive = null;
 		}
 
 		if (_source is Class) {
-			primitive=new _source();
+			primitive = new _source();
 			addChild(primitive);
 		}
 
@@ -114,7 +118,7 @@ public class SVGImage extends UIComponent {
 	//---------------------------------------------
 	// primitiveScale
 	//---------------------------------------------
-	private var _primitiveScale:Number=1;
+	private var _primitiveScale:Number = 1;
 
 	/** primitiveScale */
 	public function get primitiveScale():Number {
@@ -122,7 +126,7 @@ public class SVGImage extends UIComponent {
 	}
 
 	public function set primitiveScale(value:Number):void {
-		_primitiveScale=value;
+		_primitiveScale = value;
 		invalidateSize();
 	}
 
@@ -132,16 +136,16 @@ public class SVGImage extends UIComponent {
 	override protected function commitProperties():void {
 		super.commitProperties();
 
-		if (color && _colorOverlay < 0) {
+		if (color && !_fill) {
 			if (color.mask === primitive) {
-				color.mask=null;
+				color.mask = null;
 			}
 			removeChild(color);
-			color=null;
-		} else if (!color && _colorOverlay >= 0) {
-			color=new Shape;
+			color = null;
+		} else if (!color && _fill) {
+			color = new Shape;
 			addChild(color);
-			color.mask=primitive;
+			color.mask = primitive;
 		}
 
 		invalidateDisplayList();
@@ -149,12 +153,12 @@ public class SVGImage extends UIComponent {
 
 	override protected function measure():void {
 		if (primitive) {
-			primitive.scaleX=1;
-			primitive.scaleY=1;
-			measuredWidth=(primitive.width * _primitiveScale) + _paddingLeft + _paddingRight;
-			measuredHeight=(primitive.height * _primitiveScale) + _paddingTop + _paddingBottom;
-			primitive.scaleX=_primitiveScale;
-			primitive.scaleY=_primitiveScale;
+			primitive.scaleX = 1;
+			primitive.scaleY = 1;
+			measuredWidth = (primitive.width * _primitiveScale) + _paddingLeft + _paddingRight;
+			measuredHeight = (primitive.height * _primitiveScale) + _paddingTop + _paddingBottom;
+			primitive.scaleX = _primitiveScale;
+			primitive.scaleY = _primitiveScale;
 			invalidateDisplayList();
 		}
 	}
@@ -171,15 +175,18 @@ public class SVGImage extends UIComponent {
 			return;
 		}
 
-		primitive.x=_paddingLeft;
-		primitive.y=_paddingTop;
+		primitive.x = _paddingLeft;
+		primitive.y = _paddingTop;
 
-		if (color) {
-			var g:Graphics=color.graphics;
+		if (color && _fill) {
+			var bounds:Rectangle = new Rectangle(_paddingLeft, _paddingTop, unscaledWidth - _paddingLeft - _paddingRight, unscaledHeight - _paddingTop - _paddingBottom);
+			var point:Point = new Point(_paddingLeft, _paddingRight);
+
+			var g:Graphics = color.graphics;
 			g.clear();
-			g.beginFill(_colorOverlay);
+			_fill.begin(g, bounds, point);
 			g.drawRect(0, 0, unscaledWidth, unscaledHeight);
-			g.endFill();
+			_fill.end(g);
 		}
 	}
 }

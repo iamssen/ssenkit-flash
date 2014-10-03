@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:graphics="ssen.components.graphics.*" xmlns:fills="ssen.components.fills.*"
+		 xmlns:filters="spark.filters.*">
+	<fx:Script>
+		<![CDATA[
+		[Embed(source="assets/sample.svg")]
+		private static const SampleImage:Class;
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<fills:Dotted id="fill1" backgroundColor="0xF7D281" dotColor="0xFFF1BB"
+					  dotSize="4" dotGap="13" />
+		<fills:Dotted id="fill2" backgroundColor="0xf2fcff" dotColor="0x84e0d3" subDotColor="0x91bee0"
+					  dotSize="8" subDotSize="6" dotGap="12" />
+		<fills:Dotted id="fill3" backgroundColor="0x30b1ff" dotColor="#3DD6FF"
+					  dotSize="14" dotGap="20" />
+		<fills:Dotted id="fill4" backgroundColor="#FFFF69" dotColor="0xffe0b7" subDotColor="0xffb9de"
+					  dotSize="5" subDotSize="3" dotGap="20" />
+		<fills:Stripe id="fill5" angle="135">
+			<fills:StripeEntry color="#000000" alpha="0.3" size="5" />
+			<fills:StripeEntry color="#000000" alpha="0.1" size="7" />
+		</fills:Stripe>
+	</fx:Declarations>
+
+	<s:HGroup verticalAlign="middle" left="10" top="10">
+		<graphics:SVGImage source="{SampleImage}" primitiveScale="1.8" fill="{fill1}" />
+		<graphics:SVGImage source="{SampleImage}" primitiveScale="1.6" fill="{fill2}" />
+		<graphics:SVGImage source="{SampleImage}" primitiveScale="1.4" fill="{fill3}" />
+		<graphics:SVGImage source="{SampleImage}" primitiveScale="1.2" fill="{fill4}" />
+		<graphics:SVGImage source="{SampleImage}" fill="{fill5}" />
+		<graphics:SVGImage source="{SampleImage}" primitiveScale="0.8">
+			<graphics:filters>
+				<filters:DropShadowFilter />
+			</graphics:filters>
+		</graphics:SVGImage>
+		<graphics:SVGImage source="{SampleImage}" primitiveScale="0.6" />
+		<graphics:SVGImage source="{SampleImage}" primitiveScale="0.4" />
+		<graphics:SVGImage source="{SampleImage}" primitiveScale="0.2" />
+	</s:HGroup>
+</s:Group>

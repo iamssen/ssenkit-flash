@@ -14,11 +14,10 @@ import ssen.common.StringUtils;
 
 public class TextLineFactory {
 
-	public static function createTextLine(str:String, format:ITextLayoutFormat, truncationOptions:TruncationOptions = null, swfContext:ISWFContext = null):TextLine {
+	public static function createTextLine(str:String, format:ITextLayoutFormat, swfContext:ISWFContext = null):TextLine {
 		var textLine:TextLine = null;
 		var factory:TextFlowTextLineFactory = getTextLineFactory();
-		factory.truncationOptions = truncationOptions;
-		factory.swfContext = swfContext;
+		if (swfContext) factory.swfContext = swfContext;
 
 		var textFlow:TextFlow = getTextFlow(str);
 		textFlow.hostFormat = format;
@@ -37,8 +36,8 @@ public class TextLineFactory {
 	public static function createTextLines(str:String, format:ITextLayoutFormat, truncationOptions:TruncationOptions = null, swfContext:ISWFContext = null):Vector.<TextLine> {
 		var textLines:Vector.<TextLine> = new Vector.<TextLine>;
 		var factory:TextFlowTextLineFactory = getTextLineFactory();
-		factory.truncationOptions = truncationOptions;
-		factory.swfContext = swfContext;
+		if (truncationOptions) factory.truncationOptions = truncationOptions;
+		if (swfContext) factory.swfContext = swfContext;
 
 		var textFlow:TextFlow = getTextFlow(str);
 		textFlow.hostFormat = format;
@@ -51,11 +50,8 @@ public class TextLineFactory {
 	}
 
 	public static function getTextFlow(str:String):TextFlow {
-		if (StringUtils.isRichText(str)) {
-			return TextConverter.importToFlow(str, TextConverter.TEXT_FIELD_HTML_FORMAT);
-		}
-
-		return TextConverter.importToFlow(str, TextConverter.PLAIN_TEXT_FORMAT);
+		var format:String = (StringUtils.isRichText(str)) ? TextConverter.TEXT_FIELD_HTML_FORMAT : TextConverter.PLAIN_TEXT_FORMAT;
+		return TextConverter.importToFlow(str, format);
 	}
 
 	//==========================================================================================
