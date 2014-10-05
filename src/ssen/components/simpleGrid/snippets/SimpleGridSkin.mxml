@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+
+		minWidth="200" minHeight="50">
+
+	<fx:Metadata>
+		[HostComponent("ssen.components.simpleGrid.OldSimpleGrid")]
+	</fx:Metadata>
+
+	<s:states>
+		<s:State name="blank"/>
+		<s:State name="normal"/>
+	</s:states>
+
+	<fx:Declarations>
+		<fx:Component id="headerCellRenderer">
+			<s:Label width="100%" height="100%" paddingTop="1" fontSize="13" fontWeight="bold" color="0xffffff"
+					 textAlign="center" verticalAlign="middle"
+					 backgroundColor="0x779fc1" maxDisplayedLines="1">
+			</s:Label>
+		</fx:Component>
+
+		<fx:Component id="categoryCellRenderer">
+			<s:Label width="100%" height="100%" paddingTop="1" paddingLeft="4" paddingRight="4" verticalAlign="middle"
+					 backgroundColor="0xdbebfa" fontSize="13"
+					 color="0x000000" color.highlighted="0x032552" fontWeight="normal" fontWeight.highlighted="bold"
+					 maxDisplayedLines="1">
+				<s:states>
+					<s:State name="normal"/>
+					<s:State name="highlighted"/>
+				</s:states>
+			</s:Label>
+		</fx:Component>
+
+		<fx:Component id="cellRenderer">
+			<s:Label width="100%" height="100%" paddingTop="1" paddingLeft="4" paddingRight="4" verticalAlign="middle"
+					 fontSize="13" backgroundColor="0xffffff"
+					 backgroundColor.highlighted="0xedf4fb" color="0x000000" color.highlighted="0x032552"
+					 fontWeight="normal" fontWeight.highlighted="bold" maxDisplayedLines="1">
+				<s:states>
+					<s:State name="normal"/>
+					<s:State name="highlighted"/>
+				</s:states>
+			</s:Label>
+		</fx:Component>
+	</fx:Declarations>
+
+	<!-- graphics -->
+	<s:Rect id="headerBackground" includeIn="normal">
+		<s:fill>
+			<s:SolidColor color="0x5e7e92"/>
+		</s:fill>
+	</s:Rect>
+
+	<s:Rect id="bodyBackground" includeIn="normal">
+		<s:fill>
+			<s:SolidColor color="0x5e7e92"/>
+		</s:fill>
+	</s:Rect>
+
+	<s:Label text="None Settings" width="100%" height="100%" textAlign="center" verticalAlign="middle"
+			 includeIn="blank"/>
+
+	<s:Group id="cellGroup" includeIn="normal"/>
+</s:Skin>

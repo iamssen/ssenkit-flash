@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
-			   xmlns:devkit="ssen.devkit.*" frameRate="60">
+			   xmlns:devkit="ssen.devkit.*" xmlns:assets="ssen.assets.*" frameRate="60">
+	<fx:Declarations>
+		<assets:NotoSans/>
+	</fx:Declarations>
 
 	<devkit:ShowcaseContainer>
 		<devkit:Showcase type="ssen.components.fills.Showcase__Stripe" description="Fill : Stripe" />
@@ -10,6 +13,7 @@
 		<devkit:Showcase type="ssen.components.scroll.Showcase__SimpleScrollBars" description="Container : SimpleScrollBar" />
 		<devkit:Showcase type="ssen.text.Showcase__HtmlLabel" description="Text : HtmlLabel" />
 		<devkit:Showcase type="ssen.components.graphics.Showcase__SVGImage" description="Graphic : SVGImage" />
-		<devkit:Showcase type="ssen.components.alerts.Showcase__Alert" description="Component : Alert" />
+		<devkit:Showcase type="ssen.components.dialogs.Showcase__Alert" description="Component : Alert" />
+		<devkit:Showcase type="ssen.components.simpleGrid.Showcase__SimpleGrid" description="Component : SimpleTextGrid" />
 	</devkit:ShowcaseContainer>
 </s:Application>

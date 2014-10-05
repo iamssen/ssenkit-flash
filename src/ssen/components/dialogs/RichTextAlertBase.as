@@ -1,11 +1,11 @@
-package ssen.components.alerts {
+package ssen.components.dialogs {
 
 import spark.components.RichText;
 
 import ssen.components.graphics.SVGImage;
 import ssen.text.TextLineFactory;
 
-public class RichTextAlertBase extends AlertBase {
+public class RichTextAlertBase extends DialogBase {
 	//==========================================================================================
 	// skin parts
 	//==========================================================================================

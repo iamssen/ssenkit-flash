@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark">
+	<fx:Script>
+		<![CDATA[
+		private function showAlert(event:MouseEvent):void {
+			var alert:Alert = new Alert;
+			alert.message = "<font size='+5'><b>ALERT</b> 입니다.</font><br/>상단에 <b>Symbol을 셋팅</b>할 수 있습니다.<br/>HTML서식으로 메세지를 설정할 수 있습니다.";
+			alert.closeCallback = function ():void {
+				trace("*.closeCallback()");
+			};
+			alert.open();
+		}
+		]]>
+	</fx:Script>
+	<s:Button label="show alert" click="showAlert(event)" left="20" top="20"/>
+</s:Group>

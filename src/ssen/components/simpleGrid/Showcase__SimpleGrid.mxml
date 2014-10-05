@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:simpleTextGrid="ssen.components.simpleGrid.*"
+
+		 initialize="init(event)">
+	<fx:Script>
+		<![CDATA[
+		import mx.collections.ArrayList;
+		import mx.collections.IList;
+		import mx.events.FlexEvent;
+
+		[Bindable]
+		public var data:IList;
+
+		private function init(event:FlexEvent):void {
+			var arr:Array = [];
+			arr.push({retailer: "BBY", volume: "36K", revenue: "$38K", ratio: "28%"});
+			arr.push({retailer: "AT&T", volume: "9K", revenue: "$12K", ratio: "28%"});
+			arr.push({retailer: "VZW", volume: "4K", revenue: "$5K", ratio: "28%"});
+
+			data = new ArrayList(arr);
+		}
+
+		private static function highlightFunction(column:SimpleGridColumn, dataRow:Object):Boolean {
+			return dataRow["retailer"] === "AT&T";
+		}
+		]]>
+	</fx:Script>
+
+	<s:Group x="0" y="0" width="500" height="100%">
+		<simpleTextGrid:OldSimpleGrid dataProvider="{data}"
+								   left="17" right="17" top="47" bottom="17"
+								   highlightFunction="highlightFunction">
+			<simpleTextGrid:columns>
+				<simpleTextGrid:SimpleGridColumn category="true"
+												 dataField="retailer"
+												 headerText="Retailer"
+												 widthRatio="40"
+												 textAlign="center"/>
+				<simpleTextGrid:SimpleGridColumn category="false"
+												 dataField="volume"
+												 headerText="Volume"
+												 widthRatio="30"
+												 textAlign="center"/>
+				<simpleTextGrid:SimpleGridColumn category="false"
+												 dataField="ratio"
+												 headerText="%"
+												 widthRatio="30"
+												 textAlign="center"/>
+			</simpleTextGrid:columns>
+		</simpleTextGrid:OldSimpleGrid>
+	</s:Group>
+</s:Group>

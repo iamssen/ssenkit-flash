@@ -20,7 +20,7 @@
 
 			label = new HtmlLabel;
 			label.text = "<font size='20'><b><font color='#0000ff'>HELLO</font> WORLD</b></font><br/>test <font color='#ff0000'>label</font>";
-			label.validateNow();
+			label.createTextLines();
 			label.x = 10;
 			label.y = 30;
 
@@ -34,7 +34,7 @@
 			label.text = "<font size='20'><b><font color='#0000ff'>HELLO</font> WORLD</b></font><br/>test <font color='#ff0000'>label</font>";
 			label.format = getFormat1();
 			label.textAlign = TextAlign.CENTER;
-			label.validateNow();
+			label.createTextLines();
 			label.x = 210;
 			label.y = 30;
 
@@ -49,7 +49,7 @@
 			label.format = getFormat1();
 			label.truncationOptions = new TruncationOptions("...", 3);
 			label.textAlign = TextAlign.LEFT;
-			label.validateNow();
+			label.createTextLines();
 			label.x = 410;
 			label.y = 30;
 
@@ -58,8 +58,8 @@
 
 		private static function getFormat1():TextLayoutFormat {
 			var format:TextLayoutFormat = new TextLayoutFormat;
-//			format.fontFamily = "hyundaiLight";
-//			format.fontLookup = FontLookup.EMBEDDED_CFF;
+			//			format.fontFamily = "hyundaiLight";
+			//			format.fontLookup = FontLookup.EMBEDDED_CFF;
 			format.fontSize = 15;
 			return format;
 		}

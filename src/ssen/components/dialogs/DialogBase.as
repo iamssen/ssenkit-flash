@@ -1,4 +1,4 @@
-package ssen.components.alerts {
+package ssen.components.dialogs {
 
 import com.greensock.TweenLite;
 import com.greensock.easing.Quad;
@@ -12,7 +12,7 @@ import mx.managers.PopUpManager;
 
 import spark.components.supportClasses.SkinnableComponent;
 
-public class AlertBase extends SkinnableComponent {
+public class DialogBase extends SkinnableComponent {
 	//==========================================================================================
 	// skin parts
 	//==========================================================================================

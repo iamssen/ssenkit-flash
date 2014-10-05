@@ -283,7 +283,7 @@ public class HtmlLabel extends SpriteVisualElement {
 	//==========================================================================================
 	// commit
 	//==========================================================================================
-	public function validateNow():void {
+	public function createTextLines():void {
 		if (textChanged) {
 			commit_text();
 			textChanged = false;

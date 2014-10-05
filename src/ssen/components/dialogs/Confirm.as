@@ -1,4 +1,4 @@
-package ssen.components.alerts {
+package ssen.components.dialogs {
 
 import flash.events.MouseEvent;
 

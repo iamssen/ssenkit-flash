@@ -1,10 +1,10 @@
-package ssen.components.alerts {
+package ssen.components.dialogs {
 
 import flash.events.MouseEvent;
 
 import spark.components.Button;
 
-import ssen.components.alerts.snippets.AlertSkin;
+import ssen.components.dialogs.snippets.AlertSkin;
 
 public class Alert extends RichTextAlertBase {
 	//==========================================================================================
