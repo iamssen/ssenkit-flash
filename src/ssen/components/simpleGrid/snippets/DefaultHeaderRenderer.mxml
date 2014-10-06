@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<text:DisplayHtml xmlns:fx="http://ns.adobe.com/mxml/2009"
+				  xmlns:text="ssen.components.text.*"
+
+				  implements="ssen.components.simpleGrid.ISimpleGridRenderer">
+	<fx:Script>
+		<![CDATA[
+		import mx.events.PropertyChangeEvent;
+
+		import ssen.components.simpleGrid.SimpleGridColumn;
+
+		//---------------------------------------------
+		// data
+		//---------------------------------------------
+		private var _data:Object;
+
+		/** data */
+		[Bindable]
+		public function get data():Object {
+			return _data;
+		}
+
+		public function set data(value:Object):void {
+			var oldValue:Object = _data;
+			_data = value;
+
+			if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
+				dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "data", oldValue, _data));
+			}
+		}
+
+		//---------------------------------------------
+		// column
+		//---------------------------------------------
+		private var _column:SimpleGridColumn;
+
+		/** column */
+		[Bindable]
+		public function get column():SimpleGridColumn {
+			return _column;
+		}
+
+		public function set column(value:SimpleGridColumn):void {
+			var oldValue:SimpleGridColumn = _column;
+			_column = value;
+
+			if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
+				dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "column", oldValue, _column));
+			}
+		}
+
+		//---------------------------------------------
+		// inavalidate label
+		//---------------------------------------------
+		private var labelChanged:Boolean;
+
+		final protected function invalidate_label():void {
+			labelChanged = true;
+			invalidateProperties();
+		}
+
+		override protected function commitProperties():void {
+			super.commitProperties();
+
+			if (labelChanged) {
+				commit_label();
+				labelChanged = false;
+			}
+		}
+
+		//---------------------------------------------
+		// commit label
+		//---------------------------------------------
+		protected function commit_label():void {
+			text = String(data[column.dataField]);
+		}
+
+		public function dispose():void {
+			_data = null;
+			_column = null;
+		}
+		]]>
+	</fx:Script>
+</text:DisplayHtml>

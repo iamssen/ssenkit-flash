@@ -5,6 +5,8 @@
 
 	<fx:Script>
 		<![CDATA[
+		import flash.text.engine.FontLookup;
+
 		import flashx.textLayout.factory.TruncationOptions;
 		import flashx.textLayout.formats.TextAlign;
 		import flashx.textLayout.formats.TextLayoutFormat;
@@ -58,13 +60,13 @@
 
 		private static function getFormat1():TextLayoutFormat {
 			var format:TextLayoutFormat = new TextLayoutFormat;
-			//			format.fontFamily = "hyundaiLight";
-			//			format.fontLookup = FontLookup.EMBEDDED_CFF;
+			format.fontFamily = "notoSans";
+			format.fontLookup = FontLookup.EMBEDDED_CFF;
 			format.fontSize = 15;
 			return format;
 		}
 		]]>
 	</fx:Script>
 
-	<s:SpriteVisualElement id="container" />
+	<s:SpriteVisualElement id="container"/>
 </s:Group>

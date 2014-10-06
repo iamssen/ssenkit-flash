@@ -9,6 +9,7 @@ import mx.styles.IStyleClient;
 import spark.components.supportClasses.SkinnableComponent;
 
 import ssen.common.NullUtils;
+import ssen.components.simpleGrid.snippets.SimpleGridSkin;
 import ssen.ssen_internal;
 
 use namespace mx_internal;
@@ -240,6 +241,10 @@ public class SimpleGrid extends SkinnableComponent {
 	그렇지 않으면 상대적인 사이즈가 지정되기 시작한다. (문제는 validate 가 되어야 한다는 것 이겠지...)
 	 */
 
+	public function SimpleGrid() {
+		setStyle("skinClass", SimpleGridSkin);
+	}
+
 	//---------------------------------------------
 	// commit data
 	//---------------------------------------------
@@ -303,7 +308,9 @@ public class SimpleGrid extends SkinnableComponent {
 	}
 
 	private function clearCells():void {
-		cellContainer.removeAllElements();
+		if (cellContainer) {
+			cellContainer.removeAllElements();
+		}
 
 		if (cells) {
 			var f:int = cells.length;
@@ -314,6 +321,7 @@ public class SimpleGrid extends SkinnableComponent {
 			}
 			cells = null;
 		}
+
 		if (cellGrid) {
 			cellGrid = null;
 		}

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
 		 xmlns:s="library://ns.adobe.com/flex/spark"
-		 xmlns:simpleTextGrid="ssen.components.simpleGrid.*"
+		 xmlns:simpleGrid="ssen.components.simpleGrid.*"
 
 		 initialize="init(event)">
 	<fx:Script>
@@ -28,27 +28,17 @@
 		]]>
 	</fx:Script>
 
-	<s:Group x="0" y="0" width="500" height="100%">
-		<simpleTextGrid:OldSimpleGrid dataProvider="{data}"
-								   left="17" right="17" top="47" bottom="17"
-								   highlightFunction="highlightFunction">
-			<simpleTextGrid:columns>
-				<simpleTextGrid:SimpleGridColumn category="true"
-												 dataField="retailer"
-												 headerText="Retailer"
-												 widthRatio="40"
-												 textAlign="center"/>
-				<simpleTextGrid:SimpleGridColumn category="false"
-												 dataField="volume"
-												 headerText="Volume"
-												 widthRatio="30"
-												 textAlign="center"/>
-				<simpleTextGrid:SimpleGridColumn category="false"
-												 dataField="ratio"
-												 headerText="%"
-												 widthRatio="30"
-												 textAlign="center"/>
-			</simpleTextGrid:columns>
-		</simpleTextGrid:OldSimpleGrid>
+	<s:Group left="10" right="10">
+		<simpleGrid:SimpleGrid dataProvider="{data}">
+			<simpleGrid:columns>
+				<simpleGrid:SimpleGridColumn dataField="retailer"
+											 headerText="Retailer"
+											 explicitWidth="300"/>
+				<simpleGrid:SimpleGridColumn dataField="volume"
+											 headerText="Volume"/>
+				<simpleGrid:SimpleGridColumn dataField="ratio"
+											 headerText="%"/>
+			</simpleGrid:columns>
+		</simpleGrid:SimpleGrid>
 	</s:Group>
 </s:Group>
