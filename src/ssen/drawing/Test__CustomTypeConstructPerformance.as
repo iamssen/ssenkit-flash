@@ -3,6 +3,8 @@ package ssen.drawing {
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
+import ssen.devkit.Assert;
+
 [Exclude]
 
 /*
@@ -23,6 +25,11 @@ Rectangle < Rect 이지만, Custom Type을 감수할 정도로 큰 차이는 나
 
 public class Test__CustomTypeConstructPerformance {
 	private static const COUNT:int = 100000;
+
+	[Test]
+	public function bug():void {
+		Assert.equals(true, false);
+	}
 
 	[Test]
 	public function createXY():void {

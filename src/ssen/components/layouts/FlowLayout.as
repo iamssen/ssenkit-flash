@@ -1,4 +1,4 @@
-package ssen.layouts {
+package ssen.components.layouts {
 import flash.geom.Rectangle;
 
 import mx.core.ILayoutElement;
