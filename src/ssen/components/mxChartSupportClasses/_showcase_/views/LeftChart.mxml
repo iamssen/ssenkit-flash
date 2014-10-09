@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:charts="ssen.showcase.views.charts.*" xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:s="library://ns.adobe.com/flex/spark">
+	<fx:Script>
+		<![CDATA[
+			import mx.charts.HitData;
+			import mx.charts.chartClasses.IAxis;
+
+			import ssen.common.StringUtils;
+			import ssen.showcase.events.DimensionSelectEvent;
+			import ssen.showcase.utils.UnitConverter;
+			import ssen.showcase.viewmodels.ChartVO;
+			import ssen.showcase.viewmodels.ChartViewModel;
+			import ssen.showcase.views.charts.AdvancedBubbleChartEvent;
+
+			[Inject]
+			[Bindable]
+			private var viewModel:ChartViewModel=new ChartViewModel;
+
+			//==========================================================================================
+			// event handlers
+			//==========================================================================================
+			private function selectedDataChanged(event:AdvancedBubbleChartEvent):void {
+				viewModel.setSelectedLeftDatas(event.selectedDatas);
+			}
+
+			private function clearItems(event:Event):void {
+				viewModel.setSelectedLeftDatas(null);
+				zscontrol.resetZoom();
+			}
+
+			private function selectDimension(event:DimensionSelectEvent):void {
+				viewModel.setSelectedLeftDatas(series.selectDimension(event.topLeft, event.topRight, event.bottomLeft, event.bottomRight));
+				zscontrol.resetZoom();
+			}
+
+			//==========================================================================================
+			// text formatting functions
+			//==========================================================================================
+			// tooltip function
+			private function bubbleChartTip(hitData:HitData):String {
+				var item:ChartVO=hitData.item as ChartVO;
+				var str:Array=[];
+				str.push("<b>Company :</b> {0}");
+				str.push("<b>Product :</b> {1}");
+				str.push("<b>Price :</b> {2}");
+				str.push("<b>Sales :</b> {3}");
+				str.push("<b>Stock :</b> {4}%");
+
+				return StringUtils.formatToString(str.join("<br/>"), item.company, item.product, UnitConverter.num(item.price), UnitConverter.num(item.sales),
+														   UnitConverter.percentage(item.stock));
+			}
+
+			// axis labels
+			private function vaxisLabelFunction(labelValue:Object, previousValue:Object, axis:IAxis):String {
+				var linear:LinearAxis=axis as LinearAxis;
+				return UnitConverter.fluidNum(Number(labelValue), linear.minimum, linear.maximum, linear.interval);
+			}
+
+			// selection labels
+			private function vselectionLabelFunction(value:Number):String {
+				return UnitConverter.num(int(value));
+			}
+		]]>
+	</fx:Script>
+	<!--<charts:CartesianChartAxisWrapper bottom="30"
+									  left="0"
+									  right="33"
+									  top="0"
+									  horizontalAxisLabel="경과일수(일)"
+									  verticalAxisLabel="수주예상액(억원)">-->
+	<charts:AdvancedBubbleChart dataProvider="{viewModel.leftChartDatas}"
+								height="100%"
+								width="100%"
+								dataTipFunction="bubbleChartTip"
+								dataTipRenderer="ssen.showcase.views.tooltips.CustomChartToolTip"
+								selectedDataChanged="selectedDataChanged(event)"
+								showDataTips="true">
+		<charts:annotationElements>
+			<charts:AdvancedBubbleChartBaseLineElement id="totalBaseline"
+													   horizontalLineColor="#ce121d"
+													   horizontalLineEnabled="{viewModel.leftChartUseHorizontalLine}"
+													   horizontalLineLabel="Average Sales: {UnitConverter.num(viewModel.leftChartHorizontalLineValue)}"
+													   horizontalLineValue="{viewModel.leftChartHorizontalLineValue}"
+													   verticalLineColor="#ce121d"
+													   verticalLineEnabled="{viewModel.leftChartUseVerticalLine}"
+													   verticalLineLabel="Average Price: {UnitConverter.num(viewModel.leftChartVerticalLineValue)}"
+													   verticalLineValue="{viewModel.leftChartVerticalLineValue}"/>
+			<charts:AdvancedBubbleChartBaseLineElement horizontalLineColor="#1189c8"
+													   horizontalLineEnabled="{viewModel.leftChartUseHorizontalSubLine}"
+													   horizontalLineLabel="Apple Average Sales: {UnitConverter.num(viewModel.leftChartHorizontalSubLineValue)}"
+													   horizontalLineValue="{viewModel.leftChartHorizontalSubLineValue}"
+													   horizontalTextGap="{totalBaseline.horizontalTextHeight}"
+													   verticalLineColor="#1189c8"
+													   verticalLineEnabled="{viewModel.leftChartUseVerticalSubLine}"
+													   verticalLineLabel="Apple Average Price: {UnitConverter.num(viewModel.leftChartVerticalSubLineValue)}"
+													   verticalLineValue="{viewModel.leftChartVerticalSubLineValue}"
+													   verticalTextGap="{totalBaseline.verticalTextWidth}"
+													   visible="{snap.visibleSubLine}"/>
+			<charts:AdvancedBubbleChartZoomAndSnapElement id="zscontrol"
+														  absoluteHorizontalMinimum="30"
+														  horizontalLabelFunction="vselectionLabelFunction"
+														  scrollEnabled="{snap.moveEnabled}"
+														  selectionEnabled="{snap.selectionEnabled}"
+														  verticalLabelFunction="vselectionLabelFunction"
+														  zoomEnabled="true"/>
+		</charts:annotationElements>
+
+		<charts:backgroundElements>
+			<mx:GridLines gridDirection="both"/>
+			<charts:AdvancedChartAxisLabel yLabel="수주예상액(억원)" xLabel="경과일수(일)"/>
+		</charts:backgroundElements>
+
+		<charts:horizontalAxis>
+			<mx:LinearAxis id="haxis" labelFunction="vaxisLabelFunction"/>
+		</charts:horizontalAxis>
+
+		<charts:verticalAxis>
+			<mx:LinearAxis id="vaxis" labelFunction="vaxisLabelFunction"/>
+		</charts:verticalAxis>
+
+		<charts:horizontalAxisRenderers>
+			<mx:AxisRenderer fontSize="12" axis="{haxis}"/>
+		</charts:horizontalAxisRenderers>
+
+		<charts:verticalAxisRenderers>
+			<mx:AxisRenderer fontSize="12" axis="{vaxis}"/>
+		</charts:verticalAxisRenderers>
+
+		<charts:series>
+			<charts:AdvancedBubbleSeries id="series"
+										 radiusField="stock"
+										 xBase="{viewModel.leftChartHorizontalLineValue}"
+										 xField="sales"
+										 yBase="{viewModel.leftChartVerticalLineValue}"
+										 yField="price"/>
+		</charts:series>
+	</charts:AdvancedBubbleChart>
+
+	<charts:ChartUtilButtons id="snap"
+							 right="0"
+							 top="0"
+							 clear="clearItems(event)"
+							 enabledHorizontalSubLine="{viewModel.leftChartUseHorizontalSubLine}"
+							 enabledVerticalSubLine="{viewModel.leftChartUseVerticalSubLine}"
+							 selectDimension="selectDimension(event)"/>
+	<!--</charts:CartesianChartAxisWrapper>-->
+</s:Group>

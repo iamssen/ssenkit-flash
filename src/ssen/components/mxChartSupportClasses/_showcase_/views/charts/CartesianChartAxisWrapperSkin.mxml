@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---
+
+CartesianChartAxisWrapperSkin
+
+@see CartesianChartAxisWrapper
+-->
+<s:Skin xmlns:fb="http://ns.adobe.com/flashbuilder/2009" xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" alpha.disabled="0.5">
+	<fx:Metadata>
+		<![CDATA[ 
+	        [HostComponent("ssen.showcase.views.charts.CartesianChartAxisWrapper")]
+    	]]>
+	</fx:Metadata>
+
+	<fx:Script>
+		<![CDATA[
+			
+		]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="disabled"/>
+	</s:states>
+
+	<s:Label text="{hostComponent.verticalAxisLabel}" color="#0c2f76" fontFamily="mainfont" fontSize="11" verticalAlign="top"/>
+	<s:Label text="{hostComponent.horizontalAxisLabel}"
+			 bottom="0"
+			 color="#0c2f76"
+			 fontFamily="mainfont"
+			 fontSize="11"
+			 right="0"
+			 verticalAlign="bottom"/>
+
+	<s:Group id="contentGroup"
+			 minHeight="0"
+			 minWidth="0"
+			 bottom="15"
+			 left="0"
+			 right="0"
+			 top="18">
+		<s:layout>
+			<s:BasicLayout/>
+		</s:layout>
+	</s:Group>
+
+</s:Skin>

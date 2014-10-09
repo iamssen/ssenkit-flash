@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx"
+			   xmlns:datagrid="ssen.showcase.views.datagrid.*" preinitialize="initialModel()">
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.IList;
+
+			import ssen.common.MathUtils;
+			import ssen.datakit.ds.RandomDataCollection;
+
+			[Bindable]
+			private var model:IList;
+
+			private function initialModel():void {
+				var arr:Array=[];
+				var obj:Object;
+
+				var data:Array=[];
+				data.push({COMPANY: "Apple",
+						   PRODUCTS: ["iPhone3gs", "iPhone4", "iPhone4s", "iPhone5", "iPhone5s", "iPad2", "iPad Air", "MacBook Air", "MacBook Pro Retina", "Mac Pro"]});
+				//															  {COMPANY: "Samsung"}, {COMPANY: "HTC"}, {COMPANY: "LG"}];
+
+				var f:int=-1;
+				var fmax:int=MathUtils.rand(10, 50);
+				while (++f < fmax) {
+					obj={};
+					obj["COMPANY"]=new RandomDataCollection(["Apple", "Samsung", "HTC", "LG"]).get();
+				}
+			}
+		]]>
+	</fx:Script>
+	<datagrid:ADG dataProvider="{model}" height="100%" horizontalScrollPolicy="off" width="100%">
+		<datagrid:groupedColumns>
+			<mx:AdvancedDataGridColumn width="300" headerText="프로젝트명" dataField="POST1" showDataTips="true" dataTipField="PSPID"
+									   itemRenderer="ssen.showcase.views.datagrid.GridDefaultRenderer"/>
+			<datagrid:ADGNumbericColumn width="70" headerText="지연일수" dataField="DATE_CNT" itemRenderer="ssen.showcase.views.datagrid.GridDayRenderer"/>
+			<mx:AdvancedDataGridColumn width="170" headerText="지연사유" dataField="ISSCOD_TEXT" itemRenderer="ssen.showcase.views.datagrid.GridDefaultRenderer"/>
+			<datagrid:ADGNumbericColumn width="90" headerText="조치예상일" dataField="FFDATE" itemRenderer="ssen.showcase.views.datagrid.GridDateRenderer"/>
+			<mx:AdvancedDataGridColumn width="150" headerText="매출부서" dataField="FKSTL_STEXT" itemRenderer="ssen.showcase.views.datagrid.GridDefaultRenderer"/>
+			<mx:AdvancedDataGridColumn width="80" headerText="PM" dataField="ZZPERNR_NAME" itemRenderer="ssen.showcase.views.datagrid.GridCenterRenderer"/>
+			<mx:AdvancedDataGridColumnGroup headerText="계약기간">
+				<datagrid:ADGNumbericColumn width="90" headerText="시작일" dataField="LS_VBEGDAT" itemRenderer="ssen.showcase.views.datagrid.GridDateRenderer"/>
+				<datagrid:ADGNumbericColumn width="90" headerText="종료일" dataField="LS_VENDDAT" itemRenderer="ssen.showcase.views.datagrid.GridDateRenderer"/>
+			</mx:AdvancedDataGridColumnGroup>
+			<datagrid:ADGNumbericColumn width="80" headerText="수주액" dataField="LP_ORDER" itemRenderer="ssen.showcase.views.datagrid.GridMillionRenderer"/>
+			<datagrid:ADGNumbericColumn width="80" headerText="매출액" dataField="S_ORDER" itemRenderer="ssen.showcase.views.datagrid.GridMillionRenderer"/>
+			<datagrid:ADGNumbericColumn width="80" headerText="부실금액{'\n'}(누계)" dataField="LOSS_SUM"
+										itemRenderer="ssen.showcase.views.datagrid.GridMillionRenderer"/>
+		</datagrid:groupedColumns>
+		<datagrid:footer>
+			<datagrid:ADGFooter>
+				<!-- 프로젝트명 -->
+				<datagrid:ADGFooterColumn/>
+				<!-- 지연일수 -->
+				<datagrid:ADGFooterColumn/>
+				<!-- 지연사유 -->
+				<datagrid:ADGFooterColumn/>
+				<!-- 조치예상일 -->
+				<datagrid:ADGFooterColumn/>
+				<!-- 매출부서 -->
+				<datagrid:ADGFooterColumn/>
+				<!-- PM -->
+				<datagrid:ADGFooterColumn/>
+				<!-- 시작일 -->
+				<datagrid:ADGFooterColumn/>
+				<!-- 종료일 -->
+				<datagrid:ADGFooterTextColumn text="합계"/>
+				<!-- 수주액 -->
+				<datagrid:ADGFooterSumColumn/>
+				<!-- 매출액 -->
+				<datagrid:ADGFooterSumColumn/>
+				<!-- 부실금액 -->
+				<datagrid:ADGFooterSumColumn/>
+			</datagrid:ADGFooter>
+		</datagrid:footer>
+	</datagrid:ADG>
+</s:Application>

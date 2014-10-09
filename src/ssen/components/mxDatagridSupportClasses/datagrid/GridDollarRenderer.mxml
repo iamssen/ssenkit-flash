@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--- Grid Item Renderer : 0.00 형태의 외환 출력 -->
+<datagrid:GridRenderer xmlns:datagrid="ssen.showcase.views.datagrid.*" xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:s="library://ns.adobe.com/flex/spark" textAlign="right">
+	<fx:Script>
+		<![CDATA[
+			override public function validateProperties():void {
+				super.validateProperties();
+				text=format(listData.label);
+			}
+
+			override public function format(value:*):String {
+				if (value == "") {
+					return "-";
+				}
+				return formatter.format(value);
+			}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<mx:NumberFormatter id="formatter" precision="2"/>
+	</fx:Declarations>
+</datagrid:GridRenderer>

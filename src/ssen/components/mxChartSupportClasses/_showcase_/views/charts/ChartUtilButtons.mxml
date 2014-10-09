@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---
+
+Bubble Chart를 컨트롤 하는 추가 기능 버튼들
+
+@see AdvancedBubbleChart
+-->
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:s="library://ns.adobe.com/flex/spark">
+	<fx:Metadata>
+		/** 초기화 시켜라 */
+		[Event(name="clear", type="flash.events.Event")]
+		
+		/** 분면을 선택해라 */
+		[Event(name="selectDimension", type="ssen.showcase.events.DimensionSelectEvent")]
+	</fx:Metadata>
+
+	<fx:Script>
+		<![CDATA[
+			import ssen.showcase.events.DimensionSelectEvent;
+
+			import mx.events.PropertyChangeEvent;
+			//==========================================================================================
+			// bindable state
+			//==========================================================================================
+			//---------------------------------------------
+			// moveEnabled
+			//---------------------------------------------
+			private var _moveEnabled:Boolean=false;
+
+			/** [Bindable Getter Property] 이동 버튼이 선택되어졌는지 여부 */
+			[Bindable(event="propertyChange")]
+			public function get moveEnabled():Boolean {
+				return _moveEnabled;
+			}
+
+			//---------------------------------------------
+			// selectionEnabled
+			//---------------------------------------------
+			private var _selectionEnabled:Boolean=true;
+
+			/** [Bindable Getter Property] 영역 선택 버튼이 선택되어졌는지 여부 */
+			[Bindable(event="propertyChange")]
+			public function get selectionEnabled():Boolean {
+				return _selectionEnabled;
+			}
+
+			/** [Bindable Getter Property] 사업부 기준선을 표시할지 여부 */
+			[Bindable]
+			public var visibleSubLine:Boolean;
+
+			/** [Bindable Setter Property] 가로 기준선의 활성화 여부 입력 */
+			[Bindable]
+			public var enabledVerticalSubLine:Boolean;
+
+			/** [Bindable Setter Property] 세로 기준선의 활성화 여부 입력 */
+			[Bindable]
+			public var enabledHorizontalSubLine:Boolean;
+
+			private function or(... bools):Boolean {
+				var f:int=bools.length;
+				while (--f >= 0) {
+					if (bools[f] === true) {
+						return true;
+					}
+				}
+
+				return false;
+			}
+
+			//==========================================================================================
+			// event handlers
+			//==========================================================================================
+			private function buttonClick(event:MouseEvent):void {
+				stateToggle(!_moveEnabled, !_selectionEnabled);
+			}
+
+			private function stateToggle(move:Boolean, selection:Boolean):void {
+				moveButton.enabled=!move;
+				selectionButton.enabled=!selection;
+
+				var oldMoveEnabled:Boolean=_moveEnabled;
+				var oldSelectionEnabled:Boolean=_selectionEnabled;
+
+				_moveEnabled=move;
+				_selectionEnabled=selection;
+
+				if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
+					dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "moveEnabled", oldMoveEnabled, _moveEnabled));
+					dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "selectionEnabled", oldSelectionEnabled, _selectionEnabled));
+				}
+			}
+
+			private function clearSelection(event:MouseEvent):void {
+				dispatchEvent(new Event(Event.CLEAR));
+			}
+
+			private function selectDimension(topLeft:Boolean, topRight:Boolean, bottomLeft:Boolean, bottomRight:Boolean):void {
+				dispatchEvent(new DimensionSelectEvent(topLeft, topRight, bottomLeft, bottomRight));
+			}
+		]]>
+	</fx:Script>
+
+	<s:Button enabled="true" id="moveButton" click="buttonClick(event)" skinClass="ssen.showcase.views.charts.ChartSnapMoveButtonSkin" buttonMode="true"/>
+	<s:Button enabled="false" id="selectionButton" top="36" click="buttonClick(event)" skinClass="ssen.showcase.views.charts.ChartSnapSelectionButtonSkin" buttonMode="true"/>
+	<s:Button top="72" click="clearSelection(event)" skinClass="ssen.showcase.views.charts.ChartSnapResetButtonSkin" buttonMode="true"/>
+
+	<s:ToggleButton enabled="{or(enabledVerticalSubLine, enabledHorizontalSubLine)}"
+					label="sl"
+					selected="@{visibleSubLine}"
+					fontSize="10"
+					top="118"
+					skinClass="ssen.showcase.views.charts.ChartSubLineButtonSkin"
+					buttonMode="true"/>
+
+	<s:Button fontSize="10" top="165" click="selectDimension(true, false, false, false)" skinClass="ssen.showcase.views.charts.ChartDemension2SelectButtonSkin" buttonMode="true"/>
+	<s:Button fontSize="10" left="15" top="165" click="selectDimension(false, true, false, false)" skinClass="ssen.showcase.views.charts.ChartDemension1SelectButtonSkin" buttonMode="true"/>
+	<s:Button fontSize="10" top="185" click="selectDimension(false, false, true, false)" skinClass="ssen.showcase.views.charts.ChartDemension3SelectButtonSkin" buttonMode="true"/>
+	<s:Button fontSize="10" left="15" top="185" click="selectDimension(false, false, false, true)" skinClass="ssen.showcase.views.charts.ChartDemension4SelectButtonSkin" buttonMode="true"/>
+</s:Group>

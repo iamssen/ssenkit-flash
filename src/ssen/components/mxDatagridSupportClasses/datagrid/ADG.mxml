@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---
+Footer, Excel Download 등의 기능이 추가된 Advanced Data Grid
+-->
+<mx:AdvancedDataGrid xmlns:datagrid="ssen.showcase.views.datagrid.*"
+					 xmlns:fx="http://ns.adobe.com/mxml/2009"
+					 xmlns:mx="library://ns.adobe.com/flex/mx"
+					 xmlns:s="library://ns.adobe.com/flex/spark"
+					 
+					 horizontalScrollPolicy="auto"
+					 styleName="columnStyle"
+					 borderColor="0xc9cdd6"
+					 fontWeight="normal"
+					 headerColors="[0xeceff4, 0xd6dce8, 0xd6dce8]"
+					 headerStyleName="headerStyle"
+					 iconColor="0x616a71"
+					 rollOverColor="#e7ebf0"
+					 selectionColor="#d8efff"
+					 textAlign="center"
+					 headerSortSeparatorSkin="{null}"
+					 headerRenderer="ssen.showcase.views.datagrid.ADGHeaderRenderer"
+					 sortItemRenderer="ssen.showcase.views.datagrid.ADGSortItemRenderer"
+					 sortableColumns="true"
+					 sortExpertMode="true"
+					 horizontalGridLineColor="0xc9cdd6"
+					 verticalGridLineColor="0xc9cdd6"
+					 alternatingItemColors="[0xffffff]"
+					 borderVisible="false"
+					 verticalGridLines="true"
+					 horizontalGridLines="true"
+					 rowHeight="25"
+					 headerHeight="26"
+					 symbolColor="#ffffff">
+
+	<!-- horizontalScrollBarStyleName="scrollbarStyle" verticalScrollBarStyleName="scrollbarStyle"-->
+
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		
+		.headerStyle {
+			fontWeight: bold;
+			verticalAlign: middle;
+			fontSize: 12;
+			color: #616a71;
+		}
+		
+		.columnStyle {
+			fontWeight: normal;
+			verticalAlign: middle;
+			fontSize: 12;
+			color: #333333;
+		}
+	</fx:Style>
+
+	<fx:Script>
+		<![CDATA[
+			private var _footer:ADGFooter;
+			private var _footerMask:Sprite;
+
+			/**
+			 * DataGrid에 Footer 를 추가한다
+			 */
+			public function set footer(value:ADGFooter):void {
+				if (_footer) {
+					removeChild(_footer);
+					removeChild(_footerMask);
+					_footer=null;
+					_footerMask=null;
+				}
+
+				_footer=value;
+				_footerMask=getMaskObject();
+
+				if (_footer) {
+					_footer.grid=this;
+					_footer.mask=_footerMask;
+					addChild(_footer);
+					addChild(_footerMask);
+				}
+
+				invalidateDisplayList();
+			}
+
+			/** @private */
+			override protected function adjustListContent(unscaledWidth:Number=-1, unscaledHeight:Number=-1):void {
+				super.adjustListContent(unscaledWidth, unscaledHeight);
+
+				if (_footer) {
+					listContent.setActualSize(listContent.width, listContent.height - rowHeight);
+
+					_footer.setActualSize(listContent.width, rowHeight);
+					_footer.move(listContent.x, listContent.y + listContent.height);
+					_footerMask.width=listContent.width;
+					_footerMask.height=rowHeight;
+					_footerMask.x=listContent.x
+					_footerMask.y=listContent.y + listContent.height;
+				}
+			}
+
+			/** @private */
+			override public function invalidateDisplayList():void {
+				super.invalidateDisplayList();
+
+				if (_footer) {
+					_footer.invalidateDisplayList();
+				}
+			}
+
+			private function getMaskObject():Sprite {
+				var maskObject:Sprite=new Sprite;
+				maskObject.graphics.beginFill(0x000000, 0.1);
+				maskObject.graphics.drawRect(0, 0, 10, 10);
+				maskObject.graphics.endFill();
+				return maskObject;
+			}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<datagrid:ADGContextMenuAddon/>
+	</fx:Declarations>
+</mx:AdvancedDataGrid>

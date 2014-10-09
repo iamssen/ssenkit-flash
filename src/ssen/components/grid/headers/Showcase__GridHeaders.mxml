@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:headers="ssen.components.grid.headers.*">
+	<headers:Header left="10" right="10" top="10">
+		<headers:HeaderColumn columnWidth="0.125" headerText="HEADER A"/>
+		<headers:HeaderGroupedColumn headerText="HEADER GROUP">
+			<headers:HeaderColumn columnWidth="0.125" headerText="HEADER B"/>
+			<headers:HeaderColumn columnWidth="0.125" headerText="HEADER C"/>
+			<!--<grid:GridHeaderColumnGroup headerText="HEADER GROUP 2">
+				<grid:GridHeaderColumn columnWidth="0.125" headerText="HEADER CC"/>
+				<grid:GridHeaderColumn columnWidth="0.125" headerText="HEADER CC"/>
+			</grid:GridHeaderColumnGroup>-->
+			<headers:HeaderSubTopicColumn columnWidth="0.125" headerText="HEADER XXX">
+				<headers:HeaderColumn columnWidth="0.125" headerText="HEADER CC"/>
+				<headers:HeaderGroupedColumn headerText="HEADER GROUP 2">
+					<headers:HeaderColumn columnWidth="0.125" headerText="HEADER CC"/>
+					<headers:HeaderColumn columnWidth="0.125" headerText="HEADER CC"/>
+					<headers:HeaderColumn columnWidth="0.125" headerText="HEADER CC"/>
+				</headers:HeaderGroupedColumn>
+			</headers:HeaderSubTopicColumn>
+		</headers:HeaderGroupedColumn>
+		<headers:HeaderColumn columnWidth="0.125" headerText="HEADER D"/>
+		<headers:HeaderSubTopicColumn columnWidth="0.125" headerText="HEADER E">
+			<headers:HeaderColumn columnWidth="0.125" headerText="HEADER F"/>
+			<headers:HeaderColumn columnWidth="0.125" headerText="HEADER G"/>
+		</headers:HeaderSubTopicColumn>
+		<headers:HeaderColumn columnWidth="0.125" headerText="HEADER H"/>
+	</headers:Header>
+</s:Application>

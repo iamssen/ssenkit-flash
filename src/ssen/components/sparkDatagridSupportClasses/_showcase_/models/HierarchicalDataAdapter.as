@@ -1,4 +1,4 @@
-package ssen.components.sparkDatagridSupportClasses.models {
+package ssen.components.sparkDatagridSupportClasses._showcase_.models {
 
 import flash.events.EventDispatcher;
 
