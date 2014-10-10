@@ -5,9 +5,5 @@ public interface IHeaderLeafColumn extends IHeaderColumn {
 	[Bindable(event="propertyChange")]
 	function get columnWidth():Number;
 	function set columnWidth(value:Number):void;
-
-	/** computedColumnWidth */
-	[Bindable(event="propertyChange")]
-	function get computedColumnWidth():Number;
 }
 }

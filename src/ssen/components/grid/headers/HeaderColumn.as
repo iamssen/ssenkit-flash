@@ -1,4 +1,5 @@
 package ssen.components.grid.headers {
+
 import flash.events.EventDispatcher;
 
 import mx.events.PropertyChangeEvent;
@@ -10,6 +11,20 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 	// properties
 	//==========================================================================================
 	//---------------------------------------------
+	// header
+	//---------------------------------------------
+	private var _header:IHeaderContainer;
+
+	/** header */
+	public function get header():IHeaderContainer {
+		return _header;
+	}
+
+	public function set header(value:IHeaderContainer):void {
+		_header = value;
+	}
+
+	//---------------------------------------------
 	// headerText
 	//---------------------------------------------
 	private var _headerText:String;
@@ -20,7 +35,7 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 	}
 
 	public function set headerText(value:String):void {
-		_headerText=value;
+		_headerText = value;
 	}
 
 	//---------------------------------------------
@@ -34,7 +49,7 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 	}
 
 	public function set renderer(value:IHeaderColumnRenderer):void {
-		_renderer=value;
+		_renderer = value;
 
 	}
 
@@ -50,13 +65,12 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 	}
 
 	public function set rowIndex(value:int):void {
-		var oldValue:int=_rowIndex;
-		_rowIndex=value;
+		var oldValue:int = _rowIndex;
+		_rowIndex = value;
 
 		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
 			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "rowIndex", oldValue, _rowIndex));
 		}
-		// TODO
 	}
 
 	//---------------------------------------------
@@ -71,15 +85,13 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 	}
 
 	public function set columnIndex(value:int):void {
-		var oldValue:int=_columnIndex;
-		_columnIndex=value;
+		var oldValue:int = _columnIndex;
+		_columnIndex = value;
 
 		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
 			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "columnIndex", oldValue, _columnIndex));
 		}
-		// TODO
 	}
-
 
 	//---------------------------------------------
 	// columnWidth
@@ -93,22 +105,38 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 	}
 
 	public function set columnWidth(value:Number):void {
-		var oldValue:Number=_columnWidth;
-		_columnWidth=value;
+		var oldValue:Number = _columnWidth;
+		_columnWidth = value;
 
 		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
 			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "columnWidth", oldValue, _columnWidth));
 		}
-		// TODO
 	}
+
 
 	//---------------------------------------------
 	// computedColumnWidth
 	//---------------------------------------------
+	private var _computedColumnWidth:Number;
+
 	/** computedColumnWidth */
-	[Bindable]
+	[Bindable(event="propertyChange")]
 	public function get computedColumnWidth():Number {
+		if (sizeChanged) {
+			commit_size();
+			sizeChanged=false;
+		}
+
 		return _computedColumnWidth;
+	}
+
+	private function set_computedColumnWidth(value:Number):void {
+		var oldValue:Number = _computedColumnWidth;
+		_computedColumnWidth = value;
+
+		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
+			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "computedColumnWidth", oldValue, _computedColumnWidth));
+		}
 	}
 
 
@@ -129,8 +157,28 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 	//		return nextColumnIndex;
 	//	}
 
-	public function toString():String {
-		return StringUtils.formatToString("[GridHeaderColumn headerText={0} columnWidth={1}]", _headerText, _columnWidth);
+	//---------------------------------------------
+	// inavalidate size
+	//---------------------------------------------
+	private var sizeChanged:Boolean;
+
+	final protected function invalidate_size():void {
+		sizeChanged=true;
+	}
+
+	//---------------------------------------------
+	// commit size
+	//---------------------------------------------
+	protected function commit_size():void {
+		set_computedColumnWidth(_header.computedColumnWidthList[_columnIndex]);
+	}
+
+	public function render():void {
+		trace(HeaderUtils.getSpace(rowIndex), rowIndex, columnIndex, "HeaderColumn.render()", toString());
+	}
+
+	override public function toString():String {
+		return StringUtils.formatToString("[GridHeaderColumn headerText={0} columnIndex={1} rowIndex={2}]", headerText, columnIndex, rowIndex);
 	}
 }
 }

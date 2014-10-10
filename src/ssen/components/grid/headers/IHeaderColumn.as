@@ -23,5 +23,11 @@ public interface IHeaderColumn extends IEventDispatcher {
 	[Bindable(event="propertyChange")]
 	function get columnIndex():int;
 	function set columnIndex(value:int):void;
+
+	/** computedColumnWidth */
+	[Bindable(event="propertyChange")]
+	function get computedColumnWidth():Number;
+
+	function render():void;
 }
 }

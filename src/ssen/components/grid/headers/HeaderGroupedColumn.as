@@ -1,12 +1,15 @@
 package ssen.components.grid.headers {
-import flash.display.Graphics;
-import flash.geom.Point;
+
+import flash.events.EventDispatcher;
+
+import mx.events.PropertyChangeEvent;
 
 import ssen.common.StringUtils;
+import ssen.components.grid.headers.HeaderUtils;
 
 [DefaultProperty("columns")]
 
-public class HeaderGroupedColumn implements IHeaderBrancheColumn {
+public class HeaderGroupedColumn extends EventDispatcher implements IHeaderBrancheColumn {
 	//==========================================================================================
 	// properties
 	//==========================================================================================
@@ -33,15 +36,16 @@ public class HeaderGroupedColumn implements IHeaderBrancheColumn {
 	//---------------------------------------------
 	// header
 	//---------------------------------------------
-	private var _header:IHeader;
+	private var _header:IHeaderContainer;
 
 	/** header */
-	public function get header():IHeader {
+	public function get header():IHeaderContainer {
 		return _header;
 	}
 
-	public function set header(value:IHeader):void {
+	public function set header(value:IHeaderContainer):void {
 		_header = value;
+		invalidate_size();
 	}
 
 	//---------------------------------------------
@@ -56,10 +60,6 @@ public class HeaderGroupedColumn implements IHeaderBrancheColumn {
 
 	public function set headerText(value:String):void {
 		_headerText = value;
-
-		if (_weaver) {
-			_weaver.fire(HeaderEvents.COLUMN_CONTENT_CHANGED);
-		}
 	}
 
 	//---------------------------------------------
@@ -77,27 +77,96 @@ public class HeaderGroupedColumn implements IHeaderBrancheColumn {
 
 		var rowsAndColumns:Vector.<int> = HeaderUtils.count(value);
 		_numRows = rowsAndColumns[0];
-		_numColumns = rowsAndColumns[1];
+		_numColumns = rowsAndColumns[1]
 
-		if (_weaver) {
-			_weaver.fire(HeaderEvents.COLUMN_CHANGED);
+		invalidate_size();
+	}
+
+
+	public function get renderer():IHeaderColumnRenderer {
+		return null;
+	}
+
+	public function set renderer(value:IHeaderColumnRenderer):void {
+	}
+
+	//---------------------------------------------
+	// rowIndex
+	//---------------------------------------------
+	private var _rowIndex:int;
+
+	/** rowIndex */
+	[Bindable]
+	public function get rowIndex():int {
+		return _rowIndex;
+	}
+
+	public function set rowIndex(value:int):void {
+		var oldValue:int = _rowIndex;
+		_rowIndex = value;
+
+		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
+			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "rowIndex", oldValue, _rowIndex));
 		}
 	}
 
-	//==========================================================================================
-	// draw
-	//==========================================================================================
-	public function draw(container:IHeaderContainer, rowIndex:int, columnIndex:int):int {
-		// draw children
+	//---------------------------------------------
+	// columnIndex
+	//---------------------------------------------
+	private var _columnIndex:int;
+
+	/** columnIndex */
+	[Bindable]
+	public function get columnIndex():int {
+		return _columnIndex;
+	}
+
+	public function set columnIndex(value:int):void {
+		var oldValue:int = _columnIndex;
+		_columnIndex = value;
+
+		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
+			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "columnIndex", oldValue, _columnIndex));
+		}
+
+		invalidate_size();
+	}
+
+	//---------------------------------------------
+	// computedColumnWidth
+	//---------------------------------------------
+	private var _computedColumnWidth:Number;
+
+	/** computedColumnWidth */
+	[Bindable(event="propertyChange")]
+	public function get computedColumnWidth():Number {
+		if (sizeChanged) {
+			commit_size();
+			sizeChanged=false;
+		}
+
+		return _computedColumnWidth;
+	}
+
+	private function set_computedColumnWidth(value:Number):void {
+		var oldValue:Number = _computedColumnWidth;
+		_computedColumnWidth = value;
+
+		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
+			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "computedColumnWidth", oldValue, _computedColumnWidth));
+		}
+	}
+
+	public function render():void {
+		trace(HeaderUtils.getSpace(rowIndex), rowIndex, columnIndex, "HeaderGroupedColumn.render()", toString());
 		var f:int = -1;
 		var fmax:int = _columns.length;
-		var column:IHeaderColumn;
-		var nextColumnIndex:int = columnIndex;
-		var endColumnIndex:int = columnIndex;
-
+		//		var column:IHeaderColumn;
+		//		var nextColumnIndex:int = columnIndex;
+		//		var endColumnIndex:int = columnIndex;
+		//
 		while (++f < fmax) {
-			column = _columns[f];
-			nextColumnIndex = column.draw(container, rowIndex + 1, nextColumnIndex);
+			_columns[f].render();
 		}
 
 		//		trace("GridHeaderColumnGroup.draw -(", headerText, ")");
@@ -105,20 +174,35 @@ public class HeaderGroupedColumn implements IHeaderBrancheColumn {
 		//		trace("GridHeaderColumnGroup.draw e(", rowIndex, nextColumnIndex, ")");
 
 		// draw
-		var tl:Point = HeaderUtils.getPoint(container, rowIndex, columnIndex);
-		var tr:Point = HeaderUtils.getPoint(container, rowIndex, nextColumnIndex);
-		tr.x -= container.columnSeparatorSize;
-		//		trace("GridHeaderColumnGroup.draw x(", tl.x, tr.x, ")");
-		var g:Graphics = container.graphics;
-		g.beginFill(0, 0.2);
-		g.drawRect(tl.x, tl.y, tr.x - tl.x, container.rowHeight);
-		g.endFill();
-
-		return nextColumnIndex;
+		//		var tl:Point = HeaderUtils.getPoint(container, rowIndex, columnIndex);
+		//		var tr:Point = HeaderUtils.getPoint(container, rowIndex, nextColumnIndex);
+		//		tr.x -= container.columnSeparatorSize;
+		//		//		trace("GridHeaderColumnGroup.draw x(", tl.x, tr.x, ")");
+		//		var g:Graphics = container.graphics;
+		//		g.beginFill(0, 0.2);
+		//		g.drawRect(tl.x, tl.y, tr.x - tl.x, container.rowHeight);
+		//		g.endFill();
 	}
 
-	public function toString():String {
-		return StringUtils.formatToString("[GridHeaderColumnGroup headerText={0}]", _headerText);
+	//---------------------------------------------
+	// inavalidate size
+	//---------------------------------------------
+	private var sizeChanged:Boolean;
+
+	final protected function invalidate_size():void {
+		sizeChanged=true;
+	}
+
+	//---------------------------------------------
+	// commit size
+	//---------------------------------------------
+	protected function commit_size():void {
+		set_computedColumnWidth(HeaderUtils.getBrancheWidth(_header.computedColumnWidthList, _header.columnSeparatorSize, columnIndex, numColumns));
+	}
+
+
+	override public function toString():String {
+		return StringUtils.formatToString("[GridHeaderColumnGroup headerText={0} columnIndex={1} rowIndex={2}]", headerText, columnIndex, rowIndex);
 	}
 }
 }
