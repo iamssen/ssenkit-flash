@@ -10,6 +10,9 @@ public interface IHeader extends IVisualElementContainer, IVisualElement {
 	[Bindable(event="propertyChange")]
 	function get computedColumnWidthList():Vector.<Number>;
 
+	[Bindable(event="propertyChange")]
+	function get computedColumnPositionList():Vector.<Number>;
+
 	/** 계산된 잠겨있는 Column들의 Width 합계 */
 	[Bindable(event="propertyChange")]
 	function get computedLockedColumnWidthTotal():Number;
@@ -40,6 +43,10 @@ public interface IHeader extends IVisualElementContainer, IVisualElement {
 	/** columnSeparatorSize */
 	[Bindable(event="propertyChange")]
 	function get columnSeparatorSize():int;
+
+	/** rowSeparatorSize */
+	[Bindable(event="propertyChange")]
+	function get rowSeparatorSize():int;
 
 	//==========================================================================================
 	// 외부에서 받아야 하는 정보들

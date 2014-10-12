@@ -1,6 +1,9 @@
 package ssen.components.grid.headers {
 
+import flash.display.Graphics;
 import flash.events.EventDispatcher;
+import flash.geom.Point;
+import flash.geom.Rectangle;
 
 import mx.events.PropertyChangeEvent;
 
@@ -117,28 +120,10 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 	//---------------------------------------------
 	// computedColumnWidth
 	//---------------------------------------------
-	private var _computedColumnWidth:Number;
-
 	/** computedColumnWidth */
-	[Bindable(event="propertyChange")]
 	public function get computedColumnWidth():Number {
-		if (sizeChanged) {
-			commit_size();
-			sizeChanged=false;
-		}
-
-		return _computedColumnWidth;
+		return _header.computedColumnWidthList[columnIndex];
 	}
-
-	private function set_computedColumnWidth(value:Number):void {
-		var oldValue:Number = _computedColumnWidth;
-		_computedColumnWidth = value;
-
-		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
-			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "computedColumnWidth", oldValue, _computedColumnWidth));
-		}
-	}
-
 
 	//==========================================================================================
 	// draw
@@ -157,28 +142,32 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 	//		return nextColumnIndex;
 	//	}
 
-	//---------------------------------------------
-	// inavalidate size
-	//---------------------------------------------
-	private var sizeChanged:Boolean;
-
-	final protected function invalidate_size():void {
-		sizeChanged=true;
-	}
-
-	//---------------------------------------------
-	// commit size
-	//---------------------------------------------
-	protected function commit_size():void {
-		set_computedColumnWidth(_header.computedColumnWidthList[_columnIndex]);
-	}
-
 	public function render():void {
 		trace(HeaderUtils.getSpace(rowIndex), rowIndex, columnIndex, "HeaderColumn.render()", toString());
+
+//		var bound:Rectangle=HeaderUtils.getColumnBound(this);
+		var bound:Rectangle=new Rectangle;
+		var surplusRows:int = (header.numRows - rowIndex);
+		bound.x = header.computedColumnPositionList[columnIndex];
+		bound.y = (rowIndex > 0) ? (header.rowHeight + header.rowSeparatorSize) * rowIndex : 0;
+		bound.width = header.computedColumnWidthList[columnIndex];
+		bound.height = (header.rowHeight * surplusRows) + (header.rowSeparatorSize * (surplusRows - 1));
+
+		var g:Graphics=header.graphics;
+		g.beginFill(0, 0.1);
+		g.drawRect(bound.x, bound.y, bound.width, bound.height);
+		g.endFill();
+
+//		var tl:Point = HeaderUtils.getPoint(header, rowIndex, columnIndex);
+//		var br:Point=new Point(weaver.getProperty(), container.computedWidthList[columnIndex], container.measuredHeight - tl.y);
+//		var g:Graphics = container.graphics;
+//		g.beginFill(0, 0.1);
+//		g.drawRect(tl.x, tl.y, br.x, br.y);
+//		g.endFill();
 	}
 
 	override public function toString():String {
-		return StringUtils.formatToString("[GridHeaderColumn headerText={0} columnIndex={1} rowIndex={2}]", headerText, columnIndex, rowIndex);
+		return StringUtils.formatToString("[GridHeaderColumn headerText={0} columnIndex={1} rowIndex={2} computedColumnWidth={3}]", headerText, columnIndex, rowIndex, computedColumnWidth);
 	}
 }
 }

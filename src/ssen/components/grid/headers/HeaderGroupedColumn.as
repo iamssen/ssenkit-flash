@@ -1,11 +1,12 @@
 package ssen.components.grid.headers {
 
+import flash.display.Graphics;
 import flash.events.EventDispatcher;
+import flash.geom.Rectangle;
 
 import mx.events.PropertyChangeEvent;
 
 import ssen.common.StringUtils;
-import ssen.components.grid.headers.HeaderUtils;
 
 [DefaultProperty("columns")]
 
@@ -45,7 +46,6 @@ public class HeaderGroupedColumn extends EventDispatcher implements IHeaderBranc
 
 	public function set header(value:IHeaderContainer):void {
 		_header = value;
-		invalidate_size();
 	}
 
 	//---------------------------------------------
@@ -77,9 +77,7 @@ public class HeaderGroupedColumn extends EventDispatcher implements IHeaderBranc
 
 		var rowsAndColumns:Vector.<int> = HeaderUtils.count(value);
 		_numRows = rowsAndColumns[0];
-		_numColumns = rowsAndColumns[1]
-
-		invalidate_size();
+		_numColumns = rowsAndColumns[1];
 	}
 
 
@@ -128,81 +126,51 @@ public class HeaderGroupedColumn extends EventDispatcher implements IHeaderBranc
 		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
 			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "columnIndex", oldValue, _columnIndex));
 		}
-
-		invalidate_size();
 	}
 
 	//---------------------------------------------
 	// computedColumnWidth
 	//---------------------------------------------
-	private var _computedColumnWidth:Number;
-
 	/** computedColumnWidth */
 	[Bindable(event="propertyChange")]
 	public function get computedColumnWidth():Number {
-		if (sizeChanged) {
-			commit_size();
-			sizeChanged=false;
+		var widthList:Vector.<Number> = header.computedColumnWidthList;
+		var separatorSize:int = (numColumns - 1) * header.columnSeparatorSize;
+		var widthTotal:Number = widthList[columnIndex];
+
+		var f:int = columnIndex;
+		var fmax:int = columnIndex + numColumns;
+		while (++f < fmax) {
+			widthTotal += widthList[f];
 		}
 
-		return _computedColumnWidth;
-	}
-
-	private function set_computedColumnWidth(value:Number):void {
-		var oldValue:Number = _computedColumnWidth;
-		_computedColumnWidth = value;
-
-		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
-			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "computedColumnWidth", oldValue, _computedColumnWidth));
-		}
+		return widthTotal + separatorSize;
 	}
 
 	public function render():void {
 		trace(HeaderUtils.getSpace(rowIndex), rowIndex, columnIndex, "HeaderGroupedColumn.render()", toString());
+
+		var bound:Rectangle=new Rectangle;
+		bound.x = header.computedColumnPositionList[columnIndex];
+		bound.y = (rowIndex > 0) ? (header.rowHeight + header.rowSeparatorSize) * rowIndex : 0;
+		bound.width = computedColumnWidth;
+		bound.height = header.rowHeight;
+
+		var g:Graphics = header.graphics;
+		g.beginFill(0, 0.2);
+		g.drawRect(bound.x, bound.y, bound.width, bound.height);
+		g.endFill();
+
 		var f:int = -1;
 		var fmax:int = _columns.length;
-		//		var column:IHeaderColumn;
-		//		var nextColumnIndex:int = columnIndex;
-		//		var endColumnIndex:int = columnIndex;
-		//
 		while (++f < fmax) {
 			_columns[f].render();
 		}
-
-		//		trace("GridHeaderColumnGroup.draw -(", headerText, ")");
-		//		trace("GridHeaderColumnGroup.draw s(", rowIndex, columnIndex, ")");
-		//		trace("GridHeaderColumnGroup.draw e(", rowIndex, nextColumnIndex, ")");
-
-		// draw
-		//		var tl:Point = HeaderUtils.getPoint(container, rowIndex, columnIndex);
-		//		var tr:Point = HeaderUtils.getPoint(container, rowIndex, nextColumnIndex);
-		//		tr.x -= container.columnSeparatorSize;
-		//		//		trace("GridHeaderColumnGroup.draw x(", tl.x, tr.x, ")");
-		//		var g:Graphics = container.graphics;
-		//		g.beginFill(0, 0.2);
-		//		g.drawRect(tl.x, tl.y, tr.x - tl.x, container.rowHeight);
-		//		g.endFill();
-	}
-
-	//---------------------------------------------
-	// inavalidate size
-	//---------------------------------------------
-	private var sizeChanged:Boolean;
-
-	final protected function invalidate_size():void {
-		sizeChanged=true;
-	}
-
-	//---------------------------------------------
-	// commit size
-	//---------------------------------------------
-	protected function commit_size():void {
-		set_computedColumnWidth(HeaderUtils.getBrancheWidth(_header.computedColumnWidthList, _header.columnSeparatorSize, columnIndex, numColumns));
 	}
 
 
 	override public function toString():String {
-		return StringUtils.formatToString("[GridHeaderColumnGroup headerText={0} columnIndex={1} rowIndex={2}]", headerText, columnIndex, rowIndex);
+		return StringUtils.formatToString("[GridHeaderColumnGroup headerText={0} columnIndex={1} rowIndex={2} computedColumnWidth={3}]", headerText, columnIndex, rowIndex, computedColumnWidth);
 	}
 }
 }

@@ -1,5 +1,6 @@
 package ssen.components.grid.headers {
 import flash.events.IEventDispatcher;
+import flash.geom.Rectangle;
 
 public interface IHeaderColumn extends IEventDispatcher {
 	/** header */
@@ -25,7 +26,6 @@ public interface IHeaderColumn extends IEventDispatcher {
 	function set columnIndex(value:int):void;
 
 	/** computedColumnWidth */
-	[Bindable(event="propertyChange")]
 	function get computedColumnWidth():Number;
 
 	function render():void;
