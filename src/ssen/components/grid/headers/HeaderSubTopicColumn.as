@@ -5,6 +5,7 @@ import flash.events.EventDispatcher;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
+import mx.core.UIComponent;
 import mx.events.PropertyChangeEvent;
 
 import ssen.common.StringUtils;
@@ -76,7 +77,7 @@ public class HeaderSubTopicColumn extends EventDispatcher implements IHeaderLeaf
 	public function set columns(value:Vector.<IHeaderColumn>):void {
 		_columns = value;
 
-		var rowsAndColumns:Vector.<int> = HeaderUtils.count(value);
+		var rowsAndColumns:Vector.<int> = HeaderUtils.countColumnsAndRows(value);
 		_numRows = rowsAndColumns[0] + 1;
 		_numColumns = rowsAndColumns[1] + 1;
 	}
@@ -164,10 +165,10 @@ public class HeaderSubTopicColumn extends EventDispatcher implements IHeaderLeaf
 	}
 
 	//==========================================================================================
-	// draw
+	// render
 	//==========================================================================================
 	public function render():void {
-		trace(HeaderUtils.getSpace(rowIndex), rowIndex, columnIndex, "HeaderSubTopicColumn.render()", toString());
+		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderSubTopicColumn.render()", toString());
 
 		var bound:Rectangle = new Rectangle;
 		var surplusRows:int = (header.numRows - rowIndex);
@@ -180,7 +181,8 @@ public class HeaderSubTopicColumn extends EventDispatcher implements IHeaderLeaf
 		point.x = bound.x + header.computedColumnWidthList[columnIndex];
 		point.y = bound.y + header.rowHeight;
 
-		var g:Graphics = header.graphics;
+		var container:UIComponent = header.getContainer(columnIndex);
+		var g:Graphics = container.graphics;
 		g.beginFill(0, 0.4);
 		g.moveTo(bound.left, bound.top);
 		g.lineTo(bound.right, bound.top);
@@ -189,7 +191,6 @@ public class HeaderSubTopicColumn extends EventDispatcher implements IHeaderLeaf
 		g.lineTo(point.x, bound.bottom);
 		g.lineTo(bound.left, bound.bottom);
 		g.lineTo(bound.left, bound.top);
-		// g.drawRect(bound.x, bound.y, bound.width, bound.height);
 		g.endFill();
 
 		var f:int = -1;
@@ -198,46 +199,6 @@ public class HeaderSubTopicColumn extends EventDispatcher implements IHeaderLeaf
 			_columns[f].render();
 		}
 	}
-
-	//	public function draw(container:IHeaderContainer, rowIndex:int, columnIndex:int):int {
-	//		// draw children
-	//		var f:int = -1;
-	//		var fmax:int = _columns.length;
-	//		var column:IHeaderColumn;
-	//		var nextColumnIndex:int = columnIndex + 1;
-	//
-	//		while (++f < fmax) {
-	//			column = _columns[f];
-	//			column.render();
-	//		}
-	//
-	//		//		// draw
-	//		//		var tl:Point = HeaderUtils.getPoint(container, rowIndex, columnIndex);
-	//		//		var tr:Point = HeaderUtils.getPoint(container, rowIndex, nextColumnIndex);
-	//		//		tr.x -= container.columnSeparatorSize;
-	//		//		var c:Point = HeaderUtils.getPoint(container, rowIndex + 1, columnIndex + 1);
-	//		//		c.x -= container.columnSeparatorSize;
-	//		//		c.y -= container.rowSeparatorSize;
-	//		//		var br:Point = new Point(tr.x, container.height);
-	//		//
-	//		//		var g:Graphics = container.graphics;
-	//		//		g.beginFill(0, 0.2);
-	//		//		g.moveTo(tl.x, tl.y);
-	//		//		g.lineTo(tr.x, tl.y);
-	//		//		g.lineTo(tr.x, c.y);
-	//		//		g.lineTo(c.x, c.y);
-	//		//		g.lineTo(c.x, br.y);
-	//		//		g.lineTo(tl.x, br.y);
-	//		//		g.lineTo(tl.x, tl.y);
-	//
-	//		//		g.drawRect(tl.x, tl.y, br.x - tl.x, br.y - tl.y);
-	//		//		g.drawRect(c.x, c.y, br.x - c.x, br.y - c.y);
-	//		//		g.moveTo(tl.x, tl.y);
-	//		//		g.drawRect(tl.x, tl.y, tr.x - container.columnSeparatorSize, container.rowHeight);
-	//		//		g.endFill();
-	//
-	//		return nextColumnIndex;
-	//	}
 
 	override public function toString():String {
 		return StringUtils.formatToString("[GridHeaderColumnGroup headerText={0} columnIndex={1} rowIndex={2} computedColumnWidth={3}]", headerText, columnIndex, rowIndex, computedColumnWidth);

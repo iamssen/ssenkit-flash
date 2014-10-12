@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
-			   xmlns:s="library://ns.adobe.com/flex/spark"
-			   xmlns:headers="ssen.components.grid.headers.*">
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:headers="ssen.components.grid.headers.*">
 	<headers:Header left="10" right="10" top="10">
 		<headers:HeaderColumn columnWidth="0.125" headerText="HEADER A"/>
 		<headers:HeaderGroupedColumn headerText="HEADER GROUP">
@@ -27,4 +27,4 @@
 		</headers:HeaderSubTopicColumn>
 		<headers:HeaderColumn columnWidth="0.125" headerText="HEADER H"/>
 	</headers:Header>
-</s:Application>
+</s:Group>

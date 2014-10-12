@@ -4,6 +4,8 @@ import flash.display.Graphics;
 import flash.events.EventDispatcher;
 import flash.geom.Rectangle;
 
+import mx.core.UIComponent;
+
 import mx.events.PropertyChangeEvent;
 
 import ssen.common.StringUtils;
@@ -75,7 +77,7 @@ public class HeaderGroupedColumn extends EventDispatcher implements IHeaderBranc
 	public function set columns(value:Vector.<IHeaderColumn>):void {
 		_columns = value;
 
-		var rowsAndColumns:Vector.<int> = HeaderUtils.count(value);
+		var rowsAndColumns:Vector.<int> = HeaderUtils.countColumnsAndRows(value);
 		_numRows = rowsAndColumns[0];
 		_numColumns = rowsAndColumns[1];
 	}
@@ -147,16 +149,20 @@ public class HeaderGroupedColumn extends EventDispatcher implements IHeaderBranc
 		return widthTotal + separatorSize;
 	}
 
+	//==========================================================================================
+	// render
+	//==========================================================================================
 	public function render():void {
-		trace(HeaderUtils.getSpace(rowIndex), rowIndex, columnIndex, "HeaderGroupedColumn.render()", toString());
+		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderGroupedColumn.render()", toString());
 
-		var bound:Rectangle=new Rectangle;
+		var bound:Rectangle = new Rectangle;
 		bound.x = header.computedColumnPositionList[columnIndex];
 		bound.y = (rowIndex > 0) ? (header.rowHeight + header.rowSeparatorSize) * rowIndex : 0;
 		bound.width = computedColumnWidth;
 		bound.height = header.rowHeight;
 
-		var g:Graphics = header.graphics;
+		var container:UIComponent = header.getContainer(columnIndex);
+		var g:Graphics = container.graphics;
 		g.beginFill(0, 0.2);
 		g.drawRect(bound.x, bound.y, bound.width, bound.height);
 		g.endFill();
@@ -167,7 +173,6 @@ public class HeaderGroupedColumn extends EventDispatcher implements IHeaderBranc
 			_columns[f].render();
 		}
 	}
-
 
 	override public function toString():String {
 		return StringUtils.formatToString("[GridHeaderColumnGroup headerText={0} columnIndex={1} rowIndex={2} computedColumnWidth={3}]", headerText, columnIndex, rowIndex, computedColumnWidth);

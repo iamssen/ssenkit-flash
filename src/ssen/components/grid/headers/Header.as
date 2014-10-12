@@ -1,11 +1,12 @@
 package ssen.components.grid.headers {
 
 import flash.display.Graphics;
+import flash.utils.getTimer;
 
 import mx.core.mx_internal;
 import mx.events.PropertyChangeEvent;
 
-import spark.components.SkinnableContainer;
+import spark.components.Group;
 
 import ssen.ssen_internal;
 
@@ -14,18 +15,27 @@ use namespace mx_internal;
 
 [DefaultProperty("columns")]
 
-public class Header extends SkinnableContainer implements IHeaderContainer {
+public class Header extends Group implements IHeaderContainer {
+	//==========================================================================================
+	// skin parts
+	//==========================================================================================
+	public var lockedContainer:Group;
+	public var unlockedContainer:Group;
 
-	//==========================================================================================
-	// constructor
-	//==========================================================================================
 	public function Header() {
+		clipAndEnableScrolling = true;
+	}
 
+	public function getContainer(columnIndex:int):Group {
+		return (columnIndex < lockedColumnCount) ? lockedContainer : unlockedContainer;
 	}
 
 	//==========================================================================================
 	// implements
 	//==========================================================================================
+	//----------------------------------------------------------------
+	// export values
+	//----------------------------------------------------------------
 	//---------------------------------------------
 	// computedColumnWidthList
 	//---------------------------------------------
@@ -198,100 +208,22 @@ public class Header extends SkinnableContainer implements IHeaderContainer {
 		}
 	}
 
+	//----------------------------------------------------------------
+	// setting values
+	//----------------------------------------------------------------
 	//---------------------------------------------
 	// columnSeparatorSize
 	//---------------------------------------------
 	private var _columnSeparatorSize:int = 3;
 
 	/** columnSeparatorSize */
-	[Bindable]
 	public function get columnSeparatorSize():int {
 		return _columnSeparatorSize;
 	}
 
 	public function set columnSeparatorSize(value:int):void {
-		var oldValue:int = _columnSeparatorSize;
 		_columnSeparatorSize = value;
-
-		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
-			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "columnSeparatorSize", oldValue, _columnSeparatorSize));
-		}
-
 		invalidate_columnLayout();
-	}
-
-	//---------------------------------------------
-	// columns
-	//---------------------------------------------
-	private var _columns:Vector.<IHeaderColumn>;
-
-	/** columns */
-	[Bindable]
-	public function get columns():Vector.<IHeaderColumn> {
-		return _columns;
-	}
-
-	public function set columns(value:Vector.<IHeaderColumn>):void {
-		if (_columns === value) {
-			return;
-		}
-
-		var oldValue:Vector.<IHeaderColumn> = _columns;
-		_columns = value;
-
-		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
-			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "columns", oldValue, _columns));
-		}
-
-		invalidate_columns();
-	}
-
-	//---------------------------------------------
-	// lockedColumnCount
-	// TODO locked 구현 필요
-	//---------------------------------------------
-	private var _lockedColumnCount:int;
-
-	/** lockedColumnCount */
-	[Bindable]
-	public function get lockedColumnCount():int {
-		return _lockedColumnCount;
-	}
-
-	public function set lockedColumnCount(value:int):void {
-		var oldValue:int = _lockedColumnCount;
-		_lockedColumnCount = value;
-
-		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
-			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "lockedColumnCount", oldValue, _lockedColumnCount));
-		}
-
-		invalidate_columnLayout();
-	}
-
-	//---------------------------------------------
-	// horizontalScrollPosition
-	// TODO scroll 구현 필요
-	//---------------------------------------------
-	/** horizontalScrollPosition */
-	[Bindable]
-	public function get horizontalScrollPosition():Number {
-		return 0;
-	}
-
-	public function set horizontalScrollPosition(value:Number):void {
-	}
-
-	//---------------------------------------------
-	// horizontalScrollColumnPosition
-	// TODO scroll 구현 필요
-	//---------------------------------------------
-	/** horizontalScrollColumnPosition */
-	public function get horizontalScrollColumnPosition():Number {
-		return 0;
-	}
-
-	public function set horizontalScrollColumnPosition(value:Number):void {
 	}
 
 	//---------------------------------------------
@@ -310,9 +242,40 @@ public class Header extends SkinnableContainer implements IHeaderContainer {
 	}
 
 	//---------------------------------------------
+	// columns
+	//---------------------------------------------
+	private var _columns:Vector.<IHeaderColumn>;
+
+	/** columns */
+	public function get columns():Vector.<IHeaderColumn> {
+		return _columns;
+	}
+
+	public function set columns(value:Vector.<IHeaderColumn>):void {
+		_columns = value;
+		invalidate_columns();
+	}
+
+	//---------------------------------------------
+	// lockedColumnCount
+	// TODO locked 구현 필요
+	//---------------------------------------------
+	private var _lockedColumnCount:int;
+
+	/** lockedColumnCount */
+	public function get lockedColumnCount():int {
+		return _lockedColumnCount;
+	}
+
+	public function set lockedColumnCount(value:int):void {
+		_lockedColumnCount = value;
+		invalidate_columnLayout();
+	}
+
+	//---------------------------------------------
 	// rowHeight
 	//---------------------------------------------
-	private var _rowHeight:int = 25;
+	private var _rowHeight:int = 30;
 
 	/** rowHeight */
 	public function get rowHeight():int {
@@ -322,6 +285,49 @@ public class Header extends SkinnableContainer implements IHeaderContainer {
 	public function set rowHeight(value:int):void {
 		_rowHeight = value;
 		invalidate_columnLayout();
+	}
+
+	//----------------------------------------------------------------
+	// state values
+	//----------------------------------------------------------------
+	//---------------------------------------------
+	// horizontalScrollPosition
+	// TODO scroll 구현 필요
+	//---------------------------------------------
+	//	/** horizontalScrollPosition */
+	//	[Bindable]
+	//	public function get horizontalScrollPosition():Number {
+	//		return 0;
+	//	}
+	//
+	//	public function set horizontalScrollPosition(value:Number):void {
+	//	}
+
+	//---------------------------------------------
+	// horizontalScrollColumnPosition
+	// TODO scroll 구현 필요
+	//---------------------------------------------
+	/** horizontalScrollColumnPosition */
+	public function get horizontalScrollColumnPosition():Number {
+		return 0;
+	}
+
+	public function set horizontalScrollColumnPosition(value:Number):void {
+	}
+
+	//==========================================================================================
+	// exclude
+	//==========================================================================================
+	override public function set maxHeight(value:Number):void {
+		trace("Header.maxHeight:set is excluded");
+	}
+
+	override public function set minHeight(value:Number):void {
+		trace("Header.minHeight:set is excluded");
+	}
+
+	override public function set height(value:Number):void {
+		trace("Header.height:set is excluded");
 	}
 
 	//==========================================================================================
@@ -357,30 +363,31 @@ public class Header extends SkinnableContainer implements IHeaderContainer {
 	}
 
 	//==========================================================================================
-	// exclude
-	//==========================================================================================
-	override public function set maxHeight(value:Number):void {
-		trace("Header.maxHeight:set is excluded");
-	}
-
-	override public function set minHeight(value:Number):void {
-		trace("Header.minHeight:set is excluded");
-	}
-
-	override public function set height(value:Number):void {
-		trace("Header.height:set is excluded");
-	}
-
-	//==========================================================================================
-	// life cycle
+	// commit
 	//==========================================================================================
 	override protected function commitProperties():void {
 		super.commitProperties();
 
+		if (!lockedContainer) {
+			lockedContainer = new Group;
+			lockedContainer.clipAndEnableScrolling = true;
+			addElement(lockedContainer);
+
+			unlockedContainer = new Group;
+			unlockedContainer.clipAndEnableScrolling = true;
+			addElement(unlockedContainer);
+		}
+
 		if (columnsChanged) {
 			commit_columns();
 			columnsChanged = false;
-			invalidate_columnLayout();
+			columnLayoutChanged = true;
+		}
+
+		if (columnLayoutChanged) {
+			commit_columnLayout();
+			columnLayoutChanged = false;
+			invalidate_columnContent();
 		}
 	}
 
@@ -391,26 +398,17 @@ public class Header extends SkinnableContainer implements IHeaderContainer {
 
 		// force run measure
 		explicitHeight = NaN;
-		return super.mx_internal::measureSizes();
+		return super.measureSizes();
 	}
 
 	override protected function measure():void {
 		super.measure();
 
 		if (_columns) {
-			if (isNaN(explicitWidth)) {
-				explicitWidth = 500;
-			}
-
-			measuredWidth = explicitWidth;
 			measuredHeight = (rowHeight * numRows) + (rowSeparatorSize * (numRows - 1));
 		} else {
-			measuredWidth = explicitWidth;
 			measuredHeight = 100;
 		}
-
-		invalidateSkinState();
-		invalidateParentSizeAndDisplayList();
 	}
 
 	//---------------------------------------------
@@ -429,7 +427,7 @@ public class Header extends SkinnableContainer implements IHeaderContainer {
 
 	protected function commit_columnLayout():void {
 		if (_columns) {
-			columnRatios = computeColumnRatios(_columns);
+			columnRatios = HeaderUtils.computeColumnRatios(_columns);
 		}
 	}
 
@@ -451,22 +449,22 @@ public class Header extends SkinnableContainer implements IHeaderContainer {
 	//		}
 	//	}
 
-
+	//==========================================================================================
+	// render
+	//==========================================================================================
 	override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 		super.updateDisplayList(unscaledWidth, unscaledHeight);
 
+		var f:int;
+		var fmax:int;
+
 		// clear
 		graphics.clear();
-		removeAllElements();
+		lockedContainer.graphics.clear();
+		unlockedContainer.graphics.clear();
 
 		if (!_columns || (unscaledWidth === 0 && unscaledHeight)) {
 			return;
-		}
-
-		if (columnLayoutChanged) {
-			commit_columnLayout();
-			columnLayoutChanged = false;
-			columnContentChanged = true;
 		}
 
 		// TODO 활성화 필요
@@ -484,7 +482,7 @@ public class Header extends SkinnableContainer implements IHeaderContainer {
 		// TODO 일단 ratio mode만 작업 중
 		//---------------------------------------------
 		//		if (_columnMode === "ratio") {
-		var computedWidthList:Vector.<Number> = adjustRatio(unscaledWidth - (columnSeparatorSize * (numColumns - 1)), columnRatios);
+		var computedWidthList:Vector.<Number> = HeaderUtils.adjustRatio(unscaledWidth - (columnSeparatorSize * (numColumns - 1)), columnRatios);
 		//		} else {
 		//			computed=widthList;
 		//		}
@@ -492,15 +490,40 @@ public class Header extends SkinnableContainer implements IHeaderContainer {
 		//---------------------------------------------
 		// 픽셀이 튀거나 하는 현상을 해결하기 위해 width들을 깔끔하게 다듬는다
 		//---------------------------------------------
-		computedWidthList = cleanPixels(unscaledWidth, columnSeparatorSize, computedWidthList);
-		var computedPositionList:Vector.<Number> = sizeToPosition(computedWidthList, columnSeparatorSize);
+		computedWidthList = HeaderUtils.cleanPixels(unscaledWidth, columnSeparatorSize, computedWidthList);
+		var computedPositionList:Vector.<Number> = HeaderUtils.sizeToPosition(computedWidthList, columnSeparatorSize);
 		set_computedColumnWidthList(computedWidthList);
 		set_computedColumnPositionList(computedPositionList);
 
-		trace("Header.updateDisplayList(", unscaledWidth, unscaledHeight, ")");
-		trace("Header.updateDisplayList()", columnRatios);
+		//---------------------------------------------
+		// container visible and resize
+		//---------------------------------------------
+		if (lockedColumnCount > 0) {
+			lockedContainer.visible = true;
+			lockedContainer.includeInLayout = true;
+
+			unlockedContainer.visible = true;
+			unlockedContainer.includeInLayout = true;
+
+			lockedContainer.setActualSize(computedColumnPositionList[lockedColumnCount] - columnSeparatorSize, unscaledHeight);
+
+			unlockedContainer.x = computedColumnPositionList[lockedColumnCount];
+			unlockedContainer.setActualSize(unscaledWidth - lockedContainer.width - columnSeparatorSize, unscaledHeight);
+		} else {
+			lockedContainer.visible = false;
+			lockedContainer.includeInLayout = false;
+
+			unlockedContainer.visible = true;
+			unlockedContainer.includeInLayout = true;
+
+			unlockedContainer.x = 0;
+			unlockedContainer.setActualSize(unscaledWidth, unscaledHeight);
+		}
+
+		trace("Header.updateDisplayList(", unscaledWidth, unscaledHeight, unlockedContainer.width, unlockedContainer.height, ")");
+		trace("Header.updateDisplayList()", columnRatios.length, columnRatios);
 		trace("Header.updateDisplayList(", computedColumnWidthList.length, computedColumnWidthList, ")");
-		trace("Header.updateDisplayList()", leafColumns.length, leafColumns);
+		//		trace("Header.updateDisplayList()", leafColumns.length, leafColumns);
 
 		// TODO test code
 		var g:Graphics = graphics;
@@ -508,43 +531,25 @@ public class Header extends SkinnableContainer implements IHeaderContainer {
 		g.drawRect(0, 0, unscaledWidth, unscaledHeight);
 		g.endFill();
 
+
 		//---------------------------------------------
 		// render
 		//---------------------------------------------
-		var f:int = -1;
-		var fmax:int = _columns.length;
+		f = -1;
+		fmax = _columns.length;
 
+		trace("Header.updateDisplayList() --------------------------------------------------------", getTimer());
 		while (++f < fmax) {
 			_columns[f].render();
 		}
-
-		// dispatchEvent(new HeaderEvents(HeaderEvents.COMPUTED_WIDTH_LIST));
-	}
-
-	//==========================================================================================
-	// column width control
-	//==========================================================================================
-	private static function sizeToPosition(size:Vector.<Number>, columnSeparatorSize:int):Vector.<Number> {
-		var pos:Vector.<Number> = new Vector.<Number>(size.length, true);
-		var nx:Number = 0;
-
-		var f:int = -1;
-		var fmax:int = size.length;
-		while (++f < fmax) {
-			pos[f] = nx;
-			nx += size[f] + columnSeparatorSize;
-		}
-
-		return pos;
 	}
 
 	//----------------------------------------------------------------
 	// column 들을 loop 돌면서 작업한다
-	// 1.
 	//----------------------------------------------------------------
 	private function initColumns():void {
 		// count columns and rows
-		var rowsAndColumns:Vector.<int> = HeaderUtils.count(_columns);
+		var rowsAndColumns:Vector.<int> = HeaderUtils.countColumnsAndRows(_columns);
 		set_numRows(rowsAndColumns[0]);
 		set_numColumns(rowsAndColumns[1]);
 
@@ -556,106 +561,6 @@ public class Header extends SkinnableContainer implements IHeaderContainer {
 		set_leafColumns(initializer.leafColumns);
 	}
 
-	//----------------------------------------------------------------
-	// column들의 width 들을 계산한다
-	// - ratio (no scroll)
-	// - real (scroll)
-	//----------------------------------------------------------------
-	private static function computeColumnRatios(columns:Vector.<IHeaderColumn>):Vector.<Number> {
-		var widthList:Vector.<Number> = new Vector.<Number>;
-
-		// source가 되는 widthList를 읽어온다
-		readColumnWidth(columns, widthList);
-
-		trace("Header.computeColumnRatios()", widthList.length, widthList);
-
-		return valuesToRatios(widthList);
-	}
-
-	// Pixel 단위 사이즈들을 int 단위로 깔끔하게 정리한다
-	// int 단위로 정리를 한다음에 여분은 마지막 사이즈에 몰아서 준다
-	private static function cleanPixels(w:Number, gap:int, values:Vector.<Number>):Vector.<Number> {
-		var cleaned:Vector.<Number> = new Vector.<Number>(values.length, true);
-		var fw:int;
-		var nx:int = 0;
-
-		var f:int = -1;
-		var fmax:int = values.length;
-		while (++f < fmax) {
-			if (f === fmax - 1) {
-				cleaned[f] = w - nx;
-			} else {
-				fw = values[f];
-				cleaned[f] = fw;
-				nx += fw + gap;
-			}
-		}
-
-		return cleaned;
-	}
-
-	// Total을 Ratio로 쪼개서 보내준다
-	private static function adjustRatio(total:Number, ratios:Vector.<Number>):Vector.<Number> {
-		var computed:Vector.<Number> = new Vector.<Number>(ratios.length, true);
-		var f:int = -1;
-		var fmax:int = ratios.length;
-		while (++f < fmax) {
-			computed[f] = total * ratios[f];
-		}
-		return computed;
-	}
-
-	// Number 수치들을 Ratio 수치들로 바꾼다
-	private static function valuesToRatios(values:Vector.<Number>):Vector.<Number> {
-		var total:Number = 0;
-		var ratios:Vector.<Number>;
-
-		var f:int = -1;
-		var fmax:int = values.length;
-		while (++f < fmax) {
-			total += values[f];
-		}
-
-		if (total !== 1) {
-			ratios = new Vector.<Number>(values.length, true);
-
-			f = -1;
-			fmax = values.length;
-			while (++f < fmax) {
-				ratios[f] = values[f] / total;
-			}
-		} else {
-			ratios = values;
-		}
-
-		return ratios;
-	}
-
-	// Tree 형태의 Vector.<IHeaderColumn>의 재귀 반복을 통해 최종 Leaf들만을 찾아서 widthList로 저장한다.
-	private static function readColumnWidth(columns:Vector.<IHeaderColumn>, widthList:Vector.<Number>):void {
-		var column:IHeaderColumn;
-		var f:int = -1;
-		var fmax:int = columns.length;
-
-		while (++f < fmax) {
-			column = columns[f];
-
-			// branche 일 경우에는 재귀로 하위를 검색한다
-			if (column is IHeaderBrancheColumn) {
-				readColumnWidth(IHeaderBrancheColumn(column).columns, widthList);
-			}
-
-			if (column is IHeaderLeafColumn) {
-				// branche 이면서 동시에 leaf 인 경우도 있기 때문에 else로 할당한다
-				// leaf 일 경우에는 widthList에 추가한다
-				//				if (column is IHeaderLeafColumn) {
-				widthList.push(IHeaderLeafColumn(column).columnWidth);
-				//				} else {
-				//					throw new Error(column, "is not a IHeaderLeafColumn");
-				//				}
-			}
-		}
-	}
 }
 }
 
@@ -694,15 +599,10 @@ class ColumnInitializer {
 			if (column is IHeaderLeafColumn) {
 				columnCount += 1;
 
-				//				// branche 이면서 동시에 leaf 인 경우도 있기 때문에 else 로 할당한다
-				//				//---------------------------------------------
-				//				// add to leaf columns
-				//				//---------------------------------------------
-				//				if (column is IHeaderLeafColumn) {
+				//---------------------------------------------
+				// add to leaf columns
+				//---------------------------------------------
 				leafColumns.push(column);
-				//				} else {
-				//					throw new Error(column, "is not a IHeaderLeafColumn");
-				//				}
 			}
 
 			if (column is IHeaderBrancheColumn) {

@@ -2,7 +2,7 @@ package ssen.components.grid.headers {
 import mx.core.IVisualElement;
 import mx.core.IVisualElementContainer;
 
-public interface IHeader extends IVisualElementContainer, IVisualElement {
+public interface IHeader extends IVisualElement, IVisualElementContainer {
 	//==========================================================================================
 	// 외부로 줘야 하는 정보들
 	//==========================================================================================

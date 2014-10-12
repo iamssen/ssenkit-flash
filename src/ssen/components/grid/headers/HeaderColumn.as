@@ -2,9 +2,9 @@ package ssen.components.grid.headers {
 
 import flash.display.Graphics;
 import flash.events.EventDispatcher;
-import flash.geom.Point;
 import flash.geom.Rectangle;
 
+import mx.core.UIComponent;
 import mx.events.PropertyChangeEvent;
 
 import ssen.common.StringUtils;
@@ -116,7 +116,6 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 		}
 	}
 
-
 	//---------------------------------------------
 	// computedColumnWidth
 	//---------------------------------------------
@@ -126,44 +125,23 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 	}
 
 	//==========================================================================================
-	// draw
+	// render
 	//==========================================================================================
-	//	public function draw(container:IHeaderContainer, rowIndex:int, columnIndex:int):int {
-	//		var nextColumnIndex:int=columnIndex + 1;
-	//
-	//		var tl:Point=HeaderUtils.getPoint(container, rowIndex, columnIndex);
-	//		var br:Point
-	//		//=new Point(weaver.getProperty(), container.computedWidthList[columnIndex], container.measuredHeight - tl.y);
-	//		var g:Graphics=container.graphics;
-	//		g.beginFill(0, 0.1);
-	//		g.drawRect(tl.x, tl.y, br.x, br.y);
-	//		g.endFill();
-	//
-	//		return nextColumnIndex;
-	//	}
-
 	public function render():void {
-		trace(HeaderUtils.getSpace(rowIndex), rowIndex, columnIndex, "HeaderColumn.render()", toString());
+		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderColumn.render()", toString());
 
-//		var bound:Rectangle=HeaderUtils.getColumnBound(this);
-		var bound:Rectangle=new Rectangle;
+		var bound:Rectangle = new Rectangle;
 		var surplusRows:int = (header.numRows - rowIndex);
 		bound.x = header.computedColumnPositionList[columnIndex];
 		bound.y = (rowIndex > 0) ? (header.rowHeight + header.rowSeparatorSize) * rowIndex : 0;
 		bound.width = header.computedColumnWidthList[columnIndex];
 		bound.height = (header.rowHeight * surplusRows) + (header.rowSeparatorSize * (surplusRows - 1));
 
-		var g:Graphics=header.graphics;
-		g.beginFill(0, 0.1);
+		var container:UIComponent = header.getContainer(columnIndex);
+		var g:Graphics = container.graphics;
+		g.beginFill(0, 0.5);
 		g.drawRect(bound.x, bound.y, bound.width, bound.height);
 		g.endFill();
-
-//		var tl:Point = HeaderUtils.getPoint(header, rowIndex, columnIndex);
-//		var br:Point=new Point(weaver.getProperty(), container.computedWidthList[columnIndex], container.measuredHeight - tl.y);
-//		var g:Graphics = container.graphics;
-//		g.beginFill(0, 0.1);
-//		g.drawRect(tl.x, tl.y, br.x, br.y);
-//		g.endFill();
 	}
 
 	override public function toString():String {
