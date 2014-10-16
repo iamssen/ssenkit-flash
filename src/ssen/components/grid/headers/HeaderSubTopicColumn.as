@@ -62,6 +62,7 @@ public class HeaderSubTopicColumn extends EventDispatcher implements IHeaderLeaf
 
 	public function set headerText(value:String):void {
 		_headerText = value;
+		if (_header) _header.invalidateColumnContent();
 	}
 
 	//---------------------------------------------
@@ -80,16 +81,24 @@ public class HeaderSubTopicColumn extends EventDispatcher implements IHeaderLeaf
 		var rowsAndColumns:Vector.<int> = HeaderUtils.countColumnsAndRows(value);
 		_numRows = rowsAndColumns[0] + 1;
 		_numColumns = rowsAndColumns[1] + 1;
+
+		if (_header) _header.invalidateColumns();
 	}
 
+	//---------------------------------------------
+	// renderer
+	//---------------------------------------------
+	private var _renderer:IHeaderColumnRenderer;
 
+	/** renderer */
 	public function get renderer():IHeaderColumnRenderer {
-		return null;
+		return _renderer;
 	}
 
 	public function set renderer(value:IHeaderColumnRenderer):void {
+		_renderer = value;
+		if (_header) _header.invalidateColumnContent();
 	}
-
 
 	//---------------------------------------------
 	// rowIndex

@@ -141,5 +141,14 @@ public class HeaderUtils {
 			}
 		}
 	}
+
+	public static function getColumnWidthList(columns:Vector.<IHeaderLeafColumn>):Vector.<Number> {
+		var list:Vector.<Number> = new Vector.<Number>(columns.length, true);
+		var f:int = columns.length;
+		while (--f >= 0) {
+			list[f] = columns[f].columnWidth;
+		}
+		return list;
+	}
 }
 }

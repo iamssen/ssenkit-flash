@@ -5,7 +5,6 @@ import flash.events.EventDispatcher;
 import flash.geom.Rectangle;
 
 import mx.core.UIComponent;
-
 import mx.events.PropertyChangeEvent;
 
 import ssen.common.StringUtils;
@@ -62,6 +61,7 @@ public class HeaderGroupedColumn extends EventDispatcher implements IHeaderBranc
 
 	public function set headerText(value:String):void {
 		_headerText = value;
+		if (_header) _header.invalidateColumnContent();
 	}
 
 	//---------------------------------------------
@@ -80,14 +80,23 @@ public class HeaderGroupedColumn extends EventDispatcher implements IHeaderBranc
 		var rowsAndColumns:Vector.<int> = HeaderUtils.countColumnsAndRows(value);
 		_numRows = rowsAndColumns[0];
 		_numColumns = rowsAndColumns[1];
+
+		if (_header) _header.invalidateColumns();
 	}
 
+	//---------------------------------------------
+	// renderer
+	//---------------------------------------------
+	private var _renderer:IHeaderColumnRenderer;
 
+	/** renderer */
 	public function get renderer():IHeaderColumnRenderer {
-		return null;
+		return _renderer;
 	}
 
 	public function set renderer(value:IHeaderColumnRenderer):void {
+		_renderer = value;
+		if (_header) _header.invalidateColumnContent();
 	}
 
 	//---------------------------------------------

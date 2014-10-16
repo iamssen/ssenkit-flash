@@ -1,12 +1,11 @@
 package ssen.components.grid.headers {
 
-import flash.display.Graphics;
 import flash.utils.getTimer;
 
 import mx.core.mx_internal;
-import mx.events.PropertyChangeEvent;
 
 import spark.components.Group;
+import spark.components.supportClasses.SkinnableComponent;
 
 import ssen.ssen_internal;
 
@@ -15,19 +14,46 @@ use namespace mx_internal;
 
 [DefaultProperty("columns")]
 
-public class Header extends Group implements IHeaderContainer {
+[Event(name="columnLayoutChanged", type="ssen.components.grid.headers.HeaderEvent")]
+[Event(name="columnChanged", type="ssen.components.grid.headers.HeaderEvent")]
+
+public class Header extends SkinnableComponent implements IHeaderContainer {
 	//==========================================================================================
 	// skin parts
 	//==========================================================================================
+	[SkinPart(required="true")]
 	public var lockedContainer:Group;
+
+	[SkinPart(required="true")]
 	public var unlockedContainer:Group;
 
 	public function Header() {
-		clipAndEnableScrolling = true;
+		setStyle("skinClass", HeaderSkin);
 	}
 
 	public function getContainer(columnIndex:int):Group {
 		return (columnIndex < lockedColumnCount) ? lockedContainer : unlockedContainer;
+	}
+
+	//---------------------------------------------
+	// columnLayoutMode
+	//---------------------------------------------
+	private var _columnLayoutMode:String = "ratio";
+
+	/** columnLayoutMode */
+	public function get columnLayoutMode():String {
+		return _columnLayoutMode;
+	}
+
+	[Inspectable(type="String", defaultValue="ratio", enumeration="ratio,fixed")]
+	public function set columnLayoutMode(value:String):void {
+		_columnLayoutMode = value;
+		if (value === HeaderLayoutMode.RATIO) {
+			_scrollEnabled = false;
+		} else {
+			_horizontalScrollPosition = 0;
+		}
+		invalidate_columnLayout();
 	}
 
 	//==========================================================================================
@@ -42,18 +68,8 @@ public class Header extends Group implements IHeaderContainer {
 	private var _computedColumnWidthList:Vector.<Number>;
 
 	/** computedColumnWidthList */
-	[Bindable(event="propertyChange")]
 	public function get computedColumnWidthList():Vector.<Number> {
 		return _computedColumnWidthList;
-	}
-
-	private function set_computedColumnWidthList(value:Vector.<Number>):void {
-		var oldValue:Vector.<Number> = _computedColumnWidthList;
-		_computedColumnWidthList = value;
-
-		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
-			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "computedColumnWidthList", oldValue, _computedColumnWidthList));
-		}
 	}
 
 	//---------------------------------------------
@@ -62,18 +78,8 @@ public class Header extends Group implements IHeaderContainer {
 	private var _computedColumnPositionList:Vector.<Number>;
 
 	/** computedColumnPositionList */
-	[Bindable(event="propertyChange")]
 	public function get computedColumnPositionList():Vector.<Number> {
 		return _computedColumnPositionList;
-	}
-
-	private function set_computedColumnPositionList(value:Vector.<Number>):void {
-		var oldValue:Vector.<Number> = _computedColumnPositionList;
-		_computedColumnPositionList = value;
-
-		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
-			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "computedColumnPositionList", oldValue, _computedColumnPositionList));
-		}
 	}
 
 	//---------------------------------------------
@@ -83,18 +89,8 @@ public class Header extends Group implements IHeaderContainer {
 	private var _computedLockedColumnWidthTotal:Number;
 
 	/** computedLockedColumnWidthTotal */
-	[Bindable(event="propertyChange")]
 	public function get computedLockedColumnWidthTotal():Number {
 		return _computedLockedColumnWidthTotal;
-	}
-
-	private function set_computedLockedColumnWidthTotal(value:Number):void {
-		var oldValue:Number = _computedLockedColumnWidthTotal;
-		_computedLockedColumnWidthTotal = value;
-
-		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
-			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "computedLockedColumnWidthTotal", oldValue, _computedLockedColumnWidthTotal));
-		}
 	}
 
 	//---------------------------------------------
@@ -104,18 +100,8 @@ public class Header extends Group implements IHeaderContainer {
 	private var _computedUnlockedColumnWidthTotal:Number;
 
 	/** computedUnlockedColumnWidthTotal */
-	[Bindable(event="propertyChange")]
 	public function get computedUnlockedColumnWidthTotal():Number {
 		return _computedUnlockedColumnWidthTotal;
-	}
-
-	private function set_computedUnlockedColumnWidthTotal(value:Number):void {
-		var oldValue:Number = _computedUnlockedColumnWidthTotal;
-		_computedUnlockedColumnWidthTotal = value;
-
-		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
-			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "computedUnlockedColumnWidthTotal", oldValue, _computedUnlockedColumnWidthTotal));
-		}
 	}
 
 	//---------------------------------------------
@@ -125,27 +111,18 @@ public class Header extends Group implements IHeaderContainer {
 	private var _unlockedColumnCount:int;
 
 	/** unlockedColumnCount */
-	[Bindable(event="propertyChange")]
 	public function get unlockedColumnCount():int {
 		return _unlockedColumnCount;
 	}
 
-	private function set_unlockedColumnCount(value:int):void {
-		var oldValue:int = _unlockedColumnCount;
-		_unlockedColumnCount = value;
-
-		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
-			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "unlockedColumnCount", oldValue, _unlockedColumnCount));
-		}
-	}
-
 	//---------------------------------------------
 	// scrollEnabled
-	// TODO scroll 구현 필요
 	//---------------------------------------------
+	private var _scrollEnabled:Boolean;
+
 	/** scrollEnabled */
 	public function get scrollEnabled():Boolean {
-		return false;
+		return _scrollEnabled;
 	}
 
 	//---------------------------------------------
@@ -154,18 +131,8 @@ public class Header extends Group implements IHeaderContainer {
 	private var _leafColumns:Vector.<IHeaderLeafColumn>;
 
 	/** leafColumns */
-	[Bindable(event="propertyChange")]
 	public function get leafColumns():Vector.<IHeaderLeafColumn> {
 		return _leafColumns;
-	}
-
-	private function set_leafColumns(value:Vector.<IHeaderLeafColumn>):void {
-		var oldValue:Vector.<IHeaderLeafColumn> = _leafColumns;
-		_leafColumns = value;
-
-		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
-			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "leafColumns", oldValue, _leafColumns));
-		}
 	}
 
 	//---------------------------------------------
@@ -174,18 +141,8 @@ public class Header extends Group implements IHeaderContainer {
 	private var _numRows:int;
 
 	/** numRows */
-	[Bindable(event="propertyChange")]
 	public function get numRows():int {
 		return _numRows;
-	}
-
-	private function set_numRows(value:int):void {
-		var oldValue:int = _numRows;
-		_numRows = value;
-
-		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
-			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "numRows", oldValue, _numRows));
-		}
 	}
 
 	//---------------------------------------------
@@ -194,18 +151,8 @@ public class Header extends Group implements IHeaderContainer {
 	private var _numColumns:int;
 
 	/** numColumns */
-	[Bindable(event="propertyChange")]
 	public function get numColumns():int {
 		return _numColumns;
-	}
-
-	private function set_numColumns(value:int):void {
-		var oldValue:int = _numColumns;
-		_numColumns = value;
-
-		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
-			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "numColumns", oldValue, _numColumns));
-		}
 	}
 
 	//----------------------------------------------------------------
@@ -292,27 +239,21 @@ public class Header extends Group implements IHeaderContainer {
 	//----------------------------------------------------------------
 	//---------------------------------------------
 	// horizontalScrollPosition
-	// TODO scroll 구현 필요
 	//---------------------------------------------
-	//	/** horizontalScrollPosition */
-	//	[Bindable]
-	//	public function get horizontalScrollPosition():Number {
-	//		return 0;
-	//	}
-	//
-	//	public function set horizontalScrollPosition(value:Number):void {
-	//	}
+	private var _horizontalScrollPosition:Number;
 
-	//---------------------------------------------
-	// horizontalScrollColumnPosition
-	// TODO scroll 구현 필요
-	//---------------------------------------------
-	/** horizontalScrollColumnPosition */
-	public function get horizontalScrollColumnPosition():Number {
-		return 0;
+	/** horizontalScrollPosition */
+	public function get horizontalScrollPosition():Number {
+		if (_columnLayoutMode === HeaderLayoutMode.RATIO) {
+			return 0;
+		}
+
+		return _horizontalScrollPosition;
 	}
 
-	public function set horizontalScrollColumnPosition(value:Number):void {
+	public function set horizontalScrollPosition(value:Number):void {
+		_horizontalScrollPosition = value;
+		invalidate_scroll();
 	}
 
 	//==========================================================================================
@@ -362,21 +303,36 @@ public class Header extends Group implements IHeaderContainer {
 		invalidateDisplayList();
 	}
 
+	public function invalidateColumns():void {
+		invalidate_columns();
+	}
+
+	public function invalidateColumnLayout():void {
+		invalidate_columnLayout();
+	}
+
+	public function invalidateColumnContent():void {
+		invalidate_columnContent();
+	}
+
+	public function invalidateScroll():void {
+		invalidate_scroll();
+	}
+
 	//==========================================================================================
 	// commit
+	//
+	// ratio
+	// - [x] commitProperties 에서 ratio 비율을 계산하고,
+	// - [x] updateDisplayList 에서 실제 width 들을 계산한다
+	// - [x] scroll 은 무조건 비활성 된다
+	//
+	// fixed
+	// - commitProperties 에서 width 들을 계산한다
+	// - scroll 은 updateDisplayList 에서 체크해서 활성화 된다
 	//==========================================================================================
 	override protected function commitProperties():void {
 		super.commitProperties();
-
-		if (!lockedContainer) {
-			lockedContainer = new Group;
-			lockedContainer.clipAndEnableScrolling = true;
-			addElement(lockedContainer);
-
-			unlockedContainer = new Group;
-			unlockedContainer.clipAndEnableScrolling = true;
-			addElement(unlockedContainer);
-		}
 
 		if (columnsChanged) {
 			commit_columns();
@@ -427,7 +383,12 @@ public class Header extends Group implements IHeaderContainer {
 
 	protected function commit_columnLayout():void {
 		if (_columns) {
-			columnRatios = HeaderUtils.computeColumnRatios(_columns);
+			if (_columnLayoutMode === HeaderLayoutMode.RATIO) {
+				columnRatios = HeaderUtils.computeColumnRatios(_columns);
+			} else {
+				_computedColumnWidthList = HeaderUtils.getColumnWidthList(_leafColumns);
+				_computedColumnPositionList = HeaderUtils.sizeToPosition(_computedColumnWidthList, _columnSeparatorSize);
+			}
 		}
 	}
 
@@ -452,19 +413,80 @@ public class Header extends Group implements IHeaderContainer {
 	//==========================================================================================
 	// render
 	//==========================================================================================
+	override public function invalidateDisplayList():void {
+		super.invalidateDisplayList();
+	}
+
 	override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 		super.updateDisplayList(unscaledWidth, unscaledHeight);
 
 		var f:int;
 		var fmax:int;
 
-		// clear
-		graphics.clear();
-		lockedContainer.graphics.clear();
-		unlockedContainer.graphics.clear();
-
-		if (!_columns || (unscaledWidth === 0 && unscaledHeight)) {
+		//---------------------------------------------
+		// clear containers
+		//---------------------------------------------
+		if (lockedContainer && unlockedContainer) {
+			lockedContainer.graphics.clear();
+			unlockedContainer.graphics.clear();
+		} else {
 			return;
+		}
+
+		//---------------------------------------------
+		// return
+		//---------------------------------------------
+		if (!_columns || unscaledWidth === 0 || unscaledHeight === 0) {
+			return;
+		}
+
+		//---------------------------------------------
+		// calculate ratio width
+		//---------------------------------------------
+		if (_columnLayoutMode === HeaderLayoutMode.RATIO) {
+			var computedWidthList:Vector.<Number>;
+			var computedPositionList:Vector.<Number>;
+			computedWidthList = HeaderUtils.adjustRatio(unscaledWidth - (columnSeparatorSize * (numColumns - 1)), columnRatios);
+			computedWidthList = HeaderUtils.cleanPixels(unscaledWidth, columnSeparatorSize, computedWidthList);
+			computedPositionList = HeaderUtils.sizeToPosition(computedWidthList, columnSeparatorSize);
+
+			_computedColumnWidthList = computedWidthList;
+			_computedColumnPositionList = computedPositionList;
+
+			columnContentChanged = true;
+		}
+		//		else {
+		//			computedWidthList = _computedColumnWidthList;
+		//			computedPositionList = _computedColumnPositionList;
+		//		}
+
+		//---------------------------------------------
+		// container visible and resize
+		//---------------------------------------------
+		if (lockedColumnCount > 0) {
+			lockedContainer.visible = true;
+			lockedContainer.includeInLayout = true;
+
+			unlockedContainer.visible = true;
+			unlockedContainer.includeInLayout = true;
+
+			lockedContainer.measuredWidth = computedColumnPositionList[lockedColumnCount] - columnSeparatorSize;
+			lockedContainer.measuredHeight = unscaledHeight;
+
+			unlockedContainer.x = computedColumnPositionList[lockedColumnCount];
+			unlockedContainer.measuredWidth = unscaledWidth - lockedContainer.width - columnSeparatorSize;
+			unlockedContainer.measuredHeight = unscaledHeight;
+		} else {
+			lockedContainer.visible = false;
+			lockedContainer.includeInLayout = false;
+
+			unlockedContainer.visible = true;
+			unlockedContainer.includeInLayout = true;
+
+			unlockedContainer.x = 0;
+			unlockedContainer.measuredWidth = unscaledWidth;
+			unlockedContainer.measuredHeight = unscaledHeight;
+			unlockedContainer.invalidateSize();
 		}
 
 		// TODO 활성화 필요
@@ -478,59 +500,10 @@ public class Header extends Group implements IHeaderContainer {
 		//			columnContentChanged = false;
 		//		}
 
-		//---------------------------------------------
-		// TODO 일단 ratio mode만 작업 중
-		//---------------------------------------------
-		//		if (_columnMode === "ratio") {
-		var computedWidthList:Vector.<Number> = HeaderUtils.adjustRatio(unscaledWidth - (columnSeparatorSize * (numColumns - 1)), columnRatios);
-		//		} else {
-		//			computed=widthList;
-		//		}
-
-		//---------------------------------------------
-		// 픽셀이 튀거나 하는 현상을 해결하기 위해 width들을 깔끔하게 다듬는다
-		//---------------------------------------------
-		computedWidthList = HeaderUtils.cleanPixels(unscaledWidth, columnSeparatorSize, computedWidthList);
-		var computedPositionList:Vector.<Number> = HeaderUtils.sizeToPosition(computedWidthList, columnSeparatorSize);
-		set_computedColumnWidthList(computedWidthList);
-		set_computedColumnPositionList(computedPositionList);
-
-		//---------------------------------------------
-		// container visible and resize
-		//---------------------------------------------
-		if (lockedColumnCount > 0) {
-			lockedContainer.visible = true;
-			lockedContainer.includeInLayout = true;
-
-			unlockedContainer.visible = true;
-			unlockedContainer.includeInLayout = true;
-
-			lockedContainer.setActualSize(computedColumnPositionList[lockedColumnCount] - columnSeparatorSize, unscaledHeight);
-
-			unlockedContainer.x = computedColumnPositionList[lockedColumnCount];
-			unlockedContainer.setActualSize(unscaledWidth - lockedContainer.width - columnSeparatorSize, unscaledHeight);
-		} else {
-			lockedContainer.visible = false;
-			lockedContainer.includeInLayout = false;
-
-			unlockedContainer.visible = true;
-			unlockedContainer.includeInLayout = true;
-
-			unlockedContainer.x = 0;
-			unlockedContainer.setActualSize(unscaledWidth, unscaledHeight);
-		}
-
-		trace("Header.updateDisplayList(", unscaledWidth, unscaledHeight, unlockedContainer.width, unlockedContainer.height, ")");
+		trace("Header.updateDisplayList(", unscaledWidth, unscaledHeight, ")");
 		trace("Header.updateDisplayList()", columnRatios.length, columnRatios);
 		trace("Header.updateDisplayList(", computedColumnWidthList.length, computedColumnWidthList, ")");
 		//		trace("Header.updateDisplayList()", leafColumns.length, leafColumns);
-
-		// TODO test code
-		var g:Graphics = graphics;
-		g.beginFill(0, 0.1);
-		g.drawRect(0, 0, unscaledWidth, unscaledHeight);
-		g.endFill();
-
 
 		//---------------------------------------------
 		// render
@@ -550,17 +523,16 @@ public class Header extends Group implements IHeaderContainer {
 	private function initColumns():void {
 		// count columns and rows
 		var rowsAndColumns:Vector.<int> = HeaderUtils.countColumnsAndRows(_columns);
-		set_numRows(rowsAndColumns[0]);
-		set_numColumns(rowsAndColumns[1]);
+		_numRows = rowsAndColumns[0];
+		_numColumns = rowsAndColumns[1];
 
 		// set header to columns
 		// get leaf columns
 		var initializer:ColumnInitializer = new ColumnInitializer;
 		initializer.header = this;
 		initializer.run(_columns);
-		set_leafColumns(initializer.leafColumns);
+		_leafColumns = initializer.leafColumns;
 	}
-
 }
 }
 

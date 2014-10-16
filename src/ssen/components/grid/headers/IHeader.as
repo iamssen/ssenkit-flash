@@ -1,52 +1,55 @@
 package ssen.components.grid.headers {
+
+import mx.core.IFlexDisplayObject;
 import mx.core.IVisualElement;
-import mx.core.IVisualElementContainer;
 
-public interface IHeader extends IVisualElement, IVisualElementContainer {
+[Event(name="columnLayoutChanged", type="ssen.components.grid.headers.HeaderEvent")]
+[Event(name="columnChanged", type="ssen.components.grid.headers.HeaderEvent")]
+
+public interface IHeader extends IVisualElement, IFlexDisplayObject {
 	//==========================================================================================
-	// 외부로 줘야 하는 정보들
+	// 외부로 계산해서 줘야 하는 정보들
 	//==========================================================================================
-	/** 계산된 Column들의 Width들 */
-	[Bindable(event="propertyChange")]
-	function get computedColumnWidthList():Vector.<Number>;
-
-	[Bindable(event="propertyChange")]
-	function get computedColumnPositionList():Vector.<Number>;
-
-	/** 계산된 잠겨있는 Column들의 Width 합계 */
-	[Bindable(event="propertyChange")]
-	function get computedLockedColumnWidthTotal():Number;
-
-	/** 계산된 잠겨있지 않은 Column들의 Width 합계 */
-	[Bindable(event="propertyChange")]
-	function get computedUnlockedColumnWidthTotal():Number;
-
-	/** 잠겨있지 않은 Column들의 수 */
-	[Bindable(event="propertyChange")]
-	function get unlockedColumnCount():int;
-
+	//----------------------------------------------------------------
+	// grid의 type 정보들 (상수 정보)
+	//----------------------------------------------------------------
 	/** Header Component가 scroll을 지원하는지 여부 */
 	function get scrollEnabled():Boolean;
 
+	//----------------------------------------------------------------
+	// grid의 계산된 정보들
+	//----------------------------------------------------------------
+	//---------------------------------------------
+	// column bounds
+	//---------------------------------------------
+	/** 계산된 Column들의 Width들 */
+	function get computedColumnWidthList():Vector.<Number>;
+
+	function get computedColumnPositionList():Vector.<Number>;
+
+	//---------------------------------------------
+	// locked info
+	//---------------------------------------------
+	/** 계산된 잠겨있는 Column들의 Width 합계 */
+	function get computedLockedColumnWidthTotal():Number;
+
+	/** 계산된 잠겨있지 않은 Column들의 Width 합계 */
+	function get computedUnlockedColumnWidthTotal():Number;
+
+	/** 잠겨있지 않은 Column들의 수 */
+	function get unlockedColumnCount():int;
+
+	//---------------------------------------------
+	// column and row 정보들
+	//---------------------------------------------
 	/** leafColumns */
-	[Bindable(event="propertyChange")]
 	function get leafColumns():Vector.<IHeaderLeafColumn>;
 
 	/** Row 갯수 */
-	[Bindable(event="propertyChange")]
 	function get numRows():int;
 
 	/** Column 갯수 */
-	[Bindable(event="propertyChange")]
 	function get numColumns():int;
-
-	/** columnSeparatorSize */
-	[Bindable(event="propertyChange")]
-	function get columnSeparatorSize():int;
-
-	/** rowSeparatorSize */
-	[Bindable(event="propertyChange")]
-	function get rowSeparatorSize():int;
 
 	//==========================================================================================
 	// 외부에서 받아야 하는 정보들
@@ -63,8 +66,18 @@ public interface IHeader extends IVisualElement, IVisualElementContainer {
 	function get horizontalScrollPosition():Number;
 	function set horizontalScrollPosition(value:Number):void;
 
-	/** 잠겨있지 않은 Column들의 Column Count 기준 Scroll 위치 */
-	function get horizontalScrollColumnPosition():Number;
-	function set horizontalScrollColumnPosition(value:Number):void;
+	//==========================================================================================
+	// 내부에서 셋팅되어서 외부로 보내줘야 하는 항목들
+	//==========================================================================================
+	/** columnSeparatorSize */
+	function get columnSeparatorSize():int;
+
+	/** rowSeparatorSize */
+	function get rowSeparatorSize():int;
+
+	/** rowHeight */
+	function get rowHeight():int;
+
+	function get columnLayoutMode():String;
 }
 }

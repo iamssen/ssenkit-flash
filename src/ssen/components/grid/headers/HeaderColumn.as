@@ -39,6 +39,7 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 
 	public function set headerText(value:String):void {
 		_headerText = value;
+		if (_header) _header.invalidateColumnContent();
 	}
 
 	//---------------------------------------------
@@ -53,7 +54,7 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 
 	public function set renderer(value:IHeaderColumnRenderer):void {
 		_renderer = value;
-
+		if (_header) _header.invalidateColumnContent();
 	}
 
 	//---------------------------------------------
@@ -114,6 +115,7 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
 			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "columnWidth", oldValue, _columnWidth));
 		}
+		if (_header) _header.invalidateColumnLayout();
 	}
 
 	//---------------------------------------------
