@@ -130,16 +130,17 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 	// render
 	//==========================================================================================
 	public function render():void {
-		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderColumn.render()", toString());
-
+		var isLocekdContainer:Boolean = header.isDrawLockedContainer(columnIndex);
+		var container:UIComponent = isLocekdContainer ? header.getLockedContainer() : header.getUnlockedContainer();
 		var bound:Rectangle = new Rectangle;
 		var surplusRows:int = (header.numRows - rowIndex);
-		bound.x = header.computedColumnPositionList[columnIndex];
+		bound.x = HeaderUtils.drawStartX(header.columnLayoutMode, header.computedColumnPositionList, columnIndex, header.frontLockedColumnCount);
 		bound.y = (rowIndex > 0) ? (header.rowHeight + header.rowSeparatorSize) * rowIndex : 0;
 		bound.width = header.computedColumnWidthList[columnIndex];
 		bound.height = (header.rowHeight * surplusRows) + (header.rowSeparatorSize * (surplusRows - 1));
 
-		var container:UIComponent = header.getContainer(columnIndex);
+		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderColumn.render()", toString(), container.name, bound);
+
 		var g:Graphics = container.graphics;
 		g.beginFill(0, 0.5);
 		g.drawRect(bound.x, bound.y, bound.width, bound.height);

@@ -3,10 +3,12 @@ package ssen.components.grid.headers {
 import mx.core.IFlexDisplayObject;
 import mx.core.IVisualElement;
 
+import spark.core.IViewport;
+
 [Event(name="columnLayoutChanged", type="ssen.components.grid.headers.HeaderEvent")]
 [Event(name="columnChanged", type="ssen.components.grid.headers.HeaderEvent")]
 
-public interface IHeader extends IVisualElement, IFlexDisplayObject {
+public interface IHeader extends IViewport, IVisualElement, IFlexDisplayObject {
 	//==========================================================================================
 	// 외부로 계산해서 줘야 하는 정보들
 	//==========================================================================================
@@ -30,8 +32,11 @@ public interface IHeader extends IVisualElement, IFlexDisplayObject {
 	//---------------------------------------------
 	// locked info
 	//---------------------------------------------
-	/** 계산된 잠겨있는 Column들의 Width 합계 */
-	function get computedLockedColumnWidthTotal():Number;
+	/** 계산된 전방에 잠겨있는 Column들의 Width 합계 */
+	function get computedFrontLockedColumnWidthTotal():Number;
+
+	/** 계산된 전방에 잠겨있는 Column들의 Width 합계 */
+	function get computedBackLockedColumnWidthTotal():Number;
 
 	/** 계산된 잠겨있지 않은 Column들의 Width 합계 */
 	function get computedUnlockedColumnWidthTotal():Number;
@@ -56,15 +61,18 @@ public interface IHeader extends IVisualElement, IFlexDisplayObject {
 	//==========================================================================================
 	/** Column들 */
 	function get columns():Vector.<IHeaderColumn>;
+
 	function set columns(value:Vector.<IHeaderColumn>):void;
 
-	/** 잠겨있는 Column들의 수 */
-	function get lockedColumnCount():int;
-	function set lockedColumnCount(value:int):void;
+	/** 전방에서 잠겨있는 Column들의 수 */
+	function get frontLockedColumnCount():int;
 
-	/** 잠겨있지 않은 Column들의 Scroll 위치 */
-	function get horizontalScrollPosition():Number;
-	function set horizontalScrollPosition(value:Number):void;
+	function set frontLockedColumnCount(value:int):void;
+
+	/** 후방에서 잠겨있는 Column들의 수 */
+	function get backLockedColumnCount():int;
+
+	function set backLockedColumnCount(value:int):void;
 
 	//==========================================================================================
 	// 내부에서 셋팅되어서 외부로 보내줘야 하는 항목들
@@ -78,6 +86,7 @@ public interface IHeader extends IVisualElement, IFlexDisplayObject {
 	/** rowHeight */
 	function get rowHeight():int;
 
+	/** columnLayoutMode */
 	function get columnLayoutMode():String;
 }
 }

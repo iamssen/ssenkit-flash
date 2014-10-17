@@ -150,5 +150,40 @@ public class HeaderUtils {
 		}
 		return list;
 	}
+
+	public static function sum(values:Vector.<Number>, startIndex:int, endIndex:int, gap:int):Number {
+		if (startIndex < 0 || endIndex < 0) {
+			return 0;
+		}
+
+		var length:int = (endIndex - startIndex) + 1;
+
+		if (length < 0) {
+			return 0;
+		}
+
+		if (length === 0) {
+			return values[startIndex];
+		}
+
+		var total:Number = 0;
+
+		var f : int = startIndex - 1;
+		var fmax : int = endIndex + 1;
+		while(++f < fmax) {
+		    total += values[f];
+			trace("HeaderUtils.sum()", f, values.length, total);
+		}
+
+		return total + ((length - 1) * gap);
+	}
+
+	public static function drawStartX(columnLayoutMode:String, positionList:Vector.<Number>, columnIndex:int, lockedColumnCount:int):Number {
+		if (columnLayoutMode === HeaderLayoutMode.RATIO || columnIndex < lockedColumnCount) {
+			return positionList[columnIndex];
+		}
+
+		return positionList[columnIndex] - positionList[lockedColumnCount];
+	}
 }
 }

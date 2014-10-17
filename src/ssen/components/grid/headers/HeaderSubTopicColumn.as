@@ -177,11 +177,11 @@ public class HeaderSubTopicColumn extends EventDispatcher implements IHeaderLeaf
 	// render
 	//==========================================================================================
 	public function render():void {
-		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderSubTopicColumn.render()", toString());
-
+		var isLocekdContainer:Boolean = header.isDrawLockedContainer(columnIndex);
+		var container:UIComponent = isLocekdContainer ? header.getLockedContainer() : header.getUnlockedContainer();
 		var bound:Rectangle = new Rectangle;
 		var surplusRows:int = (header.numRows - rowIndex);
-		bound.x = header.computedColumnPositionList[columnIndex];
+		bound.x = HeaderUtils.drawStartX(header.columnLayoutMode, header.computedColumnPositionList, columnIndex, header.frontLockedColumnCount);
 		bound.y = (rowIndex > 0) ? (header.rowHeight + header.rowSeparatorSize) * rowIndex : 0;
 		bound.width = computedColumnWidth;
 		bound.height = (header.rowHeight * surplusRows) + (header.rowSeparatorSize * (surplusRows - 1));
@@ -190,7 +190,8 @@ public class HeaderSubTopicColumn extends EventDispatcher implements IHeaderLeaf
 		point.x = bound.x + header.computedColumnWidthList[columnIndex];
 		point.y = bound.y + header.rowHeight;
 
-		var container:UIComponent = header.getContainer(columnIndex);
+		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderSubTopicColumn.render()", toString(), bound);
+
 		var g:Graphics = container.graphics;
 		g.beginFill(0, 0.4);
 		g.moveTo(bound.left, bound.top);

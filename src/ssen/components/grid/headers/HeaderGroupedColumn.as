@@ -162,15 +162,16 @@ public class HeaderGroupedColumn extends EventDispatcher implements IHeaderBranc
 	// render
 	//==========================================================================================
 	public function render():void {
-		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderGroupedColumn.render()", toString());
-
+		var isLocekdContainer:Boolean = header.isDrawLockedContainer(columnIndex);
+		var container:UIComponent = isLocekdContainer ? header.getLockedContainer() : header.getUnlockedContainer();
 		var bound:Rectangle = new Rectangle;
-		bound.x = header.computedColumnPositionList[columnIndex];
+		bound.x = HeaderUtils.drawStartX(header.columnLayoutMode, header.computedColumnPositionList, columnIndex, header.frontLockedColumnCount);
 		bound.y = (rowIndex > 0) ? (header.rowHeight + header.rowSeparatorSize) * rowIndex : 0;
 		bound.width = computedColumnWidth;
 		bound.height = header.rowHeight;
 
-		var container:UIComponent = header.getContainer(columnIndex);
+		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderGroupedColumn.render()", toString(), bound);
+
 		var g:Graphics = container.graphics;
 		g.beginFill(0, 0.2);
 		g.drawRect(bound.x, bound.y, bound.width, bound.height);

@@ -1,8 +1,7 @@
 package ssen.components.grid.headers {
 
-import flash.utils.getTimer;
-
 import mx.core.mx_internal;
+import mx.events.PropertyChangeEvent;
 
 import spark.components.Group;
 import spark.components.supportClasses.SkinnableComponent;
@@ -16,6 +15,8 @@ use namespace mx_internal;
 
 [Event(name="columnLayoutChanged", type="ssen.components.grid.headers.HeaderEvent")]
 [Event(name="columnChanged", type="ssen.components.grid.headers.HeaderEvent")]
+[Event(name="scrollChanged", type="ssen.components.grid.headers.HeaderEvent")]
+[Event(name="renderComplete", type="ssen.components.grid.headers.HeaderEvent")]
 
 public class Header extends SkinnableComponent implements IHeaderContainer {
 	//==========================================================================================
@@ -31,8 +32,19 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 		setStyle("skinClass", HeaderSkin);
 	}
 
-	public function getContainer(columnIndex:int):Group {
-		return (columnIndex < lockedColumnCount) ? lockedContainer : unlockedContainer;
+	public function isDrawLockedContainer(columnIndex:int):Boolean {
+		if (_columnLayoutMode === HeaderLayoutMode.RATIO) {
+			return false;
+		}
+		return columnIndex < frontLockedColumnCount;
+	}
+
+	public function getLockedContainer():Group {
+		return lockedContainer;
+	}
+
+	public function getUnlockedContainer():Group {
+		return unlockedContainer;
 	}
 
 	//---------------------------------------------
@@ -51,7 +63,8 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 		if (value === HeaderLayoutMode.RATIO) {
 			_scrollEnabled = false;
 		} else {
-			_horizontalScrollPosition = 0;
+			initialHorizontalScroll = true;
+			invalidate_scroll();
 		}
 		invalidate_columnLayout();
 	}
@@ -83,19 +96,27 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 	}
 
 	//---------------------------------------------
-	// computedLockedColumnWidthTotal
-	// TODO locked 구현 필요
+	// computedFrontLockedColumnWidthTotal
 	//---------------------------------------------
 	private var _computedLockedColumnWidthTotal:Number;
 
-	/** computedLockedColumnWidthTotal */
-	public function get computedLockedColumnWidthTotal():Number {
+	/** computedFrontLockedColumnWidthTotal */
+	public function get computedFrontLockedColumnWidthTotal():Number {
 		return _computedLockedColumnWidthTotal;
 	}
 
 	//---------------------------------------------
+	// computedBackLockedColumnWidthTotal
+	//---------------------------------------------
+	private var _computedBackLockedColumnWidthTotal:Number;
+
+	/** computedBackLockedColumnWidthTotal */
+	public function get computedBackLockedColumnWidthTotal():Number {
+		return _computedBackLockedColumnWidthTotal;
+	}
+
+	//---------------------------------------------
 	// computedUnlockedColumnWidthTotal
-	// TODO locked 구현 필요
 	//---------------------------------------------
 	private var _computedUnlockedColumnWidthTotal:Number;
 
@@ -106,7 +127,6 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 
 	//---------------------------------------------
 	// unlockedColumnCount
-	// TODO locked 구현 필요
 	//---------------------------------------------
 	private var _unlockedColumnCount:int;
 
@@ -204,18 +224,36 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 	}
 
 	//---------------------------------------------
-	// lockedColumnCount
-	// TODO locked 구현 필요
+	// frontLockedColumnCount
 	//---------------------------------------------
-	private var _lockedColumnCount:int;
+	private var _frontLockedColumnCount:int;
 
-	/** lockedColumnCount */
-	public function get lockedColumnCount():int {
-		return _lockedColumnCount;
+	/** frontLockedColumnCount */
+	public function get frontLockedColumnCount():int {
+		return _frontLockedColumnCount;
 	}
 
-	public function set lockedColumnCount(value:int):void {
-		_lockedColumnCount = value;
+	public function set frontLockedColumnCount(value:int):void {
+		_frontLockedColumnCount = value;
+		initialHorizontalScroll = true;
+		invalidate_scroll();
+		invalidate_columnLayout();
+	}
+
+	//---------------------------------------------
+	// backLockedColumnCount
+	//---------------------------------------------
+	private var _backLockedColumnCount:int;
+
+	/** backLockedColumnCount */
+	public function get backLockedColumnCount():int {
+		return _backLockedColumnCount;
+	}
+
+	public function set backLockedColumnCount(value:int):void {
+		_backLockedColumnCount = value;
+		initialHorizontalScroll = true;
+		invalidate_scroll();
 		invalidate_columnLayout();
 	}
 
@@ -234,9 +272,9 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 		invalidate_columnLayout();
 	}
 
-	//----------------------------------------------------------------
-	// state values
-	//----------------------------------------------------------------
+	//==========================================================================================
+	// implements IViewPort
+	//==========================================================================================
 	//---------------------------------------------
 	// horizontalScrollPosition
 	//---------------------------------------------
@@ -254,6 +292,43 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 	public function set horizontalScrollPosition(value:Number):void {
 		_horizontalScrollPosition = value;
 		invalidate_scroll();
+	}
+
+	private var _contentWidth:Number;
+
+	public function get contentWidth():Number {
+		if (_columnLayoutMode === HeaderLayoutMode.RATIO) {
+			return width;
+		}
+
+		return _contentWidth;
+	}
+
+	public function get contentHeight():Number {
+		return height;
+	}
+
+	public function get verticalScrollPosition():Number {
+		return 0;
+	}
+
+	public function set verticalScrollPosition(value:Number):void {
+	}
+
+	// TODO horizontal scroll
+	public function getHorizontalScrollPositionDelta(navigationUnit:uint):Number {
+		return 0;
+	}
+
+	public function getVerticalScrollPositionDelta(navigationUnit:uint):Number {
+		return 0;
+	}
+
+	public function get clipAndEnableScrolling():Boolean {
+		return true;
+	}
+
+	public function set clipAndEnableScrolling(value:Boolean):void {
 	}
 
 	//==========================================================================================
@@ -278,6 +353,8 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 	private var columnLayoutChanged:Boolean;
 	private var columnContentChanged:Boolean;
 	private var scrollChanged:Boolean;
+	private var columnLayoutUpdated:Boolean;
+	private var initialHorizontalScroll:Boolean;
 
 	// column 정보 자체가 바뀔때
 	protected function invalidate_columns():void {
@@ -288,6 +365,7 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 	// column들의 사이즈 정보가 바뀔때
 	protected function invalidate_columnLayout():void {
 		columnLayoutChanged = true;
+		invalidateProperties();
 		invalidateSize();
 	}
 
@@ -328,8 +406,8 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 	// - [x] scroll 은 무조건 비활성 된다
 	//
 	// fixed
-	// - commitProperties 에서 width 들을 계산한다
-	// - scroll 은 updateDisplayList 에서 체크해서 활성화 된다
+	// - [x] commitProperties 에서 width 들을 계산한다
+	// - [x] scroll 은 updateDisplayList 에서 체크해서 활성화 된다
 	//==========================================================================================
 	override protected function commitProperties():void {
 		super.commitProperties();
@@ -343,6 +421,7 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 		if (columnLayoutChanged) {
 			commit_columnLayout();
 			columnLayoutChanged = false;
+			columnLayoutUpdated = true;
 			invalidate_columnContent();
 		}
 	}
@@ -373,6 +452,7 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 	protected function commit_columns():void {
 		if (_columns) {
 			initColumns();
+			dispatchEvent(new HeaderEvent(HeaderEvent.COLUMN_CHANGED));
 		}
 	}
 
@@ -385,50 +465,83 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 		if (_columns) {
 			if (_columnLayoutMode === HeaderLayoutMode.RATIO) {
 				columnRatios = HeaderUtils.computeColumnRatios(_columns);
+				_unlockedColumnCount = columnRatios.length - _frontLockedColumnCount;
 			} else {
 				_computedColumnWidthList = HeaderUtils.getColumnWidthList(_leafColumns);
 				_computedColumnPositionList = HeaderUtils.sizeToPosition(_computedColumnWidthList, _columnSeparatorSize);
+				_computedLockedColumnWidthTotal = HeaderUtils.sum(_computedColumnWidthList, 0, _frontLockedColumnCount - 1, _columnSeparatorSize);
+				_computedUnlockedColumnWidthTotal = HeaderUtils.sum(_computedColumnWidthList, _frontLockedColumnCount, _computedColumnWidthList.length - 1, _columnSeparatorSize);
+
+				trace("Header.commit_columnLayout()", _computedLockedColumnWidthTotal, _computedUnlockedColumnWidthTotal);
+
+				_unlockedColumnCount = _computedColumnWidthList.length - _frontLockedColumnCount;
+				_contentWidth = _computedLockedColumnWidthTotal + _computedUnlockedColumnWidthTotal;
+
+				columnRatios = null;
+				columnLayoutUpdated = true;
 			}
 		}
 	}
 
-	//	//---------------------------------------------
-	//	// commit columnContent
-	//	//---------------------------------------------
-	//	protected function commit_columnContent():void {
-	//		if (component) {
-	//			component.variable = _columnContent;
-	//		}
-	//	}
-	//
-	//	//---------------------------------------------
-	//	// commit scroll
-	//	//---------------------------------------------
-	//	protected function commit_scroll():void {
-	//		if (component) {
-	//			component.variable = _scroll;
-	//		}
-	//	}
+	//---------------------------------------------
+	// commit columnContent
+	//---------------------------------------------
+	protected function commit_columnContent():void {
+		lockedContainer.graphics.clear();
+		unlockedContainer.graphics.clear();
+
+		if (_columns) {
+			var f:int = -1;
+			var fmax:int = _columns.length;
+
+			trace("Header.commit_columnContent() --------------------------------------------------------");
+			while (++f < fmax) {
+				_columns[f].render();
+			}
+		}
+	}
+
+	//---------------------------------------------
+	// commit scroll
+	//---------------------------------------------
+	protected function commit_scroll():void {
+		if (unlockedContainer) {
+			if (_columnLayoutMode === HeaderLayoutMode.RATIO) {
+				_scrollEnabled = false;
+				initialHorizontalScroll = true;
+			} else {
+				_scrollEnabled = _computedUnlockedColumnWidthTotal > unlockedContainer.measuredWidth;
+
+				if (_scrollEnabled) {
+				} else {
+					initialHorizontalScroll = true;
+				}
+			}
+
+			if (initialHorizontalScroll) {
+				_horizontalScrollPosition = 0;
+				unlockedContainer.horizontalScrollPosition = 0;
+				dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE, false, false, null, "horizontalScrollPosition"));
+				initialHorizontalScroll = false;
+			} else {
+				unlockedContainer.horizontalScrollPosition = _horizontalScrollPosition;
+				dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE, false, false, null, "horizontalScrollPosition"));
+			}
+
+			invalidate_scroll();
+		}
+	}
 
 	//==========================================================================================
 	// render
 	//==========================================================================================
-	override public function invalidateDisplayList():void {
-		super.invalidateDisplayList();
-	}
-
 	override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 		super.updateDisplayList(unscaledWidth, unscaledHeight);
-
-		var f:int;
-		var fmax:int;
 
 		//---------------------------------------------
 		// clear containers
 		//---------------------------------------------
 		if (lockedContainer && unlockedContainer) {
-			lockedContainer.graphics.clear();
-			unlockedContainer.graphics.clear();
 		} else {
 			return;
 		}
@@ -452,8 +565,11 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 
 			_computedColumnWidthList = computedWidthList;
 			_computedColumnPositionList = computedPositionList;
+			_computedLockedColumnWidthTotal = 0; //HeaderUtils.sum(computedWidthList, 0, _lockedColumnCount - 1, _columnSeparatorSize);
+			_computedUnlockedColumnWidthTotal = unscaledWidth; // HeaderUtils.sum(computedWidthList, _lockedColumnCount, computedWidthList.length - 1, _columnSeparatorSize);
 
 			columnContentChanged = true;
+			columnLayoutUpdated = true;
 		}
 		//		else {
 		//			computedWidthList = _computedColumnWidthList;
@@ -461,19 +577,19 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 		//		}
 
 		//---------------------------------------------
-		// container visible and resize
+		// visible and resize container
 		//---------------------------------------------
-		if (lockedColumnCount > 0) {
+		if (_columnLayoutMode === HeaderLayoutMode.FIXED && _frontLockedColumnCount > 0) {
 			lockedContainer.visible = true;
 			lockedContainer.includeInLayout = true;
 
 			unlockedContainer.visible = true;
 			unlockedContainer.includeInLayout = true;
 
-			lockedContainer.measuredWidth = computedColumnPositionList[lockedColumnCount] - columnSeparatorSize;
+			lockedContainer.measuredWidth = computedColumnPositionList[frontLockedColumnCount] - columnSeparatorSize;
 			lockedContainer.measuredHeight = unscaledHeight;
 
-			unlockedContainer.x = computedColumnPositionList[lockedColumnCount];
+			unlockedContainer.x = computedColumnPositionList[frontLockedColumnCount];
 			unlockedContainer.measuredWidth = unscaledWidth - lockedContainer.width - columnSeparatorSize;
 			unlockedContainer.measuredHeight = unscaledHeight;
 		} else {
@@ -489,32 +605,29 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 			unlockedContainer.invalidateSize();
 		}
 
-		// TODO 활성화 필요
-		//		if (scrollChanged) {
-		//			commit_scroll();
-		//			scrollChanged = false;
-		//		}
-		//
-		//		if (columnContentChanged) {
-		//			commit_columnContent();
-		//			columnContentChanged = false;
-		//		}
-
-		trace("Header.updateDisplayList(", unscaledWidth, unscaledHeight, ")");
-		trace("Header.updateDisplayList()", columnRatios.length, columnRatios);
-		trace("Header.updateDisplayList(", computedColumnWidthList.length, computedColumnWidthList, ")");
-		//		trace("Header.updateDisplayList()", leafColumns.length, leafColumns);
-
-		//---------------------------------------------
-		// render
-		//---------------------------------------------
-		f = -1;
-		fmax = _columns.length;
-
-		trace("Header.updateDisplayList() --------------------------------------------------------", getTimer());
-		while (++f < fmax) {
-			_columns[f].render();
+		if (columnLayoutUpdated) {
+			dispatchEvent(new HeaderEvent(HeaderEvent.COLUMN_LAYOUT_CHANGED));
+			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE, false, false, null, "contentWidth"));
+			trace("Header.updateDisplayList()", _computedUnlockedColumnWidthTotal, _computedColumnWidthList.slice(_frontLockedColumnCount));
+			columnLayoutUpdated = false;
 		}
+
+		if (scrollChanged) {
+			commit_scroll();
+			scrollChanged = false;
+			dispatchEvent(new HeaderEvent(HeaderEvent.SCROLL_CHANGED));
+		}
+
+		if (columnContentChanged) {
+			commit_columnContent();
+			columnContentChanged = false;
+			dispatchEvent(new HeaderEvent(HeaderEvent.RENDER_COMPLETE));
+		}
+
+		//		trace("Header.updateDisplayList(", unscaledWidth, unscaledHeight, ")");
+		//		trace("Header.updateDisplayList()", columnRatios.length, columnRatios);
+		//		trace("Header.updateDisplayList(", computedColumnWidthList.length, computedColumnWidthList, ")");
+		//		trace("Header.updateDisplayList()", leafColumns.length, leafColumns);
 	}
 
 	//----------------------------------------------------------------

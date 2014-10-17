@@ -2,29 +2,98 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:headers="ssen.components.grid.headers.*">
-	<headers:Header left="10" right="10" top="10">
-		<headers:HeaderColumn columnWidth="0.125" headerText="HEADER A"/>
+
+	<fx:Script>
+		<![CDATA[
+		import spark.events.IndexChangeEvent;
+
+		[Bindable]
+		public var columnLayoutMode:String = "ratio";
+
+		[Bindable]
+		public var lockedColumnCount:int = 0;
+
+		private function columnLayoutModeChange(event:MouseEvent):void {
+			columnLayoutMode = (columnLayoutMode === HeaderLayoutMode.RATIO) ? HeaderLayoutMode.FIXED : HeaderLayoutMode.RATIO;
+		}
+
+		private function lockedCountChange(event:IndexChangeEvent):void {
+			if (event.newIndex > -1) {
+				lockedColumnCount = event.newIndex;
+			}
+		}
+
+		private function scrollChange(event:Event):void {
+//			trace("Showcase__GridHeaders.scrollChange()", scroll.minimum, scroll.maximum, scroll.value, scroll.viewport.contentWidth, scroll.viewport.width);
+		}
+		]]>
+	</fx:Script>
+
+	<s:layout>
+		<s:VerticalLayout paddingLeft="10" paddingRight="10" paddingTop="10" paddingBottom="10" gap="20" />
+	</s:layout>
+
+	<headers:Header id="header" width="100%" columnLayoutMode="{columnLayoutMode}"
+					lockedColumnCount="{lockedColumnCount}">
+		<headers:HeaderColumn columnWidth="130" headerText="HEADER A" />
+		<headers:HeaderColumn columnWidth="130" headerText="HEADER A" />
 		<headers:HeaderGroupedColumn headerText="HEADER GROUP">
-			<headers:HeaderColumn columnWidth="0.125" headerText="HEADER B"/>
-			<headers:HeaderColumn columnWidth="0.125" headerText="HEADER C"/>
-			<!--<grid:GridHeaderColumnGroup headerText="HEADER GROUP 2">
-				<grid:GridHeaderColumn columnWidth="0.125" headerText="HEADER CC"/>
-				<grid:GridHeaderColumn columnWidth="0.125" headerText="HEADER CC"/>
-			</grid:GridHeaderColumnGroup>-->
-			<headers:HeaderSubTopicColumn columnWidth="0.125" headerText="HEADER XXX">
-				<headers:HeaderColumn columnWidth="0.125" headerText="HEADER CC"/>
+			<headers:HeaderColumn columnWidth="130" headerText="HEADER B" />
+			<headers:HeaderColumn columnWidth="130" headerText="HEADER C" />
+			<headers:HeaderSubTopicColumn columnWidth="130" headerText="HEADER XXX">
+				<headers:HeaderColumn columnWidth="130" headerText="HEADER CC" />
 				<headers:HeaderGroupedColumn headerText="HEADER GROUP 2">
-					<headers:HeaderColumn columnWidth="0.125" headerText="HEADER CC"/>
-					<headers:HeaderColumn columnWidth="0.125" headerText="HEADER CC"/>
-					<headers:HeaderColumn columnWidth="0.125" headerText="HEADER CC"/>
+					<headers:HeaderColumn columnWidth="130" headerText="HEADER CC" />
+					<headers:HeaderColumn columnWidth="130" headerText="HEADER CC" />
+					<headers:HeaderColumn columnWidth="130" headerText="HEADER CC" />
 				</headers:HeaderGroupedColumn>
 			</headers:HeaderSubTopicColumn>
 		</headers:HeaderGroupedColumn>
-		<headers:HeaderColumn columnWidth="0.125" headerText="HEADER D"/>
-		<headers:HeaderSubTopicColumn columnWidth="0.125" headerText="HEADER E">
-			<headers:HeaderColumn columnWidth="0.125" headerText="HEADER F"/>
-			<headers:HeaderColumn columnWidth="0.125" headerText="HEADER G"/>
+		<headers:HeaderColumn columnWidth="130" headerText="HEADER D" />
+		<headers:HeaderSubTopicColumn columnWidth="130" headerText="HEADER E">
+			<headers:HeaderColumn columnWidth="130" headerText="HEADER F" />
+			<headers:HeaderColumn columnWidth="130" headerText="HEADER G" />
 		</headers:HeaderSubTopicColumn>
-		<headers:HeaderColumn columnWidth="0.125" headerText="HEADER H"/>
+		<headers:HeaderColumn columnWidth="130" headerText="HEADER H" />
+	</headers:Header>
+
+	<s:HScrollBar id="scroll" viewport="{header}" width="100%" change="scrollChange(event)" />
+
+	<s:HGroup height="40" verticalAlign="middle">
+		<s:Button label="column layout mode change" click="columnLayoutModeChange(event)" />
+		<s:DropDownList width="115" change="lockedCountChange(event)" labelField="label" selectedIndex="0">
+			<s:dataProvider>
+				<s:ArrayList>
+					<fx:String>column lock 0</fx:String>
+					<fx:String>column lock 1</fx:String>
+					<fx:String>column lock 2</fx:String>
+					<fx:String>column lock 3</fx:String>
+					<fx:String>column lock 4</fx:String>
+				</s:ArrayList>
+			</s:dataProvider>
+		</s:DropDownList>
+	</s:HGroup>
+
+	<headers:Header width="100%">
+		<headers:HeaderColumn columnWidth="130" headerText="HEADER A" />
+		<headers:HeaderColumn columnWidth="130" headerText="HEADER A" />
+		<headers:HeaderGroupedColumn headerText="HEADER GROUP">
+			<headers:HeaderColumn columnWidth="130" headerText="HEADER B" />
+			<headers:HeaderColumn columnWidth="130" headerText="HEADER C" />
+			<headers:HeaderSubTopicColumn columnWidth="130" headerText="HEADER XXX">
+				<headers:HeaderColumn columnWidth="130" headerText="HEADER CC" />
+				<headers:HeaderGroupedColumn headerText="HEADER GROUP 2">
+					<headers:HeaderColumn columnWidth="130" headerText="HEADER CC" />
+					<headers:HeaderColumn columnWidth="130" headerText="HEADER CC" />
+					<headers:HeaderColumn columnWidth="130" headerText="HEADER CC" />
+				</headers:HeaderGroupedColumn>
+			</headers:HeaderSubTopicColumn>
+		</headers:HeaderGroupedColumn>
+		<headers:HeaderColumn columnWidth="130" headerText="HEADER D" />
+		<headers:HeaderSubTopicColumn columnWidth="130" headerText="HEADER E">
+			<headers:HeaderColumn columnWidth="130" headerText="HEADER F" />
+			<headers:HeaderColumn columnWidth="130" headerText="HEADER G" />
+		</headers:HeaderSubTopicColumn>
+		<headers:HeaderColumn columnWidth="130" headerText="HEADER H" />
 	</headers:Header>
 </s:Group>
