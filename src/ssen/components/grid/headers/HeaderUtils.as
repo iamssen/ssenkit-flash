@@ -168,22 +168,42 @@ public class HeaderUtils {
 
 		var total:Number = 0;
 
-		var f : int = startIndex - 1;
-		var fmax : int = endIndex + 1;
-		while(++f < fmax) {
-		    total += values[f];
-			trace("HeaderUtils.sum()", f, values.length, total);
+		var f:int = startIndex - 1;
+		var fmax:int = endIndex + 1;
+		while (++f < fmax) {
+			total += values[f];
 		}
 
 		return total + ((length - 1) * gap);
 	}
 
-	public static function drawStartX(columnLayoutMode:String, positionList:Vector.<Number>, columnIndex:int, lockedColumnCount:int):Number {
-		if (columnLayoutMode === HeaderLayoutMode.RATIO || columnIndex < lockedColumnCount) {
+	public static function columnDrawX(positionList:Vector.<Number>, columnIndex:int, containerId:int, columnLayoutMode:String, frontLockedColumnCount:int, backLockedColumnCount:int):Number {
+		if (columnLayoutMode === HeaderLayoutMode.RATIO) {
 			return positionList[columnIndex];
 		}
 
-		return positionList[columnIndex] - positionList[lockedColumnCount];
+		switch (containerId) {
+			case HeaderContainerId.FRONT_LOCK:
+				return positionList[columnIndex];
+			case HeaderContainerId.UNLOCK:
+				if (frontLockedColumnCount > 0) {
+					return positionList[columnIndex] - positionList[frontLockedColumnCount];
+				} else {
+					return positionList[columnIndex];
+				}
+			case HeaderContainerId.BACK_LOCK:
+				return positionList[columnIndex] - positionList[positionList.length - backLockedColumnCount];
+		}
+
+		return NaN;
 	}
+
+//	public static function drawStartX(columnLayoutMode:String, positionList:Vector.<Number>, columnIndex:int, lockedColumnCount:int):Number {
+//		if (columnLayoutMode === HeaderLayoutMode.RATIO || columnIndex < lockedColumnCount) {
+//			return positionList[columnIndex];
+//		}
+//
+//		return positionList[columnIndex] - positionList[lockedColumnCount];
+//	}
 }
 }

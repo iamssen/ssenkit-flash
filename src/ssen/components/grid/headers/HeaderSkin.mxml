@@ -16,7 +16,7 @@
 		</s:fill>
 	</s:Rect>
 
-	<s:Group id="lockedContainer" clipAndEnableScrolling="true" />
+	<s:Group id="frontLockedContainer" clipAndEnableScrolling="true" />
 		<!--<s:Rect width="100%" height="100%">-->
 			<!--<s:fill>-->
 				<!--<s:SolidColor color="#d4d8f9" alpha="0.1" />-->
@@ -30,4 +30,5 @@
 			<!--</s:fill>-->
 		<!--</s:Rect>-->
 	<!--</s:Group>-->
+	<s:Group id="backLockedContainer" clipAndEnableScrolling="true" />
 </s:Skin>

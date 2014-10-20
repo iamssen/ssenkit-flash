@@ -3,11 +3,9 @@ package ssen.components.grid.headers {
 import spark.components.Group;
 
 public interface IHeaderContainer extends IHeader {
-	function isDrawLockedContainer(columnIndex:int):Boolean;
+	function getContainerId(columnIndex:int):int;
 
-	function getLockedContainer():Group;
-
-	function getUnlockedContainer():Group;
+	function getContainer(containerId:int):Group;
 
 	function invalidateColumns():void;
 

@@ -23,7 +23,10 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 	// skin parts
 	//==========================================================================================
 	[SkinPart(required="true")]
-	public var lockedContainer:Group;
+	public var frontLockedContainer:Group;
+
+	[SkinPart(required="true")]
+	public var backLockedContainer:Group;
 
 	[SkinPart(required="true")]
 	public var unlockedContainer:Group;
@@ -32,19 +35,27 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 		setStyle("skinClass", HeaderSkin);
 	}
 
-	public function isDrawLockedContainer(columnIndex:int):Boolean {
+	public function getContainerId(columnIndex:int):int {
 		if (_columnLayoutMode === HeaderLayoutMode.RATIO) {
-			return false;
+			return HeaderContainerId.UNLOCK;
+		} else if (columnIndex < frontLockedColumnCount) {
+			return HeaderContainerId.FRONT_LOCK;
+		} else if (columnIndex >= numColumns - backLockedColumnCount) {
+			return HeaderContainerId.BACK_LOCK;
+		} else {
+			return HeaderContainerId.UNLOCK;
 		}
-		return columnIndex < frontLockedColumnCount;
 	}
 
-	public function getLockedContainer():Group {
-		return lockedContainer;
-	}
-
-	public function getUnlockedContainer():Group {
-		return unlockedContainer;
+	public function getContainer(containerId:int):Group {
+		switch (containerId) {
+			case HeaderContainerId.FRONT_LOCK:
+				return frontLockedContainer;
+			case HeaderContainerId.BACK_LOCK:
+				return backLockedContainer;
+			default:
+				return unlockedContainer;
+		}
 	}
 
 	//---------------------------------------------
@@ -98,11 +109,11 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 	//---------------------------------------------
 	// computedFrontLockedColumnWidthTotal
 	//---------------------------------------------
-	private var _computedLockedColumnWidthTotal:Number;
+	private var _computedFrontLockedColumnWidthTotal:Number;
 
 	/** computedFrontLockedColumnWidthTotal */
 	public function get computedFrontLockedColumnWidthTotal():Number {
-		return _computedLockedColumnWidthTotal;
+		return _computedFrontLockedColumnWidthTotal;
 	}
 
 	//---------------------------------------------
@@ -366,7 +377,6 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 	protected function invalidate_columnLayout():void {
 		columnLayoutChanged = true;
 		invalidateProperties();
-		invalidateSize();
 	}
 
 	// column 내부의 content가 바뀔때 (renderer 혹은, headerText와 같이...)
@@ -380,6 +390,19 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 		scrollChanged = true;
 		invalidateDisplayList();
 	}
+
+
+	//	override public function invalidateProperties():void {
+	//		super.invalidateProperties();
+	//	}
+	//
+	//	override public function invalidateDisplayList():void {
+	//		super.invalidateDisplayList();
+	//	}
+	//
+	//	override public function invalidateSize():void {
+	//		super.invalidateSize();
+	//	}
 
 	public function invalidateColumns():void {
 		invalidate_columns();
@@ -422,7 +445,8 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 			commit_columnLayout();
 			columnLayoutChanged = false;
 			columnLayoutUpdated = true;
-			invalidate_columnContent();
+			columnContentChanged = true;
+			invalidateDisplayList();
 		}
 	}
 
@@ -465,17 +489,46 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 		if (_columns) {
 			if (_columnLayoutMode === HeaderLayoutMode.RATIO) {
 				columnRatios = HeaderUtils.computeColumnRatios(_columns);
-				_unlockedColumnCount = columnRatios.length - _frontLockedColumnCount;
+				_unlockedColumnCount = columnRatios.length;
 			} else {
 				_computedColumnWidthList = HeaderUtils.getColumnWidthList(_leafColumns);
 				_computedColumnPositionList = HeaderUtils.sizeToPosition(_computedColumnWidthList, _columnSeparatorSize);
-				_computedLockedColumnWidthTotal = HeaderUtils.sum(_computedColumnWidthList, 0, _frontLockedColumnCount - 1, _columnSeparatorSize);
-				_computedUnlockedColumnWidthTotal = HeaderUtils.sum(_computedColumnWidthList, _frontLockedColumnCount, _computedColumnWidthList.length - 1, _columnSeparatorSize);
 
-				trace("Header.commit_columnLayout()", _computedLockedColumnWidthTotal, _computedUnlockedColumnWidthTotal);
+				// front locked column width total
+				if (_frontLockedColumnCount > 0) {
+					var frontLockStartIndex:int = 0;
+					var frontLockEndIndex:int = _frontLockedColumnCount - 1;
+					_computedFrontLockedColumnWidthTotal = HeaderUtils.sum(_computedColumnWidthList, frontLockStartIndex, frontLockEndIndex, _columnSeparatorSize);
+				} else {
+					_computedFrontLockedColumnWidthTotal = 0;
+				}
 
-				_unlockedColumnCount = _computedColumnWidthList.length - _frontLockedColumnCount;
-				_contentWidth = _computedLockedColumnWidthTotal + _computedUnlockedColumnWidthTotal;
+				// back locked column width total
+				if (_backLockedColumnCount > 0) {
+					var backLockStartIndex:int = _computedColumnWidthList.length - _backLockedColumnCount;
+					var backLockEndIndex:int = _computedColumnWidthList.length - 1;
+					_computedBackLockedColumnWidthTotal = HeaderUtils.sum(_computedColumnWidthList, backLockStartIndex, backLockEndIndex, _columnSeparatorSize);
+				} else {
+					_computedBackLockedColumnWidthTotal = 0;
+				}
+
+				// unlocked column width total
+				var unlockedStartIndex:int;
+				var unlockedEndIndex:int;
+				if (_frontLockedColumnCount > 0) {
+					unlockedStartIndex = _frontLockedColumnCount;
+				} else {
+					unlockedStartIndex = 0;
+				}
+				if (_backLockedColumnCount > 0) {
+					unlockedEndIndex = _computedColumnWidthList.length - _backLockedColumnCount - 1;
+				} else {
+					unlockedEndIndex = _computedColumnWidthList.length - 1;
+				}
+				_computedUnlockedColumnWidthTotal = HeaderUtils.sum(_computedColumnWidthList, unlockedStartIndex, unlockedEndIndex, _columnSeparatorSize);
+
+				_unlockedColumnCount = _computedColumnWidthList.length - _frontLockedColumnCount - _backLockedColumnCount;
+				_contentWidth = _computedFrontLockedColumnWidthTotal + _computedUnlockedColumnWidthTotal + _computedBackLockedColumnWidthTotal;
 
 				columnRatios = null;
 				columnLayoutUpdated = true;
@@ -487,14 +540,16 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 	// commit columnContent
 	//---------------------------------------------
 	protected function commit_columnContent():void {
-		lockedContainer.graphics.clear();
+		trace("Header.commit_columnContent()", columnLayoutMode, _columns);
+
+		frontLockedContainer.graphics.clear();
 		unlockedContainer.graphics.clear();
+		backLockedContainer.graphics.clear();
 
 		if (_columns) {
 			var f:int = -1;
 			var fmax:int = _columns.length;
 
-			trace("Header.commit_columnContent() --------------------------------------------------------");
 			while (++f < fmax) {
 				_columns[f].render();
 			}
@@ -535,21 +590,16 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 	//==========================================================================================
 	// render
 	//==========================================================================================
+	private var lastChangedUnscaledWidth:Number;
+	private var lastChangedUnscaledHeight:Number;
+
 	override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 		super.updateDisplayList(unscaledWidth, unscaledHeight);
 
 		//---------------------------------------------
-		// clear containers
-		//---------------------------------------------
-		if (lockedContainer && unlockedContainer) {
-		} else {
-			return;
-		}
-
-		//---------------------------------------------
 		// return
 		//---------------------------------------------
-		if (!_columns || unscaledWidth === 0 || unscaledHeight === 0) {
+		if (!frontLockedContainer || !unlockedContainer || !backLockedContainer || !_columns || unscaledWidth === 0 || unscaledHeight === 0) {
 			return;
 		}
 
@@ -557,19 +607,32 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 		// calculate ratio width
 		//---------------------------------------------
 		if (_columnLayoutMode === HeaderLayoutMode.RATIO) {
-			var computedWidthList:Vector.<Number>;
-			var computedPositionList:Vector.<Number>;
-			computedWidthList = HeaderUtils.adjustRatio(unscaledWidth - (columnSeparatorSize * (numColumns - 1)), columnRatios);
-			computedWidthList = HeaderUtils.cleanPixels(unscaledWidth, columnSeparatorSize, computedWidthList);
-			computedPositionList = HeaderUtils.sizeToPosition(computedWidthList, columnSeparatorSize);
+			var changedSize:Boolean = lastChangedUnscaledWidth !== unscaledWidth || lastChangedUnscaledHeight !== unscaledHeight;
+			var validateSomething:Boolean = columnContentChanged || columnLayoutChanged || columnLayoutUpdated;
 
-			_computedColumnWidthList = computedWidthList;
-			_computedColumnPositionList = computedPositionList;
-			_computedLockedColumnWidthTotal = 0; //HeaderUtils.sum(computedWidthList, 0, _lockedColumnCount - 1, _columnSeparatorSize);
-			_computedUnlockedColumnWidthTotal = unscaledWidth; // HeaderUtils.sum(computedWidthList, _lockedColumnCount, computedWidthList.length - 1, _columnSeparatorSize);
+			trace("Header.updateDisplayList()", changedSize, validateSomething);
 
-			columnContentChanged = true;
-			columnLayoutUpdated = true;
+			if (changedSize || validateSomething) {
+				var computedWidthList:Vector.<Number>;
+				var computedPositionList:Vector.<Number>;
+				computedWidthList = HeaderUtils.adjustRatio(unscaledWidth - (columnSeparatorSize * (numColumns - 1)), columnRatios);
+				computedWidthList = HeaderUtils.cleanPixels(unscaledWidth, columnSeparatorSize, computedWidthList);
+				computedPositionList = HeaderUtils.sizeToPosition(computedWidthList, columnSeparatorSize);
+
+				_computedColumnWidthList = computedWidthList;
+				_computedColumnPositionList = computedPositionList;
+				_computedFrontLockedColumnWidthTotal = 0;
+				_computedUnlockedColumnWidthTotal = unscaledWidth;
+				_computedBackLockedColumnWidthTotal = 0;
+
+				columnContentChanged = true;
+				columnLayoutUpdated = true;
+
+				lastChangedUnscaledWidth = unscaledWidth;
+				lastChangedUnscaledHeight = unscaledHeight;
+			} else {
+				return;
+			}
 		}
 		//		else {
 		//			computedWidthList = _computedColumnWidthList;
@@ -579,36 +642,63 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 		//---------------------------------------------
 		// visible and resize container
 		//---------------------------------------------
-		if (_columnLayoutMode === HeaderLayoutMode.FIXED && _frontLockedColumnCount > 0) {
-			lockedContainer.visible = true;
-			lockedContainer.includeInLayout = true;
+		if (_columnLayoutMode === HeaderLayoutMode.FIXED) {
+			if (_frontLockedColumnCount > 0) {
+				frontLockedContainer.visible = true;
+				frontLockedContainer.includeInLayout = true;
+
+				frontLockedContainer.measuredWidth = _computedFrontLockedColumnWidthTotal;
+				frontLockedContainer.measuredHeight = unscaledHeight;
+
+				frontLockedContainer.invalidateSize();
+			} else {
+				frontLockedContainer.visible = false;
+				frontLockedContainer.includeInLayout = false;
+			}
+
+			if (_backLockedColumnCount > 0) {
+				backLockedContainer.visible = true;
+				backLockedContainer.includeInLayout = true;
+
+				backLockedContainer.x = unscaledWidth - _computedBackLockedColumnWidthTotal;
+				backLockedContainer.measuredWidth = _computedBackLockedColumnWidthTotal;
+				backLockedContainer.measuredHeight = unscaledHeight;
+
+				backLockedContainer.invalidateSize();
+			} else {
+				backLockedContainer.visible = false;
+				backLockedContainer.includeInLayout = false;
+			}
 
 			unlockedContainer.visible = true;
 			unlockedContainer.includeInLayout = true;
 
-			lockedContainer.measuredWidth = computedColumnPositionList[frontLockedColumnCount] - columnSeparatorSize;
-			lockedContainer.measuredHeight = unscaledHeight;
-
-			unlockedContainer.x = computedColumnPositionList[frontLockedColumnCount];
-			unlockedContainer.measuredWidth = unscaledWidth - lockedContainer.width - columnSeparatorSize;
+			unlockedContainer.x = _computedFrontLockedColumnWidthTotal + columnSeparatorSize;
+			unlockedContainer.measuredWidth = unscaledWidth - _computedFrontLockedColumnWidthTotal - columnSeparatorSize - _computedBackLockedColumnWidthTotal - columnSeparatorSize;
 			unlockedContainer.measuredHeight = unscaledHeight;
+
+			unlockedContainer.invalidateSize();
 		} else {
-			lockedContainer.visible = false;
-			lockedContainer.includeInLayout = false;
+			frontLockedContainer.visible = false;
+			frontLockedContainer.includeInLayout = false;
 
 			unlockedContainer.visible = true;
 			unlockedContainer.includeInLayout = true;
+
+			backLockedContainer.visible = false;
+			backLockedContainer.includeInLayout = false;
 
 			unlockedContainer.x = 0;
 			unlockedContainer.measuredWidth = unscaledWidth;
 			unlockedContainer.measuredHeight = unscaledHeight;
+
 			unlockedContainer.invalidateSize();
 		}
 
 		if (columnLayoutUpdated) {
 			dispatchEvent(new HeaderEvent(HeaderEvent.COLUMN_LAYOUT_CHANGED));
 			dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE, false, false, null, "contentWidth"));
-			trace("Header.updateDisplayList()", _computedUnlockedColumnWidthTotal, _computedColumnWidthList.slice(_frontLockedColumnCount));
+			//			trace("Header.updateDisplayList()", _computedUnlockedColumnWidthTotal, _computedColumnWidthList.slice(_frontLockedColumnCount));
 			columnLayoutUpdated = false;
 		}
 

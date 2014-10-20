@@ -7,6 +7,8 @@ import flash.geom.Rectangle;
 import mx.core.UIComponent;
 import mx.events.PropertyChangeEvent;
 
+import spark.components.Group;
+
 import ssen.common.StringUtils;
 
 public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
@@ -130,16 +132,16 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 	// render
 	//==========================================================================================
 	public function render():void {
-		var isLocekdContainer:Boolean = header.isDrawLockedContainer(columnIndex);
-		var container:UIComponent = isLocekdContainer ? header.getLockedContainer() : header.getUnlockedContainer();
+		var containerId:int = header.getContainerId(columnIndex);
+		var container:Group = header.getContainer(containerId);
 		var bound:Rectangle = new Rectangle;
 		var surplusRows:int = (header.numRows - rowIndex);
-		bound.x = HeaderUtils.drawStartX(header.columnLayoutMode, header.computedColumnPositionList, columnIndex, header.frontLockedColumnCount);
+		bound.x = HeaderUtils.columnDrawX(header.computedColumnPositionList, columnIndex, containerId, header.columnLayoutMode, header.frontLockedColumnCount, header.backLockedColumnCount);
 		bound.y = (rowIndex > 0) ? (header.rowHeight + header.rowSeparatorSize) * rowIndex : 0;
 		bound.width = header.computedColumnWidthList[columnIndex];
 		bound.height = (header.rowHeight * surplusRows) + (header.rowSeparatorSize * (surplusRows - 1));
 
-		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderColumn.render()", toString(), container.name, bound);
+//		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderColumn.render()", toString(), container.name, bound);
 
 		var g:Graphics = container.graphics;
 		g.beginFill(0, 0.5);
