@@ -192,7 +192,7 @@ public class HeaderSubTopicColumn extends EventDispatcher implements IHeaderLeaf
 		point.x = bound.x + header.computedColumnWidthList[columnIndex];
 		point.y = bound.y + header.rowHeight;
 
-//		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderSubTopicColumn.render()", toString(), bound);
+		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderSubTopicColumn.render()", toString(), bound);
 
 		var g:Graphics = container.graphics;
 		g.beginFill(0, 0.4);

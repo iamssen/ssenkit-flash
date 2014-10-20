@@ -141,7 +141,7 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 		bound.width = header.computedColumnWidthList[columnIndex];
 		bound.height = (header.rowHeight * surplusRows) + (header.rowSeparatorSize * (surplusRows - 1));
 
-//		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderColumn.render()", toString(), container.name, bound);
+		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderColumn.render()", toString(), container.name, bound);
 
 		var g:Graphics = container.graphics;
 		g.beginFill(0, 0.5);

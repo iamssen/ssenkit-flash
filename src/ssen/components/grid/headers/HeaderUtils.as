@@ -151,7 +151,7 @@ public class HeaderUtils {
 		return list;
 	}
 
-	public static function sum(values:Vector.<Number>, startIndex:int, endIndex:int, gap:int):Number {
+	public static function sumValues(values:Vector.<Number>, startIndex:int, endIndex:int, gap:int):Number {
 		if (startIndex < 0 || endIndex < 0) {
 			return 0;
 		}

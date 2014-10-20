@@ -172,7 +172,7 @@ public class HeaderGroupedColumn extends EventDispatcher implements IHeaderBranc
 		bound.width = computedColumnWidth;
 		bound.height = header.rowHeight;
 
-//		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderGroupedColumn.render()", toString(), bound);
+		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderGroupedColumn.render()", toString(), bound);
 
 		var g:Graphics = container.graphics;
 		g.beginFill(0, 0.2);

@@ -6,7 +6,6 @@ public class HeaderEvent extends Event {
 	public static const COLUMN_LAYOUT_CHANGED:String = "columnLayoutChanged";
 	public static const COLUMN_CHANGED:String = "columnChanged";
 	public static const SCROLL_CHANGED:String = "scrollChanged";
-
 	public static const RENDER_COMPLETE:String = "renderComplete";
 
 	public function HeaderEvent(type:String) {
