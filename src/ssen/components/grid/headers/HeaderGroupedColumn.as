@@ -4,12 +4,12 @@ import flash.display.Graphics;
 import flash.events.EventDispatcher;
 import flash.geom.Rectangle;
 
-import mx.core.UIComponent;
 import mx.events.PropertyChangeEvent;
 
 import spark.components.Group;
 
 import ssen.common.StringUtils;
+import ssen.components.grid.GridUtils;
 
 [DefaultProperty("columns")]
 
@@ -40,14 +40,14 @@ public class HeaderGroupedColumn extends EventDispatcher implements IHeaderBranc
 	//---------------------------------------------
 	// header
 	//---------------------------------------------
-	private var _header:IHeaderContainer;
+	private var _header:IHeaderElement;
 
 	/** header */
-	public function get header():IHeaderContainer {
+	public function get header():IHeaderElement {
 		return _header;
 	}
 
-	public function set header(value:IHeaderContainer):void {
+	public function set header(value:IHeaderElement):void {
 		_header = value;
 	}
 
@@ -79,7 +79,7 @@ public class HeaderGroupedColumn extends EventDispatcher implements IHeaderBranc
 	public function set columns(value:Vector.<IHeaderColumn>):void {
 		_columns = value;
 
-		var rowsAndColumns:Vector.<int> = HeaderUtils.countColumnsAndRows(value);
+		var rowsAndColumns:Vector.<int> = GridUtils.countColumnsAndRows(value);
 		_numRows = rowsAndColumns[0];
 		_numColumns = rowsAndColumns[1];
 
@@ -163,24 +163,54 @@ public class HeaderGroupedColumn extends EventDispatcher implements IHeaderBranc
 	//==========================================================================================
 	// render
 	//==========================================================================================
+	private static var bound:Rectangle = new Rectangle;
+
 	public function render():void {
-		var containerId:int = header.getContainerId(columnIndex);
-		var container:Group = header.getContainer(containerId);
-		var bound:Rectangle = new Rectangle;
-		bound.x = HeaderUtils.columnDrawX(header.computedColumnPositionList, columnIndex, containerId, header.columnLayoutMode, header.frontLockedColumnCount, header.backLockedColumnCount);
-		bound.y = (rowIndex > 0) ? (header.rowHeight + header.rowSeparatorSize) * rowIndex : 0;
-		bound.width = computedColumnWidth;
-		bound.height = header.rowHeight;
+		var f:int, fmax:int;
 
-		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderGroupedColumn.render()", toString(), bound);
+		var container:Group;
+		var g:Graphics;
 
-		var g:Graphics = container.graphics;
-		g.beginFill(0, 0.2);
-		g.drawRect(bound.x, bound.y, bound.width, bound.height);
-		g.endFill();
+		if (header.columnLayoutMode == HeaderLayoutMode.RATIO) {
+			var containerId:int = GridUtils.getContainerId(header, columnIndex);
+			container = header.getBlock(containerId);
+			g = container.graphics;
 
-		var f:int = -1;
-		var fmax:int = _columns.length;
+			bound.x = GridUtils.columnDrawX(header.computedColumnPositionList, columnIndex, containerId, header.columnLayoutMode, header.frontLockedColumnCount, header.backLockedColumnCount);
+			bound.y = (rowIndex > 0) ? (header.rowHeight + header.rowSeparatorSize) * rowIndex : 0;
+			bound.width = computedColumnWidth;
+			bound.height = header.rowHeight;
+
+			g.beginFill(0, 0.2);
+			g.drawRect(bound.x, bound.y, bound.width, bound.height);
+			g.endFill();
+		} else {
+			var commands:Vector.<HeaderBrancheDrawCommand> = GridUtils.countBrancheColumns(header.numColumns, header.frontLockedColumnCount, header.backLockedColumnCount, columnIndex, numColumns);
+			var command:HeaderBrancheDrawCommand;
+
+			f = -1;
+			fmax = commands.length;
+
+			while (++f < fmax) {
+				command = commands[f];
+				container = header.getBlock(command.block);
+				g = container.graphics;
+
+				bound.x = GridUtils.columnDrawX(header.computedColumnPositionList, command.start, command.block, header.columnLayoutMode, header.frontLockedColumnCount, header.backLockedColumnCount);
+				bound.y = (rowIndex > 0) ? (header.rowHeight + header.rowSeparatorSize) * rowIndex : 0;
+				bound.width = GridUtils.sumValues(header.computedColumnWidthList, command.start, command.end, header.columnSeparatorSize);
+				bound.height = header.rowHeight;
+
+				g.beginFill(0, 0.2);
+				g.drawRect(bound.x, bound.y, bound.width, bound.height);
+				g.endFill();
+			}
+		}
+
+		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderGroupedColumn.render()", toString());
+
+		f = -1;
+		fmax = _columns.length;
 		while (++f < fmax) {
 			_columns[f].render();
 		}

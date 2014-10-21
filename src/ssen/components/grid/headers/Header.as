@@ -4,8 +4,10 @@ import mx.core.mx_internal;
 import mx.events.PropertyChangeEvent;
 
 import spark.components.Group;
-import spark.components.supportClasses.SkinnableComponent;
 
+import ssen.components.grid.GridBlock;
+import ssen.components.grid.GridElement;
+import ssen.components.grid.GridUtils;
 import ssen.ssen_internal;
 
 use namespace ssen_internal;
@@ -19,81 +21,39 @@ use namespace mx_internal;
 [Event(name="renderComplete", type="ssen.components.grid.headers.HeaderEvent")]
 
 /*
- TODO Branche Column 들이 container 에 의해 잘릴때 렌더링 이어서 해주기
- TODO Row Layout --> 비균등 Layout 구현을 위한 처리...
- TODO Sorter? --> 이건 Leaf Column 들에서 구현해야 할듯
- TODO Resizer? --> 이건 차후로 미루자... 당장은 빡세다
+ TODO [x] Branche Column 들이 container 에 의해 잘릴때 렌더링 이어서 해주기
+ TODO [ ] Row Layout --> 비균등 Layout 구현을 위한 처리...
+ TODO [ ] Sorter? --> 이건 Leaf Column 들에서 구현해야 할듯
+ TODO [ ] Resizer? --> 이건 차후로 미루자... 당장은 빡세다
  */
 
-public class Header extends SkinnableComponent implements IHeaderContainer {
-	//==========================================================================================
-	// skin parts
-	//==========================================================================================
-	[SkinPart(required="true")]
-	public var frontLockedContainer:Group;
-
-	[SkinPart(required="true")]
-	public var backLockedContainer:Group;
-
-	[SkinPart(required="true")]
-	public var unlockedContainer:Group;
-
-	//==========================================================================================
-	// constructor
-	//==========================================================================================
-	public function Header() {
-		setStyle("skinClass", HeaderSkin);
-	}
-
+public class Header extends GridElement implements IHeaderElement {
 	//==========================================================================================
 	// drawing containers
 	//==========================================================================================
-	public function getContainerId(columnIndex:int):int {
-		if (_columnLayoutMode === HeaderLayoutMode.RATIO) {
-			return HeaderContainerId.UNLOCK;
-		} else if (columnIndex < frontLockedColumnCount) {
-			return HeaderContainerId.FRONT_LOCK;
-		} else if (columnIndex >= numColumns - backLockedColumnCount) {
-			return HeaderContainerId.BACK_LOCK;
-		} else {
-			return HeaderContainerId.UNLOCK;
-		}
-	}
-
-	public function getContainer(containerId:int):Group {
-		switch (containerId) {
-			case HeaderContainerId.FRONT_LOCK:
+	public function getBlock(block:int):Group {
+		switch (block) {
+			case GridBlock.FRONT_LOCK:
 				return frontLockedContainer;
-			case HeaderContainerId.BACK_LOCK:
+			case GridBlock.BACK_LOCK:
 				return backLockedContainer;
 			default:
 				return unlockedContainer;
 		}
 	}
 
-	//==========================================================================================
-	// properteis
-	//==========================================================================================
-	//---------------------------------------------
-	// columnLayoutMode
-	//---------------------------------------------
-	private var _columnLayoutMode:String = "ratio";
-
-	/** columnLayoutMode */
-	public function get columnLayoutMode():String {
-		return _columnLayoutMode;
+	public function get frontLockedBlockWidth():Number {
+		if (_columnLayoutMode === HeaderLayoutMode.RATIO || _frontLockedColumnCount === 0 || !frontLockedContainer) {
+			return 0;
+		}
+		return frontLockedContainer.width;
 	}
 
-	[Inspectable(type="String", defaultValue="ratio", enumeration="ratio,fixed")]
-	public function set columnLayoutMode(value:String):void {
-		_columnLayoutMode = value;
-		if (value === HeaderLayoutMode.RATIO) {
-			_scrollEnabled = false;
-		} else {
-			initialHorizontalScroll = true;
-			invalidate_scroll();
+	public function get backLockedBlockWidth():Number {
+		if (_columnLayoutMode === HeaderLayoutMode.RATIO || _backLockedColumnCount === 0 || !backLockedContainer) {
+			return 0;
 		}
-		invalidate_columnLayout();
+		return backLockedContainer.width;
 	}
 
 	//==========================================================================================
@@ -205,6 +165,28 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 	//----------------------------------------------------------------
 	// setting values
 	//----------------------------------------------------------------
+	//---------------------------------------------
+	// columnLayoutMode
+	//---------------------------------------------
+	private var _columnLayoutMode:String = "ratio";
+
+	/** columnLayoutMode */
+	public function get columnLayoutMode():String {
+		return _columnLayoutMode;
+	}
+
+	[Inspectable(type="String", defaultValue="ratio", enumeration="ratio,fixed")]
+	public function set columnLayoutMode(value:String):void {
+		_columnLayoutMode = value;
+		if (value === HeaderLayoutMode.RATIO) {
+			_scrollEnabled = false;
+		} else {
+			initialHorizontalScroll = true;
+			invalidate_scroll();
+		}
+		invalidate_columnLayout();
+	}
+
 	//---------------------------------------------
 	// columnSeparatorSize
 	//---------------------------------------------
@@ -499,7 +481,7 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 	// column 들을 loop 돌면서 초기화 시킨다
 	private function initColumns():void {
 		// count columns and rows
-		var rowsAndColumns:Vector.<int> = HeaderUtils.countColumnsAndRows(_columns);
+		var rowsAndColumns:Vector.<int> = GridUtils.countColumnsAndRows(_columns);
 		_numRows = rowsAndColumns[0];
 		_numColumns = rowsAndColumns[1];
 
@@ -522,17 +504,17 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 			// 비율치이기 때문에 실측값은 updateDisplayList 에서 계산하게 된다
 			// 그렇지 않은 경우에는 모든 width 값들을 미리 계산해놓는다
 			if (_columnLayoutMode === HeaderLayoutMode.RATIO) {
-				columnRatios = HeaderUtils.computeColumnRatios(_columns);
+				columnRatios = GridUtils.computeColumnRatios(_columns);
 				_unlockedColumnCount = columnRatios.length;
 			} else {
-				_computedColumnWidthList = HeaderUtils.getColumnWidthList(_leafColumns);
-				_computedColumnPositionList = HeaderUtils.sizeToPosition(_computedColumnWidthList, _columnSeparatorSize);
+				_computedColumnWidthList = GridUtils.getColumnWidthList(_leafColumns);
+				_computedColumnPositionList = GridUtils.sizeToPosition(_computedColumnWidthList, _columnSeparatorSize);
 
 				// front locked column width total
 				if (_frontLockedColumnCount > 0) {
 					var frontLockStartIndex:int = 0;
 					var frontLockEndIndex:int = _frontLockedColumnCount - 1;
-					_computedFrontLockedColumnWidthTotal = HeaderUtils.sumValues(_computedColumnWidthList, frontLockStartIndex, frontLockEndIndex, _columnSeparatorSize);
+					_computedFrontLockedColumnWidthTotal = GridUtils.sumValues(_computedColumnWidthList, frontLockStartIndex, frontLockEndIndex, _columnSeparatorSize);
 				} else {
 					_computedFrontLockedColumnWidthTotal = 0;
 				}
@@ -541,7 +523,7 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 				if (_backLockedColumnCount > 0) {
 					var backLockStartIndex:int = _computedColumnWidthList.length - _backLockedColumnCount;
 					var backLockEndIndex:int = _computedColumnWidthList.length - 1;
-					_computedBackLockedColumnWidthTotal = HeaderUtils.sumValues(_computedColumnWidthList, backLockStartIndex, backLockEndIndex, _columnSeparatorSize);
+					_computedBackLockedColumnWidthTotal = GridUtils.sumValues(_computedColumnWidthList, backLockStartIndex, backLockEndIndex, _columnSeparatorSize);
 				} else {
 					_computedBackLockedColumnWidthTotal = 0;
 				}
@@ -559,7 +541,7 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 				} else {
 					unlockedEndIndex = _computedColumnWidthList.length - 1;
 				}
-				_computedUnlockedColumnWidthTotal = HeaderUtils.sumValues(_computedColumnWidthList, unlockedStartIndex, unlockedEndIndex, _columnSeparatorSize);
+				_computedUnlockedColumnWidthTotal = GridUtils.sumValues(_computedColumnWidthList, unlockedStartIndex, unlockedEndIndex, _columnSeparatorSize);
 
 				// etc
 				_unlockedColumnCount = _computedColumnWidthList.length - _frontLockedColumnCount - _backLockedColumnCount;
@@ -645,9 +627,9 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 		if (_columnLayoutMode === HeaderLayoutMode.RATIO) {
 			var computedWidthList:Vector.<Number>;
 			var computedPositionList:Vector.<Number>;
-			computedWidthList = HeaderUtils.adjustRatio(unscaledWidth - (columnSeparatorSize * (numColumns - 1)), columnRatios);
-			computedWidthList = HeaderUtils.cleanPixels(unscaledWidth, columnSeparatorSize, computedWidthList);
-			computedPositionList = HeaderUtils.sizeToPosition(computedWidthList, columnSeparatorSize);
+			computedWidthList = GridUtils.adjustRatio(unscaledWidth - (columnSeparatorSize * (numColumns - 1)), columnRatios);
+			computedWidthList = GridUtils.cleanPixels(unscaledWidth, columnSeparatorSize, computedWidthList);
+			computedPositionList = GridUtils.sizeToPosition(computedWidthList, columnSeparatorSize);
 
 			_computedColumnWidthList = computedWidthList;
 			_computedColumnPositionList = computedPositionList;
@@ -663,6 +645,9 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 		// visible and resize container
 		//---------------------------------------------
 		if (_columnLayoutMode === HeaderLayoutMode.FIXED) {
+			var frontGap:Number = 0;
+			var backGap:Number = 0;
+
 			if (_frontLockedColumnCount > 0) {
 				frontLockedContainer.visible = true;
 				frontLockedContainer.includeInLayout = true;
@@ -671,9 +656,13 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 				frontLockedContainer.measuredHeight = unscaledHeight;
 
 				frontLockedContainer.invalidateSize();
+
+				frontGap = columnSeparatorSize;
 			} else {
 				frontLockedContainer.visible = false;
 				frontLockedContainer.includeInLayout = false;
+
+				frontGap = 0;
 			}
 
 			if (_backLockedColumnCount > 0) {
@@ -685,16 +674,20 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 				backLockedContainer.measuredHeight = unscaledHeight;
 
 				backLockedContainer.invalidateSize();
+
+				backGap = columnSeparatorSize;
 			} else {
 				backLockedContainer.visible = false;
 				backLockedContainer.includeInLayout = false;
+
+				backGap = 0;
 			}
 
 			unlockedContainer.visible = true;
 			unlockedContainer.includeInLayout = true;
 
-			unlockedContainer.x = _computedFrontLockedColumnWidthTotal + columnSeparatorSize;
-			unlockedContainer.measuredWidth = unscaledWidth - _computedFrontLockedColumnWidthTotal - columnSeparatorSize - _computedBackLockedColumnWidthTotal - columnSeparatorSize;
+			unlockedContainer.x = _computedFrontLockedColumnWidthTotal + frontGap;
+			unlockedContainer.measuredWidth = unscaledWidth - _computedFrontLockedColumnWidthTotal - frontGap - _computedBackLockedColumnWidthTotal - backGap;
 			unlockedContainer.measuredHeight = unscaledHeight;
 
 			unlockedContainer.invalidateSize();
@@ -763,11 +756,11 @@ public class Header extends SkinnableComponent implements IHeaderContainer {
 
 import ssen.components.grid.headers.IHeaderBrancheColumn;
 import ssen.components.grid.headers.IHeaderColumn;
-import ssen.components.grid.headers.IHeaderContainer;
+import ssen.components.grid.headers.IHeaderElement;
 import ssen.components.grid.headers.IHeaderLeafColumn;
 
 class ColumnInitializer {
-	public var header:IHeaderContainer;
+	public var header:IHeaderElement;
 	public var leafColumns:Vector.<IHeaderLeafColumn>;
 
 	public function run(columns:Vector.<IHeaderColumn>):void {

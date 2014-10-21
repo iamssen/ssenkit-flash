@@ -10,6 +10,7 @@ import mx.events.PropertyChangeEvent;
 import spark.components.Group;
 
 import ssen.common.StringUtils;
+import ssen.components.grid.GridUtils;
 
 public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 	//==========================================================================================
@@ -18,14 +19,14 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 	//---------------------------------------------
 	// header
 	//---------------------------------------------
-	private var _header:IHeaderContainer;
+	private var _header:IHeaderElement;
 
 	/** header */
-	public function get header():IHeaderContainer {
+	public function get header():IHeaderElement {
 		return _header;
 	}
 
-	public function set header(value:IHeaderContainer):void {
+	public function set header(value:IHeaderElement):void {
 		_header = value;
 	}
 
@@ -102,7 +103,7 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 	//---------------------------------------------
 	// columnWidth
 	//---------------------------------------------
-	private var _columnWidth:Number;
+	private var _columnWidth:Number = 100;
 
 	/** columnWidth */
 	[Bindable]
@@ -131,12 +132,14 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 	//==========================================================================================
 	// render
 	//==========================================================================================
+	private static var bound:Rectangle=new Rectangle;
+
 	public function render():void {
-		var containerId:int = header.getContainerId(columnIndex);
-		var container:Group = header.getContainer(containerId);
-		var bound:Rectangle = new Rectangle;
+		var containerId:int = GridUtils.getContainerId(header, columnIndex);
+		var container:Group = header.getBlock(containerId);
+
 		var surplusRows:int = (header.numRows - rowIndex);
-		bound.x = HeaderUtils.columnDrawX(header.computedColumnPositionList, columnIndex, containerId, header.columnLayoutMode, header.frontLockedColumnCount, header.backLockedColumnCount);
+		bound.x = GridUtils.columnDrawX(header.computedColumnPositionList, columnIndex, containerId, header.columnLayoutMode, header.frontLockedColumnCount, header.backLockedColumnCount);
 		bound.y = (rowIndex > 0) ? (header.rowHeight + header.rowSeparatorSize) * rowIndex : 0;
 		bound.width = header.computedColumnWidthList[columnIndex];
 		bound.height = (header.rowHeight * surplusRows) + (header.rowSeparatorSize * (surplusRows - 1));

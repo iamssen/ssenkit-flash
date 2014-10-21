@@ -5,12 +5,12 @@ import flash.events.EventDispatcher;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
-import mx.core.UIComponent;
 import mx.events.PropertyChangeEvent;
 
 import spark.components.Group;
 
 import ssen.common.StringUtils;
+import ssen.components.grid.GridUtils;
 
 [DefaultProperty("columns")]
 
@@ -41,14 +41,14 @@ public class HeaderSubTopicColumn extends EventDispatcher implements IHeaderLeaf
 	//---------------------------------------------
 	// header
 	//---------------------------------------------
-	private var _header:IHeaderContainer;
+	private var _header:IHeaderElement;
 
 	/** header */
-	public function get header():IHeaderContainer {
+	public function get header():IHeaderElement {
 		return _header;
 	}
 
-	public function set header(value:IHeaderContainer):void {
+	public function set header(value:IHeaderElement):void {
 		_header = value;
 	}
 
@@ -80,7 +80,7 @@ public class HeaderSubTopicColumn extends EventDispatcher implements IHeaderLeaf
 	public function set columns(value:Vector.<IHeaderColumn>):void {
 		_columns = value;
 
-		var rowsAndColumns:Vector.<int> = HeaderUtils.countColumnsAndRows(value);
+		var rowsAndColumns:Vector.<int> = GridUtils.countColumnsAndRows(value);
 		_numRows = rowsAndColumns[0] + 1;
 		_numColumns = rowsAndColumns[1] + 1;
 
@@ -145,7 +145,7 @@ public class HeaderSubTopicColumn extends EventDispatcher implements IHeaderLeaf
 	//---------------------------------------------
 	// columnWidth
 	//---------------------------------------------
-	private var _columnWidth:Number;
+	private var _columnWidth:Number = 100;
 
 	/** columnWidth */
 	public function get columnWidth():Number {
@@ -178,35 +178,90 @@ public class HeaderSubTopicColumn extends EventDispatcher implements IHeaderLeaf
 	//==========================================================================================
 	// render
 	//==========================================================================================
+	private static var bound:Rectangle = new Rectangle;
+
 	public function render():void {
-		var containerId:int = header.getContainerId(columnIndex);
-		var container:Group = header.getContainer(containerId);
-		var bound:Rectangle = new Rectangle;
-		var surplusRows:int = (header.numRows - rowIndex);
-		bound.x = HeaderUtils.columnDrawX(header.computedColumnPositionList, columnIndex, containerId, header.columnLayoutMode, header.frontLockedColumnCount, header.backLockedColumnCount);
-		bound.y = (rowIndex > 0) ? (header.rowHeight + header.rowSeparatorSize) * rowIndex : 0;
-		bound.width = computedColumnWidth;
-		bound.height = (header.rowHeight * surplusRows) + (header.rowSeparatorSize * (surplusRows - 1));
+		var f:int, fmax:int;
 
-		var point:Point = new Point;
-		point.x = bound.x + header.computedColumnWidthList[columnIndex];
-		point.y = bound.y + header.rowHeight;
+		var containerId:int;
+		var container:Group;
+		var surplusRows:int;
+		var point:Point;
+		var g:Graphics;
 
-		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderSubTopicColumn.render()", toString(), bound);
+		if (header.columnLayoutMode == HeaderLayoutMode.RATIO) {
+			containerId = GridUtils.getContainerId(header, columnIndex);
+			container = header.getBlock(containerId);
+			g = container.graphics;
 
-		var g:Graphics = container.graphics;
-		g.beginFill(0, 0.4);
-		g.moveTo(bound.left, bound.top);
-		g.lineTo(bound.right, bound.top);
-		g.lineTo(bound.right, point.y);
-		g.lineTo(point.x, point.y);
-		g.lineTo(point.x, bound.bottom);
-		g.lineTo(bound.left, bound.bottom);
-		g.lineTo(bound.left, bound.top);
-		g.endFill();
+			surplusRows = (header.numRows - rowIndex);
+			bound.x = GridUtils.columnDrawX(header.computedColumnPositionList, columnIndex, containerId, header.columnLayoutMode, header.frontLockedColumnCount, header.backLockedColumnCount);
+			bound.y = (rowIndex > 0) ? (header.rowHeight + header.rowSeparatorSize) * rowIndex : 0;
+			bound.width = computedColumnWidth;
+			bound.height = (header.rowHeight * surplusRows) + (header.rowSeparatorSize * (surplusRows - 1));
 
-		var f:int = -1;
-		var fmax:int = _columns.length;
+			point = new Point;
+			point.x = bound.x + header.computedColumnWidthList[columnIndex];
+			point.y = bound.y + header.rowHeight;
+
+			g.beginFill(0, 0.4);
+			g.moveTo(bound.left, bound.top);
+			g.lineTo(bound.right, bound.top);
+			g.lineTo(bound.right, point.y);
+			g.lineTo(point.x, point.y);
+			g.lineTo(point.x, bound.bottom);
+			g.lineTo(bound.left, bound.bottom);
+			g.lineTo(bound.left, bound.top);
+			g.endFill();
+		} else {
+			var commands:Vector.<HeaderBrancheDrawCommand> = GridUtils.countBrancheColumns(header.numColumns, header.frontLockedColumnCount, header.backLockedColumnCount, columnIndex, numColumns);
+			var command:HeaderBrancheDrawCommand;
+
+			f = -1;
+			fmax = commands.length;
+
+			while (++f < fmax) {
+				command = commands[f];
+				container = header.getBlock(command.block);
+				g = container.graphics;
+
+				if (command.begin) {
+					surplusRows = (header.numRows - rowIndex);
+					bound.x = GridUtils.columnDrawX(header.computedColumnPositionList, command.start, command.block, header.columnLayoutMode, header.frontLockedColumnCount, header.backLockedColumnCount);
+					bound.y = (rowIndex > 0) ? (header.rowHeight + header.rowSeparatorSize) * rowIndex : 0;
+					bound.width = GridUtils.sumValues(header.computedColumnWidthList, command.start, command.end, header.columnSeparatorSize);
+					bound.height = (header.rowHeight * surplusRows) + (header.rowSeparatorSize * (surplusRows - 1));
+
+					point = new Point;
+					point.x = bound.x + header.computedColumnWidthList[columnIndex];
+					point.y = bound.y + header.rowHeight;
+
+					g.beginFill(0, 0.4);
+					g.moveTo(bound.left, bound.top);
+					g.lineTo(bound.right, bound.top);
+					g.lineTo(bound.right, point.y);
+					g.lineTo(point.x, point.y);
+					g.lineTo(point.x, bound.bottom);
+					g.lineTo(bound.left, bound.bottom);
+					g.lineTo(bound.left, bound.top);
+					g.endFill();
+				} else {
+					bound.x = GridUtils.columnDrawX(header.computedColumnPositionList, command.start, command.block, header.columnLayoutMode, header.frontLockedColumnCount, header.backLockedColumnCount);
+					bound.y = (rowIndex > 0) ? (header.rowHeight + header.rowSeparatorSize) * rowIndex : 0;
+					bound.width = GridUtils.sumValues(header.computedColumnWidthList, command.start, command.end, header.columnSeparatorSize);
+					bound.height = header.rowHeight;
+
+					g.beginFill(0, 0.2);
+					g.drawRect(bound.x, bound.y, bound.width, bound.height);
+					g.endFill();
+				}
+			}
+		}
+
+		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderSubTopicColumn.render()", toString());
+
+		f = -1;
+		fmax = _columns.length;
 		while (++f < fmax) {
 			_columns[f].render();
 		}

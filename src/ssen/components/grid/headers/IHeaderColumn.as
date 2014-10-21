@@ -4,8 +4,8 @@ import flash.geom.Rectangle;
 
 public interface IHeaderColumn extends IEventDispatcher {
 	/** header */
-	function get header():IHeaderContainer;
-	function set header(value:IHeaderContainer):void;
+	function get header():IHeaderElement;
+	function set header(value:IHeaderElement):void;
 
 	/** headerText */
 	function get headerText():String;

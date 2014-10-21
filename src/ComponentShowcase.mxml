@@ -16,6 +16,7 @@
 		<devkit:Showcase type="ssen.components.dialogs.Showcase__Alert" description="Component : Alert" />
 		<devkit:Showcase type="ssen.components.mxChartSupportClasses.cartesianChartElements.Showcase__CartesianChartElement" description="Chart Axis Test" />
 		<devkit:Showcase type="ssen.components.grid.headers.Showcase__GridHeaders" description="Component : Grid Header" />
+		<devkit:Showcase type="ssen.components.grid.Showcase__GridContainer" description="Component : Grid Container" />
 		<!--<devkit:Showcase type="ssen.components.simpleGrid.Showcase__SimpleGrid" description="Component : SimpleTextGrid" />-->
 	</devkit:ShowcaseContainer>
 </s:Application>

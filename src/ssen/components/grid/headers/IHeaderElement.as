@@ -2,10 +2,8 @@ package ssen.components.grid.headers {
 
 import spark.components.Group;
 
-public interface IHeaderContainer extends IHeader {
-	function getContainerId(columnIndex:int):int;
-
-	function getContainer(containerId:int):Group;
+public interface IHeaderElement extends IHeader {
+	function getBlock(block:int):Group;
 
 	function invalidateColumns():void;
 

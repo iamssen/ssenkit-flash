@@ -1,6 +1,9 @@
-package ssen.components.grid.headers {
+package ssen.components.grid {
 
-public class HeaderUtils {
+import ssen.common.MathUtils;
+import ssen.components.grid.headers.*;
+
+public class GridUtils {
 	public static function countColumnsAndRows(columns:Vector.<IHeaderColumn>):Vector.<int> {
 		var numRows:int = 0;
 		var numColumns:int = 0;
@@ -183,27 +186,109 @@ public class HeaderUtils {
 		}
 
 		switch (containerId) {
-			case HeaderContainerId.FRONT_LOCK:
+			case GridBlock.FRONT_LOCK:
 				return positionList[columnIndex];
-			case HeaderContainerId.UNLOCK:
+			case GridBlock.UNLOCK:
 				if (frontLockedColumnCount > 0) {
 					return positionList[columnIndex] - positionList[frontLockedColumnCount];
 				} else {
 					return positionList[columnIndex];
 				}
-			case HeaderContainerId.BACK_LOCK:
+			case GridBlock.BACK_LOCK:
 				return positionList[columnIndex] - positionList[positionList.length - backLockedColumnCount];
 		}
 
 		return NaN;
 	}
 
-//	public static function drawStartX(columnLayoutMode:String, positionList:Vector.<Number>, columnIndex:int, lockedColumnCount:int):Number {
-//		if (columnLayoutMode === HeaderLayoutMode.RATIO || columnIndex < lockedColumnCount) {
-//			return positionList[columnIndex];
-//		}
-//
-//		return positionList[columnIndex] - positionList[lockedColumnCount];
-//	}
+	public static function countBrancheColumns(numColumns:int, frontLock:int, backLock:int, columnIndex:int, brancheColumns:int):Vector.<HeaderBrancheDrawCommand> {
+		var minmax:Vector.<int> = new <int>[int.MAX_VALUE, int.MIN_VALUE, int.MAX_VALUE, int.MIN_VALUE, int.MAX_VALUE, int.MIN_VALUE];
+
+		var frontLockIndex:int = frontLock;
+		var backLockIndex:int = numColumns - backLock;
+
+		var f:int = columnIndex - 1;
+		var fmax:int = columnIndex + brancheColumns;
+
+		while (++f < fmax) {
+			if (f < frontLockIndex) {
+				if (f < minmax[0]) {
+					minmax[0] = f;
+				}
+				if (f > minmax[1]) {
+					minmax[1] = f;
+				}
+			} else if (f < backLockIndex) {
+				if (f < minmax[2]) {
+					minmax[2] = f;
+				}
+				if (f > minmax[3]) {
+					minmax[3] = f;
+				}
+			} else {
+				if (f < minmax[4]) {
+					minmax[4] = f;
+				}
+				if (f > minmax[5]) {
+					minmax[5] = f;
+				}
+			}
+		}
+
+		var commands:Vector.<HeaderBrancheDrawCommand> = new Vector.<HeaderBrancheDrawCommand>;
+		var command:HeaderBrancheDrawCommand;
+		var drawFirstContainer:Boolean = true;
+
+		if (MathUtils.rangeOf(minmax[0], 0, numColumns - 1) && MathUtils.rangeOf(minmax[1], 0, numColumns - 1)) {
+			command = new HeaderBrancheDrawCommand;
+			command.block = 0;
+			command.start = minmax[0];
+			command.end = minmax[1];
+			command.begin = drawFirstContainer;
+			drawFirstContainer = false;
+			commands.push(command);
+		}
+
+		if (MathUtils.rangeOf(minmax[2], 0, numColumns - 1) && MathUtils.rangeOf(minmax[3], 0, numColumns - 1)) {
+			command = new HeaderBrancheDrawCommand;
+			command.block = 1;
+			command.start = minmax[2];
+			command.end = minmax[3];
+			command.begin = drawFirstContainer;
+			drawFirstContainer = false;
+			commands.push(command);
+		}
+
+		if (MathUtils.rangeOf(minmax[4], 0, numColumns - 1) && MathUtils.rangeOf(minmax[5], 0, numColumns - 1)) {
+			command = new HeaderBrancheDrawCommand;
+			command.block = 2;
+			command.start = minmax[4];
+			command.end = minmax[5];
+			command.begin = drawFirstContainer;
+			commands.push(command);
+		}
+
+		return commands;
+	}
+
+	public static function getContainerId(header:IHeader, columnIndex:int):int {
+		if (header.columnLayoutMode === HeaderLayoutMode.RATIO) {
+			return GridBlock.UNLOCK;
+		} else if (columnIndex < header.frontLockedColumnCount) {
+			return GridBlock.FRONT_LOCK;
+		} else if (columnIndex >= header.numColumns - header.backLockedColumnCount) {
+			return GridBlock.BACK_LOCK;
+		} else {
+			return GridBlock.UNLOCK;
+		}
+	}
+
+	//	public static function drawStartX(columnLayoutMode:String, positionList:Vector.<Number>, columnIndex:int, lockedColumnCount:int):Number {
+	//		if (columnLayoutMode === HeaderLayoutMode.RATIO || columnIndex < lockedColumnCount) {
+	//			return positionList[columnIndex];
+	//		}
+	//
+	//		return positionList[columnIndex] - positionList[lockedColumnCount];
+	//	}
 }
 }
