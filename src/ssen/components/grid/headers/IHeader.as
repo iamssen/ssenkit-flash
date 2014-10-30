@@ -1,21 +1,11 @@
 package ssen.components.grid.headers {
 
-import mx.core.IFlexDisplayObject;
-import mx.core.IVisualElement;
-
 import spark.core.IViewport;
 
 [Event(name="columnLayoutChanged", type="ssen.components.grid.headers.HeaderEvent")]
 [Event(name="columnChanged", type="ssen.components.grid.headers.HeaderEvent")]
 
-public interface IHeader extends IViewport, IVisualElement, IFlexDisplayObject {
-	//==========================================================================================
-	// 외부와 연결되는 물리적 형태의 정보들
-	//==========================================================================================
-	function get frontLockedBlockWidth():Number;
-
-	function get backLockedBlockWidth():Number;
-
+public interface IHeader extends IViewport {
 	//==========================================================================================
 	// 외부로 계산해서 줘야 하는 정보들
 	//==========================================================================================
@@ -47,6 +37,14 @@ public interface IHeader extends IViewport, IVisualElement, IFlexDisplayObject {
 
 	/** 계산된 잠겨있지 않은 Column들의 Width 합계 */
 	function get computedUnlockedColumnWidthTotal():Number;
+
+	/** Block Container 의 Width */
+	function get computedFrontLockedBlockWidth():Number;
+
+	/** Block Container 의 Width */
+	function get computedBackLockedBlockWidth():Number;
+
+	function get computedUnlockedBlockWidth():Number;
 
 	/** 잠겨있지 않은 Column들의 수 */
 	function get unlockedColumnCount():int;

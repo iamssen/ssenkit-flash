@@ -31,29 +31,33 @@ public class Header extends GridElement implements IHeaderElement {
 	//==========================================================================================
 	// drawing containers
 	//==========================================================================================
-	public function getBlock(block:int):Group {
-		switch (block) {
-			case GridBlock.FRONT_LOCK:
-				return frontLockedContainer;
-			case GridBlock.BACK_LOCK:
-				return backLockedContainer;
-			default:
-				return unlockedContainer;
-		}
-	}
+//	public function getBlock(block:int):Group {
+//		switch (block) {
+//			case GridBlock.FRONT_LOCK:
+//				return frontLockedContainer;
+//			case GridBlock.BACK_LOCK:
+//				return backLockedContainer;
+//			default:
+//				return unlockedContainer;
+//		}
+//	}
 
-	public function get frontLockedBlockWidth():Number {
+	public function get computedFrontLockedBlockWidth():Number {
 		if (_columnLayoutMode === HeaderLayoutMode.RATIO || _frontLockedColumnCount === 0 || !frontLockedContainer) {
 			return 0;
 		}
 		return frontLockedContainer.width;
 	}
 
-	public function get backLockedBlockWidth():Number {
+	public function get computedBackLockedBlockWidth():Number {
 		if (_columnLayoutMode === HeaderLayoutMode.RATIO || _backLockedColumnCount === 0 || !backLockedContainer) {
 			return 0;
 		}
 		return backLockedContainer.width;
+	}
+
+	public function get computedUnlockedBlockWidth():Number {
+		return unlockedContainer.width;
 	}
 
 	//==========================================================================================
@@ -644,6 +648,7 @@ public class Header extends GridElement implements IHeaderElement {
 		//---------------------------------------------
 		// visible and resize container
 		//---------------------------------------------
+		// TODO 코드 정리 필요
 		if (_columnLayoutMode === HeaderLayoutMode.FIXED) {
 			var frontGap:Number = 0;
 			var backGap:Number = 0;
@@ -651,11 +656,6 @@ public class Header extends GridElement implements IHeaderElement {
 			if (_frontLockedColumnCount > 0) {
 				frontLockedContainer.visible = true;
 				frontLockedContainer.includeInLayout = true;
-
-				frontLockedContainer.measuredWidth = _computedFrontLockedColumnWidthTotal;
-				frontLockedContainer.measuredHeight = unscaledHeight;
-
-				frontLockedContainer.invalidateSize();
 
 				frontGap = columnSeparatorSize;
 			} else {
@@ -669,12 +669,6 @@ public class Header extends GridElement implements IHeaderElement {
 				backLockedContainer.visible = true;
 				backLockedContainer.includeInLayout = true;
 
-				backLockedContainer.x = unscaledWidth - _computedBackLockedColumnWidthTotal;
-				backLockedContainer.measuredWidth = _computedBackLockedColumnWidthTotal;
-				backLockedContainer.measuredHeight = unscaledHeight;
-
-				backLockedContainer.invalidateSize();
-
 				backGap = columnSeparatorSize;
 			} else {
 				backLockedContainer.visible = false;
@@ -683,14 +677,32 @@ public class Header extends GridElement implements IHeaderElement {
 				backGap = 0;
 			}
 
+			var unlockedWidth:Number = unscaledWidth - _computedFrontLockedColumnWidthTotal - frontGap - _computedBackLockedColumnWidthTotal - backGap;
+			if (unlockedWidth > _computedUnlockedColumnWidthTotal) unlockedWidth = _computedUnlockedColumnWidthTotal;
+
 			unlockedContainer.visible = true;
 			unlockedContainer.includeInLayout = true;
 
 			unlockedContainer.x = _computedFrontLockedColumnWidthTotal + frontGap;
-			unlockedContainer.measuredWidth = unscaledWidth - _computedFrontLockedColumnWidthTotal - frontGap - _computedBackLockedColumnWidthTotal - backGap;
+			unlockedContainer.measuredWidth = unlockedWidth;
 			unlockedContainer.measuredHeight = unscaledHeight;
 
 			unlockedContainer.invalidateSize();
+
+			if (_frontLockedColumnCount > 0) {
+				frontLockedContainer.measuredWidth = _computedFrontLockedColumnWidthTotal;
+				frontLockedContainer.measuredHeight = unscaledHeight;
+
+				frontLockedContainer.invalidateSize();
+			}
+
+			if (_backLockedColumnCount > 0) {
+				backLockedContainer.x = unlockedContainer.x + unlockedContainer.width + _columnSeparatorSize;
+				backLockedContainer.measuredWidth = _computedBackLockedColumnWidthTotal;
+				backLockedContainer.measuredHeight = unscaledHeight;
+
+				backLockedContainer.invalidateSize();
+			}
 		} else {
 			frontLockedContainer.visible = false;
 			frontLockedContainer.includeInLayout = false;
@@ -727,7 +739,7 @@ public class Header extends GridElement implements IHeaderElement {
 			// 바뀐 scroll 값들을 적용한다
 			commit_scroll();
 			// scroll 정보가 바뀌었으니 하위 contents 들의 scroll 정보들을 업데이트 하길 알린다
-			dispatchEvent(new HeaderEvent(HeaderEvent.SCROLL_CHANGED));
+			dispatchEvent(new HeaderEvent(HeaderEvent.SCROLL));
 
 			scrollChanged = false;
 		}

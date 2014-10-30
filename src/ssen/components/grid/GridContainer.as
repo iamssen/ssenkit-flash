@@ -1,5 +1,7 @@
 package ssen.components.grid {
 
+import flash.events.Event;
+
 import mx.core.IVisualElement;
 import mx.core.mx_internal;
 
@@ -38,7 +40,7 @@ public class GridContainer extends VGroup {
 
 	private function columnLayoutChanged(event:HeaderEvent):void {
 		for each (var content:IGridContent in contents) {
-			content.invalidateColumnContent();
+			content.invalidateColumnLayout();
 		}
 
 		updateScrollDisplay();
@@ -80,7 +82,8 @@ public class GridContainer extends VGroup {
 		header.addEventListener(HeaderEvent.COLUMN_LAYOUT_CHANGED, columnLayoutChanged);
 		header.addEventListener(HeaderEvent.COLUMN_CHANGED, columnChanged);
 		header.addEventListener(HeaderEvent.RENDER_COMPLETE, renderComplete);
-		header.addEventListener(HeaderEvent.SCROLL_CHANGED, scrollChanged);
+		header.addEventListener(HeaderEvent.SCROLL, scrollChanged);
+		header.addEventListener(Event.RESIZE, resize);
 
 		if (scroll) {
 			scroll.viewport = header;
@@ -97,11 +100,16 @@ public class GridContainer extends VGroup {
 		updateScrollDisplay();
 	}
 
+	private function resize(event:Event):void {
+		updateScrollDisplay();
+	}
+
 	private function clearHeader(element:IHeader):void {
 		element.removeEventListener(HeaderEvent.COLUMN_LAYOUT_CHANGED, columnLayoutChanged);
 		element.removeEventListener(HeaderEvent.COLUMN_CHANGED, columnChanged);
 		element.removeEventListener(HeaderEvent.RENDER_COMPLETE, renderComplete);
-		element.removeEventListener(HeaderEvent.SCROLL_CHANGED, scrollChanged);
+		element.removeEventListener(HeaderEvent.SCROLL, scrollChanged);
+		element.removeEventListener(Event.RESIZE, resize);
 
 		header = null;
 	}
@@ -144,15 +152,17 @@ public class GridContainer extends VGroup {
 			return;
 		}
 
-		if (header.columnLayoutMode === HeaderLayoutMode.RATIO || header.contentWidth < header.measuredWidth) {
+		//		var viewport:IViewport = header;
+		//		trace("GridContainer.updateScrollDisplay()", viewport.contentWidth < viewport.width, viewport.width);
+		if (header.columnLayoutMode === HeaderLayoutMode.RATIO || header.contentWidth < header.width) {
 			scroll.includeInLayout = false;
 			scroll.visible = false;
 		} else {
 			scroll.includeInLayout = true;
 			scroll.visible = true;
 
-			scroll.left = header.frontLockedBlockWidth;
-			scroll.right = header.backLockedBlockWidth;
+			scroll.left = header.computedFrontLockedBlockWidth;
+			scroll.right = header.computedBackLockedBlockWidth;
 		}
 	}
 }

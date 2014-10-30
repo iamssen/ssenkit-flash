@@ -18,7 +18,7 @@
 	</fx:Script>
 
 	<grid:GridContainer left="10" right="10" top="10" bottom="10">
-		<headers:Header columnLayoutMode="fixed" frontLockedColumnCount="2">
+		<headers:Header columnLayoutMode="fixed" frontLockedColumnCount="2" backLockedColumnCount="1">
 			<headers:HeaderColumn columnWidth="130" headerText="HEADER A" />
 			<headers:HeaderColumn columnWidth="130" headerText="HEADER B" />
 			<headers:HeaderColumn columnWidth="130" headerText="HEADER C" />

@@ -13,8 +13,10 @@ public interface IGridContent extends IVisualElement {
 
 	function set header(value:IHeader):void;
 
-	function invalidateColumnContent():void;
+	// column 들의 사이즈 재배치
+	function invalidateColumnLayout():void;
 
+	// 스크롤 재배치
 	function invalidateScroll():void;
 }
 }
