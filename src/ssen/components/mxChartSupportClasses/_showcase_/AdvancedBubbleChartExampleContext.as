@@ -1,7 +1,7 @@
 package ssen.components.mxChartSupportClasses._showcase_ {
+import ssen.components.mxChartSupportClasses._showcase_.viewmodels.ChartViewModel;
+import ssen.components.mxChartSupportClasses._showcase_.views.LeftChart;
 import ssen.reflow.context.Context;
-import ssen.showcase.viewmodels.ChartViewModel;
-import ssen.showcase.views.LeftChart;
 
 public class AdvancedBubbleChartExampleContext extends Context {
 	override protected function mapDependency():void {

@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" initialize="init(event)" xmlns:grid="ssen.flexkit.components.grid.*"
-			   xmlns:columns="ssen.flexkit.components.grid.columns.*">
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:grid="ssen.components.sparkDatagridSupportClasses.*"
+			   xmlns:columns="ssen.components.sparkDatagridSupportClasses.columns.*" initialize="init(event)">
 	<fx:Script>
 		<![CDATA[
-			import mx.collections.IList;
-			import mx.events.FlexEvent;
+		import mx.collections.IList;
+		import mx.events.FlexEvent;
 
-			import ssen.showcase.models.LockedDataGridRow;
+		import ssen.components.sparkDatagridSupportClasses._showcase_.models.LockedDataGridRow;
 
-			[Bindable]
-			public var data:IList;
+		[Bindable]
+		public var data:IList;
 
-			private function init(event:FlexEvent):void {
-				data=LockedDataGridRow.createData();
-			}
+		private function init(event:FlexEvent):void {
+			data = LockedDataGridRow.createData();
+		}
 		]]>
 	</fx:Script>
 	

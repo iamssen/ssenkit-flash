@@ -1,11 +1,10 @@
 package ssen.components.mxChartSupportClasses._showcase_.viewmodels {
-import ssen.showcase.views.charts.IAdvancedBubbleData;
-
 import flash.events.EventDispatcher;
 
 import mx.events.PropertyChangeEvent;
 
 import ssen.common.MathUtils;
+import ssen.components.mxChartSupportClasses._showcase_.views.charts.IAdvancedBubbleData;
 import ssen.datakit.ds.RandomDataCollection;
 
 public class ChartVO extends EventDispatcher implements IAdvancedBubbleData {

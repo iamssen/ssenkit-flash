@@ -1,5 +1,5 @@
 package ssen.components.sparkDatagridSupportClasses._showcase_.views {
-import ssen.flexkit.components.grid.renderers.GridRenderer;
+import ssen.components.sparkDatagridSupportClasses.renderers.GridRenderer;
 
 public class SampleFooterGraphProductRenderer extends GridRenderer {
 	public function SampleFooterGraphProductRenderer() {

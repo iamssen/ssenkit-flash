@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--- Grid Item Renderer : 나누지 않은 기본 숫자형 데이터 출력 -->
-<datagrid:GridRenderer xmlns:datagrid="ssen.showcase.views.datagrid.*" xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:s="library://ns.adobe.com/flex/spark" textAlign="right">
+<datagrid:GridRenderer xmlns:datagrid="ssen.components.mxDatagridSupportClasses.datagrid.*" xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:s="library://ns.adobe.com/flex/spark" textAlign="right">
 	<fx:Script>
 		<![CDATA[
 			override public function validateProperties():void {

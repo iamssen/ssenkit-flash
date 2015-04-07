@@ -3,21 +3,21 @@ import flash.display.Graphics;
 import flash.geom.Rectangle;
 import flash.text.engine.TextLine;
 
-import mx.collections.IList;
-import mx.core.UIComponent;
-
-import spark.components.DataGrid;
-import spark.formatters.NumberFormatter;
-
 import flashx.textLayout.compose.TextLineRecycler;
 import flashx.textLayout.factory.StringTextLineFactory;
 import flashx.textLayout.formats.TextAlign;
 import flashx.textLayout.formats.TextLayoutFormat;
 import flashx.textLayout.formats.VerticalAlign;
 
-import ssen.flexkit.components.grid.elements.IDataGridRowElement;
-import ssen.flexkit.components.grid.elements.RowElementController;
-import ssen.showcase.models.FooterDataGridRow;
+import mx.collections.IList;
+import mx.core.UIComponent;
+
+import spark.components.DataGrid;
+import spark.formatters.NumberFormatter;
+
+import ssen.components.sparkDatagridSupportClasses._showcase_.models.FooterDataGridRow;
+import ssen.components.sparkDatagridSupportClasses.elements.IDataGridRowElement;
+import ssen.components.sparkDatagridSupportClasses.elements.RowElementController;
 
 public class SampleFooterElement extends UIComponent implements IDataGridRowElement {
 	protected var helper:RowElementController;

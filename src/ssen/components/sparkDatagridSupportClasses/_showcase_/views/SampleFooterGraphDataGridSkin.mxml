@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx"
-			 xmlns:fb="http://ns.adobe.com/flashbuilder/2009" alpha.disabled="0.5" minWidth="89" minHeight="84" xmlns:indicators="ssen.flexkit.components.grid.skins.indicators.*"
-			 xmlns:primitives="ssen.flexkit.primitives.*" xmlns:lined="ssen.flexkit.components.grid.skins.lined.*" xmlns:views="ssen.showcase.views.*">
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+			 xmlns:mx="library://ns.adobe.com/flex/mx"
+			 xmlns:fb="http://ns.adobe.com/flashbuilder/2009" xmlns:primitives="ssen.components.graphics.*"
+			 xmlns:lined="ssen.components.sparkDatagridSupportClasses.skins.lined.*"
+			 xmlns:views="ssen.components.sparkDatagridSupportClasses._showcase_.views.*"
+			 alpha.disabled="0.5" minWidth="89" minHeight="84">
 
 	<fx:Metadata>
 		<![CDATA[

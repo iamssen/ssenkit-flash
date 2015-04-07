@@ -1,4 +1,4 @@
-package ssen.flexkit.components.chart {
+package ssen.components.mxChartSupportClasses.cartesianChartElements {
 import flash.geom.Point;
 import flash.geom.Rectangle;
 

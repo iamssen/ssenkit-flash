@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--- Grid Item Renderer : 기본 텍스트 출력 -->
-<datagrid:GridRenderer xmlns:datagrid="ssen.showcase.views.datagrid.*" xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:s="library://ns.adobe.com/flex/spark" textAlign="left">
+<datagrid:GridRenderer xmlns:datagrid="ssen.components.mxDatagridSupportClasses.datagrid.*" xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:s="library://ns.adobe.com/flex/spark" textAlign="left">
 </datagrid:GridRenderer>

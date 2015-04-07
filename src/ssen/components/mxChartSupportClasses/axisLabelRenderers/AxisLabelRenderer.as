@@ -17,11 +17,11 @@
 //				</mx:labelRenderer>
 //			</mx:AxisRenderer>
 
-package ssen.components.mxChartSupportClasses.renderers {
+package ssen.components.mxChartSupportClasses.axisLabelRenderers {
 
-	import spark.components.RichText;
+import spark.components.RichText;
 
-	public class AxisLabelRenderer extends RichText {
+public class AxisLabelRenderer extends RichText {
 
-	}
+}
 }

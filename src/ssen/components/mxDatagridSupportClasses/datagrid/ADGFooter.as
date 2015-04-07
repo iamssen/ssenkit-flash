@@ -19,7 +19,7 @@ public class ADGFooter extends UIComponent {
 	internal var grid:ADG;
 
 	/** Footer Columns */
-	[Inspectable(arrayType="ssen.showcase.views.datagrid.ADGFooterColumn")]
+	[Inspectable(arrayType="ssen.components.mxDatagridSupportClasses.datagrid.ADGFooterColumn")]
 	public var columns:Array;
 
 	//==========================================================================================
@@ -89,7 +89,7 @@ public class ADGFooter extends UIComponent {
 			th=unscaledHeight - 3;
 
 			// draw vertical line
-			if (nx !== 0 && (drawInit || (getQualifiedClassName(footerColumn) !== "ssen.showcase.views.datagrid::ADGFooterColumn" && getQualifiedClassName(footerColumn) !== "ssen.showcase.views.datagrid::ADGFooterTextColumn"))) {
+			if (nx !== 0 && (drawInit || (getQualifiedClassName(footerColumn) !== "ssen.components.mxDatagridSupportClasses.datagrid::ADGFooterColumn" && getQualifiedClassName(footerColumn) !== "ssen.components.mxDatagridSupportClasses.datagrid::ADGFooterTextColumn"))) {
 				g.drawRect(int(nx), 0, 1, unscaledHeight);
 
 				tx=tx + 1;

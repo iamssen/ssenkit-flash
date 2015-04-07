@@ -8,7 +8,7 @@ import mx.core.mx_internal;
 
 use namespace mx_internal;
 
-[Event(name="selectedDataChanged", type="ssen.showcase.views.charts.AdvancedBubbleChartEvent")]
+[Event(name="selectedDataChanged", type="ssen.components.mxChartSupportClasses._showcase_.views.charts.AdvancedBubbleChartEvent")]
 
 /** Zoom, Selection 등의 기능이 추가된 Bubble Chart */
 public class AdvancedBubbleChart extends BubbleChart {

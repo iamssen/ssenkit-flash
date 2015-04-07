@@ -8,7 +8,7 @@
 
 		import spark.components.DataGrid;
 
-		import ssen.components.sparkDatagridSupportClasses.models.HierarchicalDataAdapter;
+		import ssen.components.sparkDatagridSupportClasses._showcase_.models.HierarchicalDataAdapter;
 
 		private var hierarchicalCollectionView:IHierarchicalCollectionView;
 

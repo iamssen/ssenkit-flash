@@ -1,65 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Group xmlns:charts="ssen.showcase.views.charts.*" xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:s="library://ns.adobe.com/flex/spark">
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:charts="ssen.components.mxChartSupportClasses._showcase_.views.charts.*">
 	<fx:Script>
 		<![CDATA[
-			import mx.charts.HitData;
-			import mx.charts.chartClasses.IAxis;
+		import mx.charts.HitData;
+		import mx.charts.chartClasses.IAxis;
 
-			import ssen.common.StringUtils;
-			import ssen.showcase.events.DimensionSelectEvent;
-			import ssen.showcase.utils.UnitConverter;
-			import ssen.showcase.viewmodels.ChartVO;
-			import ssen.showcase.viewmodels.ChartViewModel;
-			import ssen.showcase.views.charts.AdvancedBubbleChartEvent;
+		import ssen.common.StringUtils;
+		import ssen.components.mxChartSupportClasses._showcase_.events.DimensionSelectEvent;
+		import ssen.components.mxChartSupportClasses._showcase_.utils.UnitConverter;
+		import ssen.components.mxChartSupportClasses._showcase_.viewmodels.ChartVO;
+		import ssen.components.mxChartSupportClasses._showcase_.viewmodels.ChartViewModel;
+		import ssen.components.mxChartSupportClasses._showcase_.views.charts.AdvancedBubbleChartEvent;
 
-			[Inject]
-			[Bindable]
-			private var viewModel:ChartViewModel=new ChartViewModel;
+		[Inject]
+		[Bindable]
+		private var viewModel:ChartViewModel = new ChartViewModel;
 
-			//==========================================================================================
-			// event handlers
-			//==========================================================================================
-			private function selectedDataChanged(event:AdvancedBubbleChartEvent):void {
-				viewModel.setSelectedLeftDatas(event.selectedDatas);
-			}
+		//==========================================================================================
+		// event handlers
+		//==========================================================================================
+		private function selectedDataChanged(event:AdvancedBubbleChartEvent):void {
+			viewModel.setSelectedLeftDatas(event.selectedDatas);
+		}
 
-			private function clearItems(event:Event):void {
-				viewModel.setSelectedLeftDatas(null);
-				zscontrol.resetZoom();
-			}
+		private function clearItems(event:Event):void {
+			viewModel.setSelectedLeftDatas(null);
+			zscontrol.resetZoom();
+		}
 
-			private function selectDimension(event:DimensionSelectEvent):void {
-				viewModel.setSelectedLeftDatas(series.selectDimension(event.topLeft, event.topRight, event.bottomLeft, event.bottomRight));
-				zscontrol.resetZoom();
-			}
+		private function selectDimension(event:DimensionSelectEvent):void {
+			viewModel.setSelectedLeftDatas(series.selectDimension(event.topLeft, event.topRight, event.bottomLeft, event.bottomRight));
+			zscontrol.resetZoom();
+		}
 
-			//==========================================================================================
-			// text formatting functions
-			//==========================================================================================
-			// tooltip function
-			private function bubbleChartTip(hitData:HitData):String {
-				var item:ChartVO=hitData.item as ChartVO;
-				var str:Array=[];
-				str.push("<b>Company :</b> {0}");
-				str.push("<b>Product :</b> {1}");
-				str.push("<b>Price :</b> {2}");
-				str.push("<b>Sales :</b> {3}");
-				str.push("<b>Stock :</b> {4}%");
+		//==========================================================================================
+		// text formatting functions
+		//==========================================================================================
+		// tooltip function
+		private function bubbleChartTip(hitData:HitData):String {
+			var item:ChartVO = hitData.item as ChartVO;
+			var str:Array = [];
+			str.push("<b>Company :</b> {0}");
+			str.push("<b>Product :</b> {1}");
+			str.push("<b>Price :</b> {2}");
+			str.push("<b>Sales :</b> {3}");
+			str.push("<b>Stock :</b> {4}%");
 
-				return StringUtils.formatToString(str.join("<br/>"), item.company, item.product, UnitConverter.num(item.price), UnitConverter.num(item.sales),
-														   UnitConverter.percentage(item.stock));
-			}
+			return StringUtils.formatToString(str.join("<br/>"), item.company, item.product, UnitConverter.num(item.price), UnitConverter.num(item.sales),
+					UnitConverter.percentage(item.stock));
+		}
 
-			// axis labels
-			private function vaxisLabelFunction(labelValue:Object, previousValue:Object, axis:IAxis):String {
-				var linear:LinearAxis=axis as LinearAxis;
-				return UnitConverter.fluidNum(Number(labelValue), linear.minimum, linear.maximum, linear.interval);
-			}
+		// axis labels
+		private function vaxisLabelFunction(labelValue:Object, previousValue:Object, axis:IAxis):String {
+			var linear:LinearAxis = axis as LinearAxis;
+			return UnitConverter.fluidNum(Number(labelValue), linear.minimum, linear.maximum, linear.interval);
+		}
 
-			// selection labels
-			private function vselectionLabelFunction(value:Number):String {
-				return UnitConverter.num(int(value));
-			}
+		// selection labels
+		private function vselectionLabelFunction(value:Number):String {
+			return UnitConverter.num(int(value));
+		}
 		]]>
 	</fx:Script>
 	<!--<charts:CartesianChartAxisWrapper bottom="30"
@@ -72,7 +74,7 @@
 								height="100%"
 								width="100%"
 								dataTipFunction="bubbleChartTip"
-								dataTipRenderer="ssen.showcase.views.tooltips.CustomChartToolTip"
+								dataTipRenderer="ssen.components.mxChartSupportClasses._showcase_.views.tooltips.CustomChartToolTip"
 								selectedDataChanged="selectedDataChanged(event)"
 								showDataTips="true">
 		<charts:annotationElements>

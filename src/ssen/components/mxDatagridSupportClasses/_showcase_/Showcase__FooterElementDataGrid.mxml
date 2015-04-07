@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx"
-			   xmlns:datagrid="ssen.showcase.views.datagrid.*" preinitialize="initialModel()">
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   xmlns:datagrid="ssen.components.mxDatagridSupportClasses.datagrid.*"
+			   preinitialize="initialModel()">
 	<fx:Script>
 		<![CDATA[
 			import mx.collections.IList;
@@ -32,20 +34,20 @@
 	<datagrid:ADG dataProvider="{model}" height="100%" horizontalScrollPolicy="off" width="100%">
 		<datagrid:groupedColumns>
 			<mx:AdvancedDataGridColumn width="300" headerText="프로젝트명" dataField="POST1" showDataTips="true" dataTipField="PSPID"
-									   itemRenderer="ssen.showcase.views.datagrid.GridDefaultRenderer"/>
-			<datagrid:ADGNumbericColumn width="70" headerText="지연일수" dataField="DATE_CNT" itemRenderer="ssen.showcase.views.datagrid.GridDayRenderer"/>
-			<mx:AdvancedDataGridColumn width="170" headerText="지연사유" dataField="ISSCOD_TEXT" itemRenderer="ssen.showcase.views.datagrid.GridDefaultRenderer"/>
-			<datagrid:ADGNumbericColumn width="90" headerText="조치예상일" dataField="FFDATE" itemRenderer="ssen.showcase.views.datagrid.GridDateRenderer"/>
-			<mx:AdvancedDataGridColumn width="150" headerText="매출부서" dataField="FKSTL_STEXT" itemRenderer="ssen.showcase.views.datagrid.GridDefaultRenderer"/>
-			<mx:AdvancedDataGridColumn width="80" headerText="PM" dataField="ZZPERNR_NAME" itemRenderer="ssen.showcase.views.datagrid.GridCenterRenderer"/>
+									   itemRenderer="ssen.components.mxDatagridSupportClasses.datagrid.GridDefaultRenderer"/>
+			<datagrid:ADGNumbericColumn width="70" headerText="지연일수" dataField="DATE_CNT" itemRenderer="ssen.components.mxDatagridSupportClasses.datagrid.GridDayRenderer"/>
+			<mx:AdvancedDataGridColumn width="170" headerText="지연사유" dataField="ISSCOD_TEXT" itemRenderer="ssen.components.mxDatagridSupportClasses.datagrid.GridDefaultRenderer"/>
+			<datagrid:ADGNumbericColumn width="90" headerText="조치예상일" dataField="FFDATE" itemRenderer="ssen.components.mxDatagridSupportClasses.datagrid.GridDateRenderer"/>
+			<mx:AdvancedDataGridColumn width="150" headerText="매출부서" dataField="FKSTL_STEXT" itemRenderer="ssen.components.mxDatagridSupportClasses.datagrid.GridDefaultRenderer"/>
+			<mx:AdvancedDataGridColumn width="80" headerText="PM" dataField="ZZPERNR_NAME" itemRenderer="ssen.components.mxDatagridSupportClasses.datagrid.GridCenterRenderer"/>
 			<mx:AdvancedDataGridColumnGroup headerText="계약기간">
-				<datagrid:ADGNumbericColumn width="90" headerText="시작일" dataField="LS_VBEGDAT" itemRenderer="ssen.showcase.views.datagrid.GridDateRenderer"/>
-				<datagrid:ADGNumbericColumn width="90" headerText="종료일" dataField="LS_VENDDAT" itemRenderer="ssen.showcase.views.datagrid.GridDateRenderer"/>
+				<datagrid:ADGNumbericColumn width="90" headerText="시작일" dataField="LS_VBEGDAT" itemRenderer="ssen.components.mxDatagridSupportClasses.datagrid.GridDateRenderer"/>
+				<datagrid:ADGNumbericColumn width="90" headerText="종료일" dataField="LS_VENDDAT" itemRenderer="ssen.components.mxDatagridSupportClasses.datagrid.GridDateRenderer"/>
 			</mx:AdvancedDataGridColumnGroup>
-			<datagrid:ADGNumbericColumn width="80" headerText="수주액" dataField="LP_ORDER" itemRenderer="ssen.showcase.views.datagrid.GridMillionRenderer"/>
-			<datagrid:ADGNumbericColumn width="80" headerText="매출액" dataField="S_ORDER" itemRenderer="ssen.showcase.views.datagrid.GridMillionRenderer"/>
+			<datagrid:ADGNumbericColumn width="80" headerText="수주액" dataField="LP_ORDER" itemRenderer="ssen.components.mxDatagridSupportClasses.datagrid.GridMillionRenderer"/>
+			<datagrid:ADGNumbericColumn width="80" headerText="매출액" dataField="S_ORDER" itemRenderer="ssen.components.mxDatagridSupportClasses.datagrid.GridMillionRenderer"/>
 			<datagrid:ADGNumbericColumn width="80" headerText="부실금액{'\n'}(누계)" dataField="LOSS_SUM"
-										itemRenderer="ssen.showcase.views.datagrid.GridMillionRenderer"/>
+										itemRenderer="ssen.components.mxDatagridSupportClasses.datagrid.GridMillionRenderer"/>
 		</datagrid:groupedColumns>
 		<datagrid:footer>
 			<datagrid:ADGFooter>
