@@ -1,6 +1,7 @@
 package ssen.components.grid.headers {
 import flash.events.IEventDispatcher;
-import flash.geom.Rectangle;
+
+import mx.core.IFactory;
 
 public interface IHeaderColumn extends IEventDispatcher {
 	/** header */
@@ -12,8 +13,8 @@ public interface IHeaderColumn extends IEventDispatcher {
 	function set headerText(value:String):void;
 
 	/** renderer */
-	function get renderer():IHeaderColumnRenderer;
-	function set renderer(value:IHeaderColumnRenderer):void;
+	function get renderer():IFactory;
+	function set renderer(value:IFactory):void;
 
 	/** rowIndex */
 	[Bindable(event="propertyChange")]

@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:grid="ssen.components.grid.*"
+		 xmlns:headers="ssen.components.grid.headers.*"
+		 xmlns:tables="ssen.components.grid.contents.tables.*"
+
+		 initialize="init(event)">
+
+	<fx:Script>
+		<![CDATA[
+		import mx.events.FlexEvent;
+
+		import ssen.common.MathUtils;
+
+		[Bindable]
+		private var data:Object;
+
+		private function init(event:FlexEvent):void {
+			data = [
+				{
+					category: "총 합계",
+					y2015: MathUtils.rand(100, 1000),
+					y2016: MathUtils.rand(100, 1000),
+					y2017: MathUtils.rand(100, 1000),
+					y2018: MathUtils.rand(100, 1000),
+					y2019: MathUtils.rand(100, 1000),
+					y2020: MathUtils.rand(100, 1000),
+					rowHeight: 30,
+					mergeDirection: "bottom",
+					children: [
+						{
+							category: "모듈",
+							y2015: MathUtils.rand(100, 1000),
+							y2016: MathUtils.rand(100, 1000),
+							y2017: MathUtils.rand(100, 1000),
+							y2018: MathUtils.rand(100, 1000),
+							y2019: MathUtils.rand(100, 1000),
+							y2020: MathUtils.rand(100, 1000)
+						},
+						{
+							category: "핵심부품 계",
+							y2015: MathUtils.rand(100, 1000),
+							y2016: MathUtils.rand(100, 1000),
+							y2017: MathUtils.rand(100, 1000),
+							y2018: MathUtils.rand(100, 1000),
+							y2019: MathUtils.rand(100, 1000),
+							y2020: MathUtils.rand(100, 1000),
+							rowHeight: 60,
+							mergeDirection: "bottom",
+							children: [
+								{
+									category: "부품",
+									y2015: MathUtils.rand(100, 1000),
+									y2016: MathUtils.rand(100, 1000),
+									y2017: MathUtils.rand(100, 1000),
+									y2018: MathUtils.rand(100, 1000),
+									y2019: MathUtils.rand(100, 1000),
+									y2020: MathUtils.rand(100, 1000)
+								},
+								{
+									category: "전장",
+									y2015: MathUtils.rand(100, 1000),
+									y2016: MathUtils.rand(100, 1000),
+									y2017: MathUtils.rand(100, 1000),
+									y2018: MathUtils.rand(100, 1000),
+									y2019: MathUtils.rand(100, 1000),
+									y2020: MathUtils.rand(100, 1000)
+								}
+							]
+						},
+						{
+							category: "AS",
+							y2015: MathUtils.rand(100, 1000),
+							y2016: MathUtils.rand(100, 1000),
+							y2017: MathUtils.rand(100, 1000),
+							y2018: MathUtils.rand(100, 1000),
+							y2019: MathUtils.rand(100, 1000),
+							y2020: MathUtils.rand(100, 1000)
+						}
+					]
+				},
+				{
+					category: "총 합계",
+					y2015: MathUtils.rand(100, 1000),
+					y2016: MathUtils.rand(100, 1000),
+					y2017: MathUtils.rand(100, 1000),
+					y2018: MathUtils.rand(100, 1000),
+					y2019: MathUtils.rand(100, 1000),
+					y2020: MathUtils.rand(100, 1000),
+					rowHeight: 40,
+					mergeDirection: "top",
+					children: [
+						{
+							category: "모듈",
+							y2015: MathUtils.rand(100, 1000),
+							y2016: MathUtils.rand(100, 1000),
+							y2017: MathUtils.rand(100, 1000),
+							y2018: MathUtils.rand(100, 1000),
+							y2019: MathUtils.rand(100, 1000),
+							y2020: MathUtils.rand(100, 1000)
+						},
+						{
+							category: "핵심부품 계",
+							y2015: MathUtils.rand(100, 1000),
+							y2016: MathUtils.rand(100, 1000),
+							y2017: MathUtils.rand(100, 1000),
+							y2018: MathUtils.rand(100, 1000),
+							y2019: MathUtils.rand(100, 1000),
+							y2020: MathUtils.rand(100, 1000),
+							mergeDirection: "top",
+							children: [
+								{
+									category: "부품",
+									y2015: MathUtils.rand(100, 1000),
+									y2016: MathUtils.rand(100, 1000),
+									y2017: MathUtils.rand(100, 1000),
+									y2018: MathUtils.rand(100, 1000),
+									y2019: MathUtils.rand(100, 1000),
+									y2020: MathUtils.rand(100, 1000)
+								},
+								{
+									category: "전장",
+									y2015: MathUtils.rand(100, 1000),
+									y2016: MathUtils.rand(100, 1000),
+									y2017: MathUtils.rand(100, 1000),
+									y2018: MathUtils.rand(100, 1000),
+									y2019: MathUtils.rand(100, 1000),
+									y2020: MathUtils.rand(100, 1000)
+								}
+							]
+						},
+						{
+							category: "AS",
+							y2015: MathUtils.rand(100, 1000),
+							y2016: MathUtils.rand(100, 1000),
+							y2017: MathUtils.rand(100, 1000),
+							y2018: MathUtils.rand(100, 1000),
+							y2019: MathUtils.rand(100, 1000),
+							y2020: MathUtils.rand(100, 1000)
+						}
+					]
+				}
+			]
+		}
+		]]>
+	</fx:Script>
+
+	<s:layout>
+		<s:VerticalLayout padding="10" gap="10"/>
+	</s:layout>
+
+	<grid:GridContainer width="100%">
+		<headers:Header columnLayoutMode="fixed" frontLockedColumnCount="1" backLockedColumnCount="1">
+		<!--<headers:Header columnLayoutMode="ratio">-->
+			<headers:HeaderColumn columnWidth="130" headerText="HEADER A"/>
+			<headers:HeaderColumn columnWidth="130" headerText="HEADER B"/>
+			<headers:HeaderGroupedColumn headerText="HEADER GROUP">
+				<headers:HeaderColumn columnWidth="130" headerText="HEADER C"/>
+				<headers:HeaderColumn columnWidth="130" headerText="HEADER D"/>
+			</headers:HeaderGroupedColumn>
+			<headers:HeaderSubTopicColumn headerText="HEADER SUBTOPIC" columnWidth="130">
+				<headers:HeaderColumn columnWidth="130" headerText="HEADER E"/>
+				<headers:HeaderColumn columnWidth="130" headerText="HEADER F"/>
+			</headers:HeaderSubTopicColumn>
+		</headers:Header>
+		<tables:Table height="100%" dataProvider="{data}">
+			<tables:TableFlagColumn dataField="category"
+									mergeDirectionField="mergeDirection"
+									rowHeightField="rowHeight"/>
+			<tables:TableColumn dataField="y2015"/>
+			<tables:TableColumn dataField="y2016"/>
+			<tables:TableColumn dataField="y2017"/>
+			<tables:TableColumn dataField="y2018"/>
+			<tables:TableColumn dataField="y2019"/>
+			<tables:TableColumn dataField="y2020"/>
+		</tables:Table>
+		<s:HScrollBar/>
+	</grid:GridContainer>
+
+	<s:Rect width="100%" height="100%">
+		<s:fill>
+			<s:SolidColor color="#1919a4"/>
+		</s:fill>
+	</s:Rect>
+</s:Group>

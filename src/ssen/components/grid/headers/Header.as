@@ -1,11 +1,12 @@
 package ssen.components.grid.headers {
 
+import mx.core.IVisualElement;
 import mx.core.mx_internal;
 import mx.events.PropertyChangeEvent;
 
 import spark.components.Group;
 
-import ssen.components.grid.GridBlock;
+import ssen.common.IDisposable;
 import ssen.components.grid.GridElement;
 import ssen.components.grid.GridUtils;
 import ssen.ssen_internal;
@@ -31,16 +32,16 @@ public class Header extends GridElement implements IHeaderElement {
 	//==========================================================================================
 	// drawing containers
 	//==========================================================================================
-//	public function getBlock(block:int):Group {
-//		switch (block) {
-//			case GridBlock.FRONT_LOCK:
-//				return frontLockedContainer;
-//			case GridBlock.BACK_LOCK:
-//				return backLockedContainer;
-//			default:
-//				return unlockedContainer;
-//		}
-//	}
+	//	public function getBlock(block:int):Group {
+	//		switch (block) {
+	//			case GridBlock.FRONT_LOCK:
+	//				return frontLockedContainer;
+	//			case GridBlock.BACK_LOCK:
+	//				return backLockedContainer;
+	//			default:
+	//				return unlockedContainer;
+	//		}
+	//	}
 
 	public function get computedFrontLockedBlockWidth():Number {
 		if (_columnLayoutMode === HeaderLayoutMode.RATIO || _frontLockedColumnCount === 0 || !frontLockedContainer) {
@@ -549,7 +550,7 @@ public class Header extends GridElement implements IHeaderElement {
 
 				// etc
 				_unlockedColumnCount = _computedColumnWidthList.length - _frontLockedColumnCount - _backLockedColumnCount;
-				_contentWidth = _computedFrontLockedColumnWidthTotal + _computedUnlockedColumnWidthTotal + _computedBackLockedColumnWidthTotal;
+				_contentWidth = _computedFrontLockedColumnWidthTotal + _columnSeparatorSize + _computedUnlockedColumnWidthTotal + _columnSeparatorSize + _computedBackLockedColumnWidthTotal;
 
 				columnRatios = null;
 				columnLayoutUpdated = true;
@@ -561,15 +562,12 @@ public class Header extends GridElement implements IHeaderElement {
 	// commit columnContent
 	//---------------------------------------------
 	protected function commit_columnContent():void {
-		trace("Header.commit_columnContent()", columnLayoutMode, _columns);
+		//		trace("Header.commit_columnContent()", columnLayoutMode, _columns);
 
 		// container 들을 clear 한다
-		frontLockedContainer.removeAllElements();
-		unlockedContainer.removeAllElements();
-		backLockedContainer.removeAllElements();
-		frontLockedContainer.graphics.clear();
-		unlockedContainer.graphics.clear();
-		backLockedContainer.graphics.clear();
+		disposeContainer(frontLockedContainer);
+		disposeContainer(unlockedContainer);
+		disposeContainer(backLockedContainer);
 
 		// rendering 한다
 		if (_columns) {
@@ -580,6 +578,19 @@ public class Header extends GridElement implements IHeaderElement {
 				_columns[f].render();
 			}
 		}
+	}
+
+	private static function disposeContainer(container:Group):void {
+		var f:int = container.numElements;
+		var el:IVisualElement;
+		while (--f >= 0) {
+			el = container.getElementAt(f);
+			if (el is IDisposable) {
+				IDisposable(el).dispose();
+			}
+		}
+		container.removeAllElements();
+		container.graphics.clear();
 	}
 
 	//---------------------------------------------

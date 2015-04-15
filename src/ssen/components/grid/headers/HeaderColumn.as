@@ -1,16 +1,18 @@
 package ssen.components.grid.headers {
 
-import flash.display.Graphics;
+import flash.display.GraphicsPath;
 import flash.events.EventDispatcher;
 import flash.geom.Rectangle;
+import flash.utils.Dictionary;
 
-import mx.core.UIComponent;
+import mx.core.IFactory;
 import mx.events.PropertyChangeEvent;
 
 import spark.components.Group;
 
 import ssen.common.StringUtils;
 import ssen.components.grid.GridUtils;
+import ssen.drawing.PathMaker;
 
 public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 	//==========================================================================================
@@ -48,14 +50,14 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 	//---------------------------------------------
 	// renderer
 	//---------------------------------------------
-	private var _renderer:IHeaderColumnRenderer;
+	private var _renderer:IFactory;
 
 	/** renderer */
-	public function get renderer():IHeaderColumnRenderer {
-		return _renderer;
+	public function get renderer():IFactory {
+		return _renderer || HeaderColumnRenderer.factory;
 	}
 
-	public function set renderer(value:IHeaderColumnRenderer):void {
+	public function set renderer(value:IFactory):void {
 		_renderer = value;
 		if (_header) _header.invalidateColumnContent();
 	}
@@ -132,24 +134,44 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 	//==========================================================================================
 	// render
 	//==========================================================================================
-	private static var bound:Rectangle=new Rectangle;
+	private static var bound:Rectangle = new Rectangle;
 
 	public function render():void {
-		var containerId:int = GridUtils.getContainerId(header, columnIndex);
-		var container:Group = header.getBlock(containerId);
+		var header:IHeaderElement = this.header;
 
-		var surplusRows:int = (header.numRows - rowIndex);
+		var containerId:int;
+		var container:Group;
+
+		var path:GraphicsPath;
+		var contentSpaces:Dictionary;
+		var renderer:IHeaderColumnRenderer;
+
+		//---------------------------------------------
+		// calculate
+		//---------------------------------------------
+		containerId = GridUtils.getContainerId(header, columnIndex); // column lock 등을 고려한 container id를 가져온다
+		container = header.getBlock(containerId); // 그릴 container를 가져온다
+
+		var surplusRows:int = (header.numRows - rowIndex); // 그릴 (잔여) row
 		bound.x = GridUtils.columnDrawX(header.computedColumnPositionList, columnIndex, containerId, header.columnLayoutMode, header.frontLockedColumnCount, header.backLockedColumnCount);
 		bound.y = (rowIndex > 0) ? (header.rowHeight + header.rowSeparatorSize) * rowIndex : 0;
 		bound.width = header.computedColumnWidthList[columnIndex];
 		bound.height = (header.rowHeight * surplusRows) + (header.rowSeparatorSize * (surplusRows - 1));
 
-		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderColumn.render()", toString(), container.name, bound);
+//		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderColumn.render()", toString(), container.name, bound);
 
-		var g:Graphics = container.graphics;
-		g.beginFill(0, 0.5);
-		g.drawRect(bound.x, bound.y, bound.width, bound.height);
-		g.endFill();
+		//---------------------------------------------
+		// export
+		//---------------------------------------------
+		path = PathMaker.rect(0, 0, bound.width, bound.height);
+		contentSpaces = new Dictionary;
+		contentSpaces["default"] = new Rectangle(0, 0, bound.width, bound.height);
+
+		renderer = this.renderer.newInstance();
+		renderer.draw(this, container, bound.clone(), path, contentSpaces, true);
+		renderer.x = bound.x;
+		renderer.y = bound.y;
+		container.addElement(renderer);
 	}
 
 	override public function toString():String {
