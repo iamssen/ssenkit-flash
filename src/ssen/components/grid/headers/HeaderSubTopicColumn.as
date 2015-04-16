@@ -57,17 +57,17 @@ public class HeaderSubTopicColumn extends EventDispatcher implements IHeaderLeaf
 	}
 
 	//---------------------------------------------
-	// headerText
+	// headerContent
 	//---------------------------------------------
-	private var _headerText:String;
+	private var _headerContent:Object;
 
-	/** headerText */
-	public function get headerText():String {
-		return _headerText;
+	/** headerContent */
+	public function get headerContent():Object {
+		return _headerContent;
 	}
 
-	public function set headerText(value:String):void {
-		_headerText = value;
+	public function set headerContent(value:Object):void {
+		_headerContent = value;
 		if (_header) _header.invalidateColumnContent();
 	}
 
@@ -226,7 +226,12 @@ public class HeaderSubTopicColumn extends EventDispatcher implements IHeaderLeaf
 			contentSpaces["subTopicCut"] = new Rectangle(dig.x, 0, bound.width - dig.x, dig.y);
 
 			renderer = this.renderer.newInstance();
-			renderer.draw(this, container, bound.clone(), path, contentSpaces, true);
+			renderer.column = this;
+			renderer.bound = bound.clone();
+			renderer.path = path;
+			renderer.contentSpaces = contentSpaces;
+			renderer.isMainContainer = true;
+			//			renderer.draw(this, container, bound.clone(), path, contentSpaces, true);
 			renderer.x = bound.x;
 			renderer.y = bound.y;
 			container.addElement(renderer);
@@ -265,7 +270,12 @@ public class HeaderSubTopicColumn extends EventDispatcher implements IHeaderLeaf
 					contentSpaces["subTopicCut"] = new Rectangle(dig.x, 0, bound.width - dig.x, dig.y);
 
 					renderer = this.renderer.newInstance();
-					renderer.draw(this, container, bound.clone(), path, contentSpaces, command.block == GridBlock.UNLOCK);
+					renderer.column = this;
+					renderer.bound = bound.clone();
+					renderer.path = path;
+					renderer.contentSpaces = contentSpaces;
+					renderer.isMainContainer = command.block == GridBlock.UNLOCK;
+					//					renderer.draw(this, container, bound.clone(), path, contentSpaces, command.block == GridBlock.UNLOCK);
 					renderer.x = bound.x;
 					renderer.y = bound.y;
 					container.addElement(renderer);
@@ -286,7 +296,12 @@ public class HeaderSubTopicColumn extends EventDispatcher implements IHeaderLeaf
 					contentSpaces["default"] = new Rectangle(0, 0, bound.width, bound.height);
 
 					renderer = this.renderer.newInstance();
-					renderer.draw(this, container, bound.clone(), path, contentSpaces, command.block == GridBlock.UNLOCK);
+					renderer.column = this;
+					renderer.bound = bound.clone();
+					renderer.path = path;
+					renderer.contentSpaces = contentSpaces;
+					renderer.isMainContainer = command.block == GridBlock.UNLOCK;
+					//					renderer.draw(this, container, bound.clone(), path, contentSpaces, command.block == GridBlock.UNLOCK);
 					renderer.x = bound.x;
 					renderer.y = bound.y;
 					container.addElement(renderer);
@@ -294,7 +309,7 @@ public class HeaderSubTopicColumn extends EventDispatcher implements IHeaderLeaf
 			}
 		}
 
-//		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderSubTopicColumn.render()", toString());
+		//		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderSubTopicColumn.render()", toString());
 
 		f = -1;
 		fmax = _columns.length;
@@ -304,7 +319,7 @@ public class HeaderSubTopicColumn extends EventDispatcher implements IHeaderLeaf
 	}
 
 	override public function toString():String {
-		return StringUtils.formatToString("[GridHeaderColumnGroup headerText={0} columnIndex={1} rowIndex={2} computedColumnWidth={3}]", headerText, columnIndex, rowIndex, computedColumnWidth);
+		return StringUtils.formatToString("[GridHeaderColumnGroup headerContent={0} columnIndex={1} rowIndex={2} computedColumnWidth={3}]", headerContent, columnIndex, rowIndex, computedColumnWidth);
 	}
 }
 }

@@ -44,7 +44,26 @@ public interface IHeader extends IViewport {
 	/** Block Container 의 Width */
 	function get computedBackLockedBlockWidth():Number;
 
+	/** Block Container 의 Width */
 	function get computedUnlockedBlockWidth():Number;
+
+	/** Block Container 의 X */
+	function get computedFrontLockedBlockX():Number;
+
+	/** Block Container 의 X */
+	function get computedBackLockedBlockX():Number;
+
+	/** Block Container 의 X */
+	function get computedUnlockedBlockX():Number;
+
+	/** Block Container 의 Visible */
+	function get computedFrontLockedBlockVisible():Boolean;
+
+	/** Block Container 의 Visible */
+	function get computedBackLockedBlockVisible():Boolean;
+
+	/** Block Container 의 Visible */
+	function get computedUnlockedBlockVisible():Boolean;
 
 	/** 잠겨있지 않은 Column들의 수 */
 	function get unlockedColumnCount():int;

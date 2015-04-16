@@ -8,9 +8,12 @@ public interface IHeaderColumn extends IEventDispatcher {
 	function get header():IHeaderElement;
 	function set header(value:IHeaderElement):void;
 
-	/** headerText */
-	function get headerText():String;
-	function set headerText(value:String):void;
+	//---------------------------------------------
+	// headerContent
+	//---------------------------------------------
+	/** headerContent */
+	function get headerContent() : Object;
+	function set headerContent(value : Object):void;
 
 	/** renderer */
 	function get renderer():IFactory;

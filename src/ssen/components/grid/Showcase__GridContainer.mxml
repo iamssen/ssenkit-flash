@@ -19,18 +19,18 @@
 
 	<grid:GridContainer left="10" right="10" top="10" bottom="10">
 		<headers:Header columnLayoutMode="fixed" frontLockedColumnCount="2" backLockedColumnCount="1">
-			<headers:HeaderColumn columnWidth="130" headerText="HEADER A" />
-			<headers:HeaderColumn columnWidth="130" headerText="HEADER B" />
-			<headers:HeaderColumn columnWidth="130" headerText="HEADER C" />
-			<headers:HeaderColumn columnWidth="130" headerText="HEADER D" />
-			<headers:HeaderGroupedColumn headerText="HEADER GROUP">
-				<headers:HeaderColumn columnWidth="130" headerText="HEADER E" />
-				<headers:HeaderColumn columnWidth="130" headerText="HEADER F" />
-				<headers:HeaderColumn columnWidth="130" headerText="HEADER G" />
+			<headers:HeaderColumn columnWidth="130" headerContent="HEADER A" />
+			<headers:HeaderColumn columnWidth="130" headerContent="HEADER B" />
+			<headers:HeaderColumn columnWidth="130" headerContent="HEADER C" />
+			<headers:HeaderColumn columnWidth="130" headerContent="HEADER D" />
+			<headers:HeaderGroupedColumn headerContent="HEADER GROUP">
+				<headers:HeaderColumn columnWidth="130" headerContent="HEADER E" />
+				<headers:HeaderColumn columnWidth="130" headerContent="HEADER F" />
+				<headers:HeaderColumn columnWidth="130" headerContent="HEADER G" />
 			</headers:HeaderGroupedColumn>
-			<headers:HeaderSubTopicColumn headerText="HEADER SUBTOPIC" columnWidth="130">
-				<headers:HeaderColumn columnWidth="130" headerText="HEADER H" />
-				<headers:HeaderColumn columnWidth="130" headerText="HEADER I" />
+			<headers:HeaderSubTopicColumn headerContent="HEADER SUBTOPIC" columnWidth="130">
+				<headers:HeaderColumn columnWidth="130" headerContent="HEADER H" />
+				<headers:HeaderColumn columnWidth="130" headerContent="HEADER I" />
 			</headers:HeaderSubTopicColumn>
 		</headers:Header>
 		<contents:Showcase__GridContents height="100%" />

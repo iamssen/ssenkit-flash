@@ -56,17 +56,17 @@ public class HeaderGroupedColumn extends EventDispatcher implements IHeaderBranc
 	}
 
 	//---------------------------------------------
-	// headerText
+	// headerContent
 	//---------------------------------------------
-	private var _headerText:String;
+	private var _headerContent:Object;
 
-	/** headerText */
-	public function get headerText():String {
-		return _headerText;
+	/** headerContent */
+	public function get headerContent():Object {
+		return _headerContent;
 	}
 
-	public function set headerText(value:String):void {
-		_headerText = value;
+	public function set headerContent(value:Object):void {
+		_headerContent = value;
 		if (_header) _header.invalidateColumnContent();
 	}
 
@@ -201,7 +201,12 @@ public class HeaderGroupedColumn extends EventDispatcher implements IHeaderBranc
 			contentSpaces["default"] = new Rectangle(0, 0, bound.width, bound.height);
 
 			renderer = this.renderer.newInstance();
-			renderer.draw(this, container, bound.clone(), path, contentSpaces, true);
+			renderer.column = this;
+			renderer.bound = bound.clone();
+			renderer.path = path;
+			renderer.contentSpaces = contentSpaces;
+			renderer.isMainContainer = true;
+			//			renderer.draw(this, container, bound.clone(), path, contentSpaces, true);
 			renderer.x = bound.x;
 			renderer.y = bound.y;
 			container.addElement(renderer);
@@ -233,14 +238,19 @@ public class HeaderGroupedColumn extends EventDispatcher implements IHeaderBranc
 				contentSpaces["default"] = new Rectangle(0, 0, bound.width, bound.height);
 
 				renderer = this.renderer.newInstance();
-				renderer.draw(this, container, bound.clone(), path, contentSpaces, command.block === GridBlock.UNLOCK);
+				renderer.column = this;
+				renderer.bound = bound.clone();
+				renderer.path = path;
+				renderer.contentSpaces = contentSpaces;
+				renderer.isMainContainer = command.block === GridBlock.UNLOCK;
+				//				renderer.draw(this, container, bound.clone(), path, contentSpaces, command.block === GridBlock.UNLOCK);
 				renderer.x = bound.x;
 				renderer.y = bound.y;
 				container.addElement(renderer);
 			}
 		}
 
-//		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderGroupedColumn.render()", toString());
+		//		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderGroupedColumn.render()", toString());
 
 		//---------------------------------------------
 		// render children
@@ -253,7 +263,7 @@ public class HeaderGroupedColumn extends EventDispatcher implements IHeaderBranc
 	}
 
 	override public function toString():String {
-		return StringUtils.formatToString("[GridHeaderColumnGroup headerText={0} columnIndex={1} rowIndex={2} computedColumnWidth={3}]", headerText, columnIndex, rowIndex, computedColumnWidth);
+		return StringUtils.formatToString("[GridHeaderColumnGroup headerContent={0} columnIndex={1} rowIndex={2} computedColumnWidth={3}]", headerContent, columnIndex, rowIndex, computedColumnWidth);
 	}
 }
 }

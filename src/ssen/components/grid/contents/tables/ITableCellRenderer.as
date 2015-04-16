@@ -1,9 +1,9 @@
 package ssen.components.grid.contents.tables {
 import mx.core.IVisualElement;
 
-import spark.components.Group;
+import ssen.common.IDisposable;
 
-public interface ITableCellRenderer extends IVisualElement {
+public interface ITableCellRenderer extends IVisualElement, IDisposable {
 	//---------------------------------------------
 	// table
 	//---------------------------------------------
@@ -31,13 +31,6 @@ public interface ITableCellRenderer extends IVisualElement {
 	/** columnIndex */
 	function get columnIndex() : int;
 	function set columnIndex(value : int):void;
-
-	//---------------------------------------------
-	// data
-	//---------------------------------------------
-	/** data */
-	function get data() : Object;
-	function set data(value : Object):void;
 
 	function render():void;
 }

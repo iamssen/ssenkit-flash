@@ -1,6 +1,7 @@
 package ssen.components.grid {
 
 import spark.components.Group;
+import spark.components.VScrollBar;
 import spark.components.supportClasses.SkinnableComponent;
 
 public class GridElement extends SkinnableComponent {
@@ -16,6 +17,9 @@ public class GridElement extends SkinnableComponent {
 	[SkinPart(required="true")]
 	public var unlockedContainer:Group;
 
+	[SkinPart(required="true")]
+	public var scrollBar:VScrollBar;
+
 	public function GridElement() {
 		setStyle("skinClass", GridElementSkin);
 	}
@@ -30,17 +34,5 @@ public class GridElement extends SkinnableComponent {
 				return unlockedContainer;
 		}
 	}
-
-	//	override protected function createChildren():void {
-	//		super.createChildren();
-	//
-	//		frontLockedContainer = new Group;
-	//		unlockedContainer = new Group;
-	//		backLockedContainer = new Group;
-	//
-	//		addChild(frontLockedContainer);
-	//		addChild(unlockedContainer);
-	//		addChild(backLockedContainer);
-	//	}
 }
 }

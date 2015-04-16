@@ -3,13 +3,36 @@ import flash.geom.Rectangle;
 
 import mx.core.ClassFactory;
 import mx.core.IFactory;
-import mx.core.UIComponent;
 
-import ssen.common.MathUtils;
+import ssen.components.grid.base.TextItemRenderer;
+import ssen.drawing.RGB;
 
-public class TableCellRenderer extends UIComponent implements ITableCellRenderer {
+public class TableCellRenderer extends TextItemRenderer implements ITableCellRenderer {
+
 	internal static const defaultRenderer:IFactory = new ClassFactory(TableCellRenderer);
 
+	//==========================================================================================
+	// Style
+	//==========================================================================================
+	//---------------------------------------------
+	// contentSpace
+	//---------------------------------------------
+	private var _contentSpace:String = "fit";
+
+	/** contentSpace */
+	public function get contentSpace():String {
+		return _contentSpace;
+	}
+
+	[Inspectable(type="Array", enumeration="wide,fit", defaultValue="fit")]
+	public function set contentSpace(value:String):void {
+		_contentSpace = value;
+		invalidateDisplayList();
+	}
+
+	//==========================================================================================
+	// ITableCellRenderer
+	//==========================================================================================
 	//---------------------------------------------
 	// table
 	//---------------------------------------------
@@ -66,31 +89,29 @@ public class TableCellRenderer extends UIComponent implements ITableCellRenderer
 		_columnIndex = value;
 	}
 
-	//---------------------------------------------
-	// data
-	//---------------------------------------------
-	private var _data:Object;
-
-	/** data */
-	public function get data():Object {
-		return _data;
-	}
-
-	public function set data(value:Object):void {
-		_data = value;
-	}
-
 	//==========================================================================================
 	// render
 	//==========================================================================================
 	public function render():void {
+		invalidateDisplayList();
+	}
+
+	override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
+		super.updateDisplayList(unscaledWidth, unscaledHeight);
+
 		var indent:int = 0;
 		var width:Number = this.width;
 		var height:Number = this.height;
+		var contentBound:Rectangle = new Rectangle;
 
-		var backgroundColor:uint = MathUtils.rand(0, 0xffffff);
+		clear();
 
-		graphics.clear();
+		//----------------------------------------------------------------
+		// draw background fill
+		//----------------------------------------------------------------
+		var backgroundColor:RGB = getBackgroundColor();
+
+		graphics.beginFill(backgroundColor.toHex());
 
 		if (columnIndex === 0 && column is TableFlagColumn) {
 			if (row.indent > 0) {
@@ -105,20 +126,62 @@ public class TableCellRenderer extends UIComponent implements ITableCellRenderer
 				rect.y = startRow.y - row.y;
 				rect.height = endRow.y + endRow.height - startRow.y;
 
-				graphics.beginFill(backgroundColor);
 				graphics.drawRect(indent, rect.y, table.mergeIndentSize, rect.height);
 				graphics.drawRect(indent + table.mergeIndentSize, 0, width - indent - table.mergeIndentSize, height);
-				graphics.endFill();
+
+				if (_contentSpace === "wide") {
+					contentBound.x = indent;
+					contentBound.width = width - indent;
+				} else {
+					contentBound.x = indent + table.mergeIndentSize;
+					contentBound.width = width - contentBound.x;
+				}
 			} else {
-				graphics.beginFill(backgroundColor);
 				graphics.drawRect(indent, 0, width - indent, height);
-				graphics.endFill();
+
+				contentBound.x = indent;
+				contentBound.width = width - indent;
 			}
 		} else {
-			graphics.beginFill(backgroundColor);
 			graphics.drawRect(0, 0, width, height);
-			graphics.endFill();
+
+			contentBound.x = 0;
+			contentBound.width = width;
 		}
+
+		contentBound.y = 0;
+		contentBound.height = height;
+
+		graphics.endFill();
+
+		//----------------------------------------------------------------
+		// draw content
+		//----------------------------------------------------------------
+		if (row && row.data && column && column.dataField) {
+			renderContent(contentBound);
+		}
+	}
+
+	override protected function getLabelText():String {
+		return (formatter) ? formatter.format(row.data[column.dataField]) : row.data[column.dataField].toString();
+	}
+
+	private function getBackgroundColor():RGB {
+		var back:RGB = new RGB(row.backgroundColor);
+		var fore:RGB = new RGB(column.columnBackgroundColor);
+
+		var result:RGB;
+
+		switch (column.columnBackgroundBlendMode) {
+			case ColumnBlendMode.OVERWRITE:
+				result = fore;
+				break;
+			default:
+				result = back.multiply(fore);
+				break;
+		}
+		
+		return result;
 	}
 }
 }

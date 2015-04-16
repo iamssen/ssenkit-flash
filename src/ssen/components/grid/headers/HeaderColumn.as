@@ -33,17 +33,17 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 	}
 
 	//---------------------------------------------
-	// headerText
+	// headerContent
 	//---------------------------------------------
-	private var _headerText:String;
+	private var _headerContent:Object;
 
-	/** headerText */
-	public function get headerText():String {
-		return _headerText;
+	/** headerContent */
+	public function get headerContent():Object {
+		return _headerContent;
 	}
 
-	public function set headerText(value:String):void {
-		_headerText = value;
+	public function set headerContent(value:Object):void {
+		_headerContent = value;
 		if (_header) _header.invalidateColumnContent();
 	}
 
@@ -158,7 +158,7 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 		bound.width = header.computedColumnWidthList[columnIndex];
 		bound.height = (header.rowHeight * surplusRows) + (header.rowSeparatorSize * (surplusRows - 1));
 
-//		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderColumn.render()", toString(), container.name, bound);
+		//		trace(StringUtils.multiply("+", rowIndex + 1), rowIndex, columnIndex, "HeaderColumn.render()", toString(), container.name, bound);
 
 		//---------------------------------------------
 		// export
@@ -168,14 +168,19 @@ public class HeaderColumn extends EventDispatcher implements IHeaderLeafColumn {
 		contentSpaces["default"] = new Rectangle(0, 0, bound.width, bound.height);
 
 		renderer = this.renderer.newInstance();
-		renderer.draw(this, container, bound.clone(), path, contentSpaces, true);
+		renderer.column = this;
+		renderer.bound = bound.clone();
+		renderer.path = path;
+		renderer.contentSpaces = contentSpaces;
+		renderer.isMainContainer = true;
+		//		renderer.draw(this, container, bound.clone(), path, contentSpaces, true);
 		renderer.x = bound.x;
 		renderer.y = bound.y;
 		container.addElement(renderer);
 	}
 
 	override public function toString():String {
-		return StringUtils.formatToString("[GridHeaderColumn headerText={0} columnIndex={1} rowIndex={2} computedColumnWidth={3}]", headerText, columnIndex, rowIndex, computedColumnWidth);
+		return StringUtils.formatToString("[GridHeaderColumn headerContent={0} columnIndex={1} rowIndex={2} computedColumnWidth={3}]", headerContent, columnIndex, rowIndex, computedColumnWidth);
 	}
 }
 }

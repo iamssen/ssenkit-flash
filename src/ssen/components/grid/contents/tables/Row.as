@@ -39,7 +39,6 @@ internal class Row {
 
 	// row style
 	public var backgroundColor:uint;
-	public var backgroundAlpha:Number;
 
 	public function toString():String {
 		return StringUtils.formatToString("{0}{1} ({2}/{3}/{4})", StringUtils.multiply("+", indent), data["category"], rowIndex, startRowIndex, endRowIndex);

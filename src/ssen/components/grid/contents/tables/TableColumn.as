@@ -1,6 +1,8 @@
 package ssen.components.grid.contents.tables {
 import mx.core.IFactory;
 
+[DefaultProperty("itemRenderer")]
+
 public class TableColumn {
 	//==========================================================================================
 	// internal
@@ -23,6 +25,36 @@ public class TableColumn {
 	public function set dataField(value:String):void {
 		_dataField = value;
 		if (table) table.refreshCellContents(this);
+	}
+
+	//---------------------------------------------
+	// rowHeightField
+	//---------------------------------------------
+	private var _rowHeightField:String;
+
+	/** rowHeightField */
+	public function get rowHeightField():String {
+		return _rowHeightField;
+	}
+
+	public function set rowHeightField(value:String):void {
+		_rowHeightField = value;
+		if (table) table.refreshRows();
+	}
+
+	//---------------------------------------------
+	// rowBackgroundColorField
+	//---------------------------------------------
+	private var _rowBackgroundColorField:String;
+
+	/** rowBackgroundColorField */
+	public function get rowBackgroundColorField():String {
+		return _rowBackgroundColorField;
+	}
+
+	public function set rowBackgroundColorField(value:String):void {
+		_rowBackgroundColorField = value;
+		if (table) table.refreshCellStyles(this);
 	}
 
 	//---------------------------------------------
@@ -58,32 +90,16 @@ public class TableColumn {
 	}
 
 	//---------------------------------------------
-	// columnBackgroundAlpha
-	//---------------------------------------------
-	private var _columnBackgroundAlpha:Number = 0;
-
-	/** columnBackgroundAlpha */
-	public function get columnBackgroundAlpha():Number {
-		return _columnBackgroundAlpha;
-	}
-
-	[Inspectable(format="Number")]
-	public function set columnBackgroundAlpha(value:Number):void {
-		_columnBackgroundAlpha = value;
-		if (table) table.refreshCellStyles(this);
-	}
-
-	//---------------------------------------------
 	// columnBackgroundBlendMode
 	//---------------------------------------------
-	private var _columnBackgroundBlendMode:String = "normal";
+	private var _columnBackgroundBlendMode:String = "multiply";
 
 	/** columnBackgroundBlendMode */
 	public function get columnBackgroundBlendMode():String {
 		return _columnBackgroundBlendMode;
 	}
 
-	[Inspectable(type="Array", enumeration="normal,multiply", defaultValue="normal")]
+	[Inspectable(type="Array", enumeration="overwrite,multiply", defaultValue="overwrite")]
 	public function set columnBackgroundBlendMode(value:String):void {
 		_columnBackgroundBlendMode = value;
 		if (table) table.refreshCellStyles(this);

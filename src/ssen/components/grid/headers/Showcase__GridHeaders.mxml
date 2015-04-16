@@ -31,26 +31,26 @@
 	<headers:Header id="header" width="100%" columnLayoutMode="{columnLayoutMode}"
 					frontLockedColumnCount="{frontLockCount.selectedIndex}"
 					backLockedColumnCount="{backLockCount.selectedIndex}">
-		<headers:HeaderColumn columnWidth="130" headerText="HEADER A" />
-		<headers:HeaderColumn columnWidth="130" headerText="HEADER A" />
-		<headers:HeaderGroupedColumn headerText="HEADER GROUP">
-			<headers:HeaderColumn columnWidth="130" headerText="HEADER B" />
-			<headers:HeaderColumn columnWidth="130" headerText="HEADER C" />
-			<headers:HeaderSubTopicColumn columnWidth="130" headerText="HEADER XXX">
-				<headers:HeaderColumn columnWidth="130" headerText="HEADER CC" />
-				<headers:HeaderGroupedColumn headerText="HEADER GROUP 2">
-					<headers:HeaderColumn columnWidth="130" headerText="HEADER CC" />
-					<headers:HeaderColumn columnWidth="130" headerText="HEADER CC" />
-					<headers:HeaderColumn columnWidth="130" headerText="HEADER CC" />
+		<headers:HeaderColumn columnWidth="130" headerContent="HEADER A" />
+		<headers:HeaderColumn columnWidth="130" headerContent="HEADER A" />
+		<headers:HeaderGroupedColumn headerContent="HEADER GROUP">
+			<headers:HeaderColumn columnWidth="130" headerContent="HEADER B" />
+			<headers:HeaderColumn columnWidth="130" headerContent="HEADER C" />
+			<headers:HeaderSubTopicColumn columnWidth="130" headerContent="HEADER XXX">
+				<headers:HeaderColumn columnWidth="130" headerContent="HEADER CC" />
+				<headers:HeaderGroupedColumn headerContent="HEADER GROUP 2">
+					<headers:HeaderColumn columnWidth="130" headerContent="HEADER CC" />
+					<headers:HeaderColumn columnWidth="130" headerContent="HEADER CC" />
+					<headers:HeaderColumn columnWidth="130" headerContent="HEADER CC" />
 				</headers:HeaderGroupedColumn>
 			</headers:HeaderSubTopicColumn>
 		</headers:HeaderGroupedColumn>
-		<headers:HeaderColumn columnWidth="130" headerText="HEADER D" />
-		<headers:HeaderSubTopicColumn columnWidth="130" headerText="HEADER E">
-			<headers:HeaderColumn columnWidth="130" headerText="HEADER F" />
-			<headers:HeaderColumn columnWidth="130" headerText="HEADER G" />
+		<headers:HeaderColumn columnWidth="130" headerContent="HEADER D" />
+		<headers:HeaderSubTopicColumn columnWidth="130" headerContent="HEADER E">
+			<headers:HeaderColumn columnWidth="130" headerContent="HEADER F" />
+			<headers:HeaderColumn columnWidth="130" headerContent="HEADER G" />
 		</headers:HeaderSubTopicColumn>
-		<headers:HeaderColumn columnWidth="130" headerText="HEADER H" />
+		<headers:HeaderColumn columnWidth="130" headerContent="HEADER H" />
 	</headers:Header>
 
 	<s:HScrollBar id="scroll" viewport="{header}" width="100%" change="scrollChange(event)" />
@@ -83,25 +83,25 @@
 	</s:HGroup>
 
 	<!--<headers:Header width="100%">-->
-		<!--<headers:HeaderColumn columnWidth="130" headerText="HEADER A" />-->
-		<!--<headers:HeaderColumn columnWidth="130" headerText="HEADER A" />-->
-		<!--<headers:HeaderGroupedColumn headerText="HEADER GROUP">-->
-			<!--<headers:HeaderColumn columnWidth="130" headerText="HEADER B" />-->
-			<!--<headers:HeaderColumn columnWidth="130" headerText="HEADER C" />-->
-			<!--<headers:HeaderSubTopicColumn columnWidth="130" headerText="HEADER XXX">-->
-				<!--<headers:HeaderColumn columnWidth="130" headerText="HEADER CC" />-->
-				<!--<headers:HeaderGroupedColumn headerText="HEADER GROUP 2">-->
-					<!--<headers:HeaderColumn columnWidth="130" headerText="HEADER CC" />-->
-					<!--<headers:HeaderColumn columnWidth="130" headerText="HEADER CC" />-->
-					<!--<headers:HeaderColumn columnWidth="130" headerText="HEADER CC" />-->
+		<!--<headers:HeaderColumn columnWidth="130" headerContent="HEADER A" />-->
+		<!--<headers:HeaderColumn columnWidth="130" headerContent="HEADER A" />-->
+		<!--<headers:HeaderGroupedColumn headerContent="HEADER GROUP">-->
+			<!--<headers:HeaderColumn columnWidth="130" headerContent="HEADER B" />-->
+			<!--<headers:HeaderColumn columnWidth="130" headerContent="HEADER C" />-->
+			<!--<headers:HeaderSubTopicColumn columnWidth="130" headerContent="HEADER XXX">-->
+				<!--<headers:HeaderColumn columnWidth="130" headerContent="HEADER CC" />-->
+				<!--<headers:HeaderGroupedColumn headerContent="HEADER GROUP 2">-->
+					<!--<headers:HeaderColumn columnWidth="130" headerContent="HEADER CC" />-->
+					<!--<headers:HeaderColumn columnWidth="130" headerContent="HEADER CC" />-->
+					<!--<headers:HeaderColumn columnWidth="130" headerContent="HEADER CC" />-->
 				<!--</headers:HeaderGroupedColumn>-->
 			<!--</headers:HeaderSubTopicColumn>-->
 		<!--</headers:HeaderGroupedColumn>-->
-		<!--<headers:HeaderColumn columnWidth="130" headerText="HEADER D" />-->
-		<!--<headers:HeaderSubTopicColumn columnWidth="130" headerText="HEADER E">-->
-			<!--<headers:HeaderColumn columnWidth="130" headerText="HEADER F" />-->
-			<!--<headers:HeaderColumn columnWidth="130" headerText="HEADER G" />-->
+		<!--<headers:HeaderColumn columnWidth="130" headerContent="HEADER D" />-->
+		<!--<headers:HeaderSubTopicColumn columnWidth="130" headerContent="HEADER E">-->
+			<!--<headers:HeaderColumn columnWidth="130" headerContent="HEADER F" />-->
+			<!--<headers:HeaderColumn columnWidth="130" headerContent="HEADER G" />-->
 		<!--</headers:HeaderSubTopicColumn>-->
-		<!--<headers:HeaderColumn columnWidth="130" headerText="HEADER H" />-->
+		<!--<headers:HeaderColumn columnWidth="130" headerContent="HEADER H" />-->
 	<!--</headers:Header>-->
 </s:Group>

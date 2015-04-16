@@ -21,7 +21,7 @@ public class GridContainer extends VGroup {
 	private var contents:Vector.<IGridContent> = new Vector.<IGridContent>;
 
 	public function GridContainer() {
-		gap = 0;
+		gap = 1;
 	}
 
 	private function scrollChanged(event:HeaderEvent):void {

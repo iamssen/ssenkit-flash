@@ -1,14 +1,14 @@
 package ssen.components.grid.contents.tables {
-import flash.display.Graphics;
 import flash.geom.Rectangle;
 
 import mx.core.IFactory;
+import mx.events.PropertyChangeEvent;
 
 import spark.components.Group;
-import spark.components.supportClasses.ItemRenderer;
+import spark.core.IViewport;
 
+import ssen.common.DisposableUtils;
 import ssen.components.grid.GridBlock;
-
 import ssen.components.grid.GridElement;
 import ssen.components.grid.GridUtils;
 import ssen.components.grid.contents.IGridContent;
@@ -17,7 +17,7 @@ import ssen.components.grid.headers.IHeader;
 
 [DefaultProperty("columns")]
 
-public class Table extends GridElement implements IGridContent {
+public class Table extends GridElement implements IGridContent, IViewport {
 	//==========================================================================================
 	// properties
 	//==========================================================================================
@@ -29,7 +29,12 @@ public class Table extends GridElement implements IGridContent {
 	// - row info fields
 	//----------------------------------------------------------------
 	private var rows:Vector.<Row>;
-	private var flagColumn:TableFlagColumn;
+	private var flagColumn:TableColumn;
+
+	private var cells:Vector.<ITableCellRenderer> = new <ITableCellRenderer>[];
+	private var _frontContentWidth:Number;
+	private var _unlockContentWidth:Number;
+	private var _backContentWidth:Number;
 
 	//==========================================================================================
 	// invalidate
@@ -62,14 +67,12 @@ public class Table extends GridElement implements IGridContent {
 	// from IGridContent interface
 	//----------------------------------------------------------------
 	public function invalidateColumnLayout():void {
-		trace("Table.invalidateColumnLayout()");
 		invalidate_cellCreation();
 	}
 
 	public function invalidateScroll():void {
-		//		trace("Table.invalidateScroll()", width, height, frontLockedContainer.width, frontLockedContainer.height, unlockedContainer.width, unlockedContainer.height, backLockedContainer.width, backLockedContainer.height);
+		commit_layout();
 		commit_scroll();
-		//		invalidateDisplayList();
 	}
 
 	//---------------------------------------------
@@ -177,11 +180,19 @@ public class Table extends GridElement implements IGridContent {
 	}
 
 	private function getMergeDirection(data:Object):String {
-		if (flagColumn && flagColumn.mergeDirectionField && data[flagColumn.mergeDirectionField] is String) {
-			switch (data[flagColumn.mergeDirectionField]) {
+		var flag:TableFlagColumn;
+
+		if (flagColumn is TableFlagColumn) {
+			flag = flagColumn as TableFlagColumn;
+		} else {
+			return MergeDirection.NONE;
+		}
+
+		if (flag && flag.mergeDirectionField && data[flag.mergeDirectionField] is String) {
+			switch (data[flag.mergeDirectionField]) {
 				case MergeDirection.TOP:
 				case MergeDirection.BOTTOM:
-					return data[flagColumn.mergeDirectionField];
+					return data[flag.mergeDirectionField];
 			}
 		}
 
@@ -252,29 +263,6 @@ public class Table extends GridElement implements IGridContent {
 		return rowBackgroundColor;
 	}
 
-	//---------------------------------------------
-	// rowBackgroundAlpha
-	//---------------------------------------------
-	private var _rowBackgroundAlpha:Number = 1;
-
-	/** rowBackgroundAlpha */
-	public function get rowBackgroundAlpha():Number {
-		return _rowBackgroundAlpha;
-	}
-
-	public function set rowBackgroundAlpha(value:Number):void {
-		_rowBackgroundAlpha = value;
-		invalidate_draw();
-	}
-
-	private function getRowBackgroundAlpha(data:Object):Number {
-		if (flagColumn && flagColumn.rowBackgroundAlphaField && !isNaN(Number(data[flagColumn.rowBackgroundAlphaField]))) {
-			return data[flagColumn.rowBackgroundAlphaField];
-		}
-
-		return rowBackgroundAlpha;
-	}
-
 	//----------------------------------------------------------------
 	// data read policy
 	//----------------------------------------------------------------
@@ -299,7 +287,7 @@ public class Table extends GridElement implements IGridContent {
 	//---------------------------------------------
 	// rowGap
 	//---------------------------------------------
-	private var _rowGap:int = 2;
+	private var _rowGap:int = 1;
 
 	/** rowGap */
 	public function get rowGap():int {
@@ -371,28 +359,13 @@ public class Table extends GridElement implements IGridContent {
 	}
 
 	//==========================================================================================
-	// invalidate and commit
-	//==========================================================================================
-	override protected function commitProperties():void {
-		super.commitProperties();
-
-		if (rowsChanged) {
-			if (canCommitRows()) {
-				commit_rows();
-				rowsChanged = false;
-			} else {
-				invalidateProperties();
-			}
-		}
-	}
-
-	//==========================================================================================
 	// create rows
 	//==========================================================================================
 	private function readColumns():void {
-		if (_columns && _columns[0] is TableFlagColumn) {
-			flagColumn = _columns[0] as TableFlagColumn;
-		}
+		flagColumn = _columns[0];
+		//		if (_columns && _columns[0] is TableFlagColumn) {
+		//			flagColumn = _columns[0] as TableFlagColumn;
+		//		}
 	}
 
 	private function readRows():void {
@@ -439,7 +412,6 @@ public class Table extends GridElement implements IGridContent {
 		var mergeDirection:String = getMergeDirection(data);
 		var rowHeight:int = getRowHeight(data);
 		var rowBackgroundColor:uint = getRowBackgroundColor(data);
-		var rowBackgroundAlpha:Number = getRowBackgroundAlpha(data);
 		var childrenField:String = this.childrenField;
 
 		var row:Row = new Row;
@@ -447,14 +419,13 @@ public class Table extends GridElement implements IGridContent {
 		row.data = data;
 		row.height = rowHeight;
 		row.backgroundColor = rowBackgroundColor;
-		row.backgroundAlpha = rowBackgroundAlpha;
 
 		var startIndex:int = rows.length;
 		var endIndex:int;
 		var children:Array;
 		var child:Object;
 
-		if (data[childrenField] is Array) {
+		if (getMergeDirection(data) !== MergeDirection.NONE && data[childrenField] is Array) {
 			if (mergeDirection === MergeDirection.TOP) {
 				// add to collection
 				rows.push(row);
@@ -472,7 +443,7 @@ public class Table extends GridElement implements IGridContent {
 				row.startRowIndex = startIndex;
 				row.endRowIndex = endIndex;
 				// set children
-				row.hasChildren=true;
+				row.hasChildren = true;
 			} else {
 				// loop children
 				children = data[childrenField];
@@ -490,7 +461,7 @@ public class Table extends GridElement implements IGridContent {
 				row.startRowIndex = startIndex;
 				row.endRowIndex = endIndex;
 				// set children
-				row.hasChildren=true;
+				row.hasChildren = true;
 			}
 		} else {
 			// add to collection
@@ -504,23 +475,25 @@ public class Table extends GridElement implements IGridContent {
 		}
 	}
 
-	//----------------------------------------------------------------
-	//
-	//----------------------------------------------------------------
+	//==========================================================================================
+	// create commits
+	//==========================================================================================
 	//---------------------------------------------
 	// commit cellCreation
 	//---------------------------------------------
 	protected function commit_cellCreation():void {
-		// cell 들을 만들면서 bound 계산을 한다
-		frontLockedContainer.removeAllElements();
-		unlockedContainer.removeAllElements();
-		backLockedContainer.removeAllElements();
+		//---------------------------------------------
+		// clear
+		//---------------------------------------------
+		DisposableUtils.disposeContainer(frontLockedContainer);
+		DisposableUtils.disposeContainer(unlockedContainer);
+		DisposableUtils.disposeContainer(backLockedContainer);
 		cells.length = 0;
 
-		frontContentWidth = 0;
-		backContentWidth = 0;
-		unlockContentWidth = 0;
-		contentHeight = 0;
+		var frontContentWidth:Number = 0;
+		var backContentWidth:Number = 0;
+		var unlockContentWidth:Number = 0;
+		var contentHeight:Number = 0;
 
 		var bound:Rectangle = new Rectangle;
 		var block:Group;
@@ -594,62 +567,66 @@ public class Table extends GridElement implements IGridContent {
 			// increase row info
 			ny += row.height + rowGap;
 		}
+
+		_frontContentWidth = frontContentWidth;
+		_backContentWidth = backContentWidth;
+		_unlockContentWidth = unlockContentWidth;
+		set_contentHeight(contentHeight);
+		measuredHeight = contentHeight;
 	}
 
 	//---------------------------------------------
 	// commit layout
 	//---------------------------------------------
 	protected function commit_layout():void {
-		if (header.columnLayoutMode === HeaderLayoutMode.FIXED) {
-			var frontGap:Number = 0;
-			var backGap:Number = 0;
+		var containerHeight:Number = isNaN(explicitHeight) ? measuredHeight : explicitHeight;
+		var containerWidth:Number = 0;
+		var enabledScroll:Boolean = measuredHeight >= containerHeight;
 
+		if (header.columnLayoutMode === HeaderLayoutMode.FIXED) {
 			// front / back container visible
-			if (header.frontLockedColumnCount > 0) {
+			if (header.computedFrontLockedBlockVisible) {
 				frontLockedContainer.visible = true;
 				frontLockedContainer.includeInLayout = true;
-
-				frontGap = header.columnSeparatorSize;
 			} else {
 				frontLockedContainer.visible = false;
 				frontLockedContainer.includeInLayout = false;
-
-				frontGap = 0;
 			}
 
-			if (header.backLockedColumnCount > 0) {
+			if (header.computedBackLockedBlockVisible) {
 				backLockedContainer.visible = true;
 				backLockedContainer.includeInLayout = true;
-
-				backGap = header.columnSeparatorSize;
 			} else {
 				backLockedContainer.visible = false;
 				backLockedContainer.includeInLayout = false;
-
-				backGap = 0;
 			}
 
 			// set bound values
 			unlockedContainer.visible = true;
 			unlockedContainer.includeInLayout = true;
 
-			unlockedContainer.x = header.computedFrontLockedColumnWidthTotal + frontGap;
-			unlockedContainer.width = unscaledWidth - header.computedFrontLockedColumnWidthTotal - frontGap - header.computedBackLockedColumnWidthTotal - backGap;
-			unlockedContainer.height = contentHeight;
+			unlockedContainer.x = header.computedUnlockedBlockX;
+			unlockedContainer.width = header.computedUnlockedBlockWidth;
+			unlockedContainer.height = containerHeight;
 
-			if (unlockedContainer.width > unlockContentWidth) {
-				unlockedContainer.width = unlockContentWidth;
+			if (unlockedContainer.width > _unlockContentWidth) {
+				unlockedContainer.width = _unlockContentWidth;
+
+				containerWidth = unlockedContainer.x + unlockedContainer.width;
 			}
 
-			if (header.frontLockedColumnCount > 0) {
-				frontLockedContainer.width = header.computedFrontLockedColumnWidthTotal;
-				frontLockedContainer.height = contentHeight;
+			if (header.computedFrontLockedBlockVisible) {
+				frontLockedContainer.x = header.computedFrontLockedBlockX;
+				frontLockedContainer.width = header.computedFrontLockedBlockWidth;
+				frontLockedContainer.height = containerHeight;
 			}
 
-			if (header.backLockedColumnCount > 0) {
-				backLockedContainer.x = unlockedContainer.x + unlockedContainer.width + backGap;
-				backLockedContainer.width = header.computedBackLockedColumnWidthTotal;
-				backLockedContainer.height = contentHeight;
+			if (header.computedBackLockedBlockVisible) {
+				backLockedContainer.x = header.computedBackLockedBlockX;
+				backLockedContainer.width = header.computedBackLockedBlockWidth;
+				backLockedContainer.height = containerHeight;
+
+				containerWidth = backLockedContainer.x + backLockedContainer.width;
 			}
 		} else {
 			frontLockedContainer.visible = false;
@@ -661,10 +638,29 @@ public class Table extends GridElement implements IGridContent {
 			backLockedContainer.visible = false;
 			backLockedContainer.includeInLayout = false;
 
-			unlockedContainer.x = 0;
-			unlockedContainer.width = unscaledWidth;
-			unlockedContainer.height = contentHeight;
+			unlockedContainer.x = header.computedUnlockedBlockX;
+			unlockedContainer.width = header.computedUnlockedBlockWidth;
+			unlockedContainer.height = containerHeight;
+
+			containerWidth = unlockedContainer.x + unlockedContainer.width;
 		}
+
+		if (enabledScroll) {
+			scrollBar.visible = true;
+			scrollBar.includeInLayout = true;
+
+			scrollBar.x = containerWidth - scrollBar.width;
+			scrollBar.y = 0;
+			scrollBar.height = containerHeight;
+		} else {
+			scrollBar.visible = false;
+			scrollBar.includeInLayout = false;
+		}
+	}
+
+	override protected function createChildren():void {
+		super.createChildren();
+		if (scrollBar) scrollBar.viewport = this;
 	}
 
 	//---------------------------------------------
@@ -681,18 +677,25 @@ public class Table extends GridElement implements IGridContent {
 	// commit scroll
 	//---------------------------------------------
 	protected function commit_scroll():void {
-		if (!_header || !unlockedContainer) return;
-		unlockedContainer.horizontalScrollPosition = _header.horizontalScrollPosition;
+		if (!_header) return;
+		horizontalScrollPosition = _header.horizontalScrollPosition;
 	}
 
 	//==========================================================================================
-	//
+	// update hook
 	//==========================================================================================
-	private var cells:Vector.<ITableCellRenderer> = new <ITableCellRenderer>[];
-	private var frontContentWidth:Number;
-	private var unlockContentWidth:Number;
-	private var backContentWidth:Number;
-	private var contentHeight:Number;
+	override protected function commitProperties():void {
+		super.commitProperties();
+
+		if (rowsChanged) {
+			if (canCommitRows()) {
+				commit_rows();
+				rowsChanged = false;
+			} else {
+				invalidateProperties();
+			}
+		}
+	}
 
 	override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 		//----------------------------------------------------------------
@@ -746,230 +749,82 @@ public class Table extends GridElement implements IGridContent {
 				return;
 			}
 		}
-
-		//		//----------------------------------------------------------------
-		//		// test
-		//		//----------------------------------------------------------------
-		//		if (cellCreationChanged || drawChanged) {
-		//			if (canCommitCellCreation() || canCommitDraw()) {
-		//				//---------------------------------------------
-		//				// clear
-		//				//---------------------------------------------
-		//				frontLockedContainer.graphics.clear();
-		//				unlockedContainer.graphics.clear();
-		//				backLockedContainer.graphics.clear();
-		//
-		//				commit_cellCreation();
-		//
-		//				cellCreationChanged = false;
-		//				drawChanged = false;
-		//			} else {
-		//				invalidate_cellCreation();
-		//			}
-		//
-		//			trace("Table.updateDisplayList()", unscaledWidth, unscaledHeight);
-		//		}
-
-		//----------------------------------------------------------------
-		// cell creation
-		//----------------------------------------------------------------
-		//		if (canCommitCellCreation()) {
-		//			commit_cellCreation();
-		//			cellCreationChanged = false;
-		//		}
-
-		//----------------------------------------------------------------
-		// draw
-		//----------------------------------------------------------------
-		//		if (canCommitDraw()) {
-		//			//---------------------------------------------
-		//			// clear
-		//			//---------------------------------------------
-		//			frontLockedContainer.graphics.clear();
-		//			unlockedContainer.graphics.clear();
-		//			backLockedContainer.graphics.clear();
-		//
-		//			commit_draw();
-		//			drawChanged = false;
-		//		}
 	}
 
-	private function oldDraw():void {
+	//==========================================================================================
+	// implements IViewport
+	//==========================================================================================
+	public function get contentWidth():Number {
+		return (unlockedContainer) ? unlockedContainer.contentWidth : 0;
+	}
 
-		//----------------------------------------------------------------
-		// draw
-		//----------------------------------------------------------------
-		var g:Graphics;
-		var bound:Rectangle = new Rectangle;
-		var block:Group;
+	//---------------------------------------------
+	// contentHeight
+	//---------------------------------------------
+	private var _contentHeight:Number;
 
-		var widthList:Vector.<Number> = header.computedColumnWidthList;
-		var positionList:Vector.<Number> = header.computedColumnPositionList;
-		var blockId:int;
+	/** contentHeight */
+	[Bindable(event="propertyChange")]
+	public function get contentHeight():Number {
+		return _contentHeight;
+	}
 
-		var alpha:Number;
+	private function set_contentHeight(value:Number):void {
+		var oldValue:Number = _contentHeight;
+		_contentHeight = value;
 
-		var row:Row;
+		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
+			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "contentHeight", oldValue, _contentHeight));
+		}
+	}
 
-		var f:int;
-		var fmax:int;
-		var s:int;
-		var smax:int;
+	public function get horizontalScrollPosition():Number {
+		return (unlockedContainer) ? unlockedContainer.horizontalScrollPosition : 0;
+	}
 
-		f = -1;
-		fmax = rows.length;
-		while (++f < fmax) {
-			row = rows[f];
+	public function set horizontalScrollPosition(value:Number):void {
+		if (!unlockedContainer) return;
+		unlockedContainer.horizontalScrollPosition = value;
+	}
 
-			alpha = 1;
+	//---------------------------------------------
+	// verticalScrollPosition
+	//---------------------------------------------
+	private var _verticalScrollPosition:Number;
 
-			s = -1;
-			smax = widthList.length;
-			while (++s < smax) {
-				blockId = GridUtils.getContainerId(header, s);
-				block = getBlock(blockId);
+	/** verticalScrollPosition */
+	[Bindable]
+	public function get verticalScrollPosition():Number {
+		return _verticalScrollPosition;
+	}
 
-				//---------------------------------------------
-				// draw
-				//---------------------------------------------
-				bound.x = GridUtils.columnDrawX(positionList, s, blockId, header.columnLayoutMode, header.frontLockedColumnCount, header.backLockedColumnCount);
-				bound.y = (f * 25);
-				bound.width = widthList[s];
-				bound.height = 20;
+	public function set verticalScrollPosition(value:Number):void {
+		var oldValue:Number = _verticalScrollPosition;
+		_verticalScrollPosition = value;
 
-				//				trace("Table.commit_cellCreation() draw", f, s, block.width, block.height);
-				//
-				//				g = block.graphics;
-				//				g.beginFill(0, alpha);
-				//				g.drawRect(bound.x, bound.y, bound.width, bound.height);
-				//				g.endFill();
-				//
-				//				alpha -= 0.1;
-			}
+		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
+			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "verticalScrollPosition", oldValue, _verticalScrollPosition));
 		}
 
-		//----------------------------------------------------------------
-		// set height
-		//----------------------------------------------------------------
-		var computedWidth:Number = unscaledWidth;
-		var computedHeight:Number = bound.y + bound.height;
+		if (frontLockedContainer) frontLockedContainer.verticalScrollPosition = value;
+		if (unlockedContainer) unlockedContainer.verticalScrollPosition = value;
+		if (backLockedContainer) backLockedContainer.verticalScrollPosition = value;
+	}
 
-		//----------------------------------------------------------------
-		// update container layouts
-		//----------------------------------------------------------------
-		if (header.columnLayoutMode === HeaderLayoutMode.FIXED) {
-			var frontGap:Number = 0;
-			var backGap:Number = 0;
+	public function getHorizontalScrollPositionDelta(navigationUnit:uint):Number {
+		return 0;
+	}
 
-			// front / back container visible
-			if (header.frontLockedColumnCount > 0) {
-				frontLockedContainer.visible = true;
-				frontLockedContainer.includeInLayout = true;
+	public function getVerticalScrollPositionDelta(navigationUnit:uint):Number {
+		return (unlockedContainer) ? unlockedContainer.getVerticalScrollPositionDelta(navigationUnit) : 0;
+	}
 
-				frontGap = header.columnSeparatorSize;
-			} else {
-				frontLockedContainer.visible = false;
-				frontLockedContainer.includeInLayout = false;
+	public function get clipAndEnableScrolling():Boolean {
+		return true;
+	}
 
-				frontGap = 0;
-			}
-
-			if (header.backLockedColumnCount > 0) {
-				backLockedContainer.visible = true;
-				backLockedContainer.includeInLayout = true;
-
-				backGap = header.columnSeparatorSize;
-			} else {
-				backLockedContainer.visible = false;
-				backLockedContainer.includeInLayout = false;
-
-				backGap = 0;
-			}
-
-			// set bound values
-			unlockedContainer.visible = true;
-			unlockedContainer.includeInLayout = true;
-
-			unlockedContainer.x = header.computedFrontLockedColumnWidthTotal + frontGap;
-			unlockedContainer.width = unscaledWidth - header.computedFrontLockedColumnWidthTotal - frontGap - header.computedBackLockedColumnWidthTotal - backGap;
-			unlockedContainer.height = computedHeight;
-
-			//			trace("Table.commit_cellCreation() unlocked width", unscaledWidth, header.computedFrontLockedColumnWidthTotal, frontGap, header.computedBackLockedColumnWidthTotal, backGap);
-
-			if (header.frontLockedColumnCount > 0) {
-				frontLockedContainer.width = header.computedFrontLockedColumnWidthTotal;
-				frontLockedContainer.height = computedHeight;
-			}
-
-			if (header.backLockedColumnCount > 0) {
-				backLockedContainer.x = unlockedContainer.x + unlockedContainer.width + header.columnSeparatorSize;
-				backLockedContainer.width = header.computedBackLockedColumnWidthTotal;
-				backLockedContainer.height = computedHeight;
-
-				trace("Table.commit_cellCreation()", backLockedContainer.x, backLockedContainer.width, backLockedContainer.height);
-			}
-		} else {
-			frontLockedContainer.visible = false;
-			frontLockedContainer.includeInLayout = false;
-
-			unlockedContainer.visible = true;
-			unlockedContainer.includeInLayout = true;
-
-			backLockedContainer.visible = false;
-			backLockedContainer.includeInLayout = false;
-
-			unlockedContainer.x = 0;
-			unlockedContainer.width = unscaledWidth;
-			unlockedContainer.height = computedHeight;
-		}
-
-		//		if (frontLockedContainer.visible) {
-		//			frontLockedContainer.height = computedHeight;
-		//		}
-		//
-		//		if (backLockedContainer.visible) {
-		//			backLockedContainer.height = computedHeight;
-		//		}
-		//
-		//		height = computedHeight;
-
-		trace("Table.commit_cellCreation() Containers", unscaledWidth, unscaledHeight, width, height, frontLockedContainer.width, frontLockedContainer.height, unlockedContainer.width, unlockedContainer.height, backLockedContainer.width, backLockedContainer.height);
-
-
-		//----------------------------------------------------------------
-		// draw2
-		//----------------------------------------------------------------
-		f = -1;
-		fmax = rows.length;
-		while (++f < fmax) {
-			row = rows[f];
-
-			alpha = 1;
-
-			s = -1;
-			smax = widthList.length;
-			while (++s < smax) {
-				blockId = GridUtils.getContainerId(header, s);
-				block = getBlock(blockId);
-
-				//---------------------------------------------
-				// draw
-				//---------------------------------------------
-				bound.x = GridUtils.columnDrawX(positionList, s, blockId, header.columnLayoutMode, header.frontLockedColumnCount, header.backLockedColumnCount);
-				bound.y = (f * 25);
-				bound.width = widthList[s];
-				bound.height = 20;
-
-				trace("Table.commit_cellCreation() draw", f, s, block.width, block.height);
-
-				g = block.graphics;
-				g.beginFill(0, alpha);
-				g.drawRect(bound.x, bound.y, bound.width, bound.height);
-				g.endFill();
-
-				alpha -= 0.1;
-			}
-		}
+	public function set clipAndEnableScrolling(value:Boolean):void {
+		// ignore
 	}
 }
 }

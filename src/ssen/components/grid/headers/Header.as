@@ -6,6 +6,8 @@ import mx.events.PropertyChangeEvent;
 
 import spark.components.Group;
 
+import ssen.common.DisposableUtils;
+
 import ssen.common.IDisposable;
 import ssen.components.grid.GridElement;
 import ssen.components.grid.GridUtils;
@@ -59,6 +61,36 @@ public class Header extends GridElement implements IHeaderElement {
 
 	public function get computedUnlockedBlockWidth():Number {
 		return unlockedContainer.width;
+	}
+
+	public function get computedFrontLockedBlockX():Number {
+		return 0;
+	}
+
+	public function get computedBackLockedBlockX():Number {
+		if (_columnLayoutMode === HeaderLayoutMode.RATIO || _backLockedColumnCount === 0) {
+			return 0;
+		}
+		return computedUnlockedBlockX + computedUnlockedBlockWidth + columnSeparatorSize;
+	}
+
+	public function get computedUnlockedBlockX():Number {
+		if (_columnLayoutMode === HeaderLayoutMode.RATIO || _frontLockedColumnCount === 0) {
+			return 0;
+		}
+		return computedFrontLockedBlockWidth + columnSeparatorSize;
+	}
+
+	public function get computedFrontLockedBlockVisible():Boolean {
+		return _columnLayoutMode === HeaderLayoutMode.FIXED || _frontLockedColumnCount > 0;
+	}
+
+	public function get computedBackLockedBlockVisible():Boolean {
+		return _columnLayoutMode === HeaderLayoutMode.FIXED || _backLockedColumnCount > 0;
+	}
+
+	public function get computedUnlockedBlockVisible():Boolean {
+		return true;
 	}
 
 	//==========================================================================================
@@ -195,7 +227,7 @@ public class Header extends GridElement implements IHeaderElement {
 	//---------------------------------------------
 	// columnSeparatorSize
 	//---------------------------------------------
-	private var _columnSeparatorSize:int = 3;
+	private var _columnSeparatorSize:int = 1;
 
 	/** columnSeparatorSize */
 	public function get columnSeparatorSize():int {
@@ -210,7 +242,7 @@ public class Header extends GridElement implements IHeaderElement {
 	//---------------------------------------------
 	// rowSeparatorSize
 	//---------------------------------------------
-	private var _rowSeparatorSize:int = 3;
+	private var _rowSeparatorSize:int = 1;
 
 	/** rowSeparatorSize */
 	public function get rowSeparatorSize():int {
@@ -565,9 +597,9 @@ public class Header extends GridElement implements IHeaderElement {
 		//		trace("Header.commit_columnContent()", columnLayoutMode, _columns);
 
 		// container 들을 clear 한다
-		disposeContainer(frontLockedContainer);
-		disposeContainer(unlockedContainer);
-		disposeContainer(backLockedContainer);
+		DisposableUtils.disposeContainer(frontLockedContainer);
+		DisposableUtils.disposeContainer(unlockedContainer);
+		DisposableUtils.disposeContainer(backLockedContainer);
 
 		// rendering 한다
 		if (_columns) {
@@ -578,19 +610,6 @@ public class Header extends GridElement implements IHeaderElement {
 				_columns[f].render();
 			}
 		}
-	}
-
-	private static function disposeContainer(container:Group):void {
-		var f:int = container.numElements;
-		var el:IVisualElement;
-		while (--f >= 0) {
-			el = container.getElementAt(f);
-			if (el is IDisposable) {
-				IDisposable(el).dispose();
-			}
-		}
-		container.removeAllElements();
-		container.graphics.clear();
 	}
 
 	//---------------------------------------------
