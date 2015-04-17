@@ -12,17 +12,17 @@ public class SampleFooterGraphProductRenderer extends GridRenderer {
 		}
 	}
 
-	private const symbolWidth:int=10;
-	private const symbolHeight:int=10;
+	private static const SYMBOL_WIDTH:int = 10;
+	private static const SYMBOL_HEIGHT:int = 10;
 
 	override protected function draw(hasBeenRecycled:Boolean, dataChanged:Boolean, columnChanged:Boolean, sizeChanged:Boolean):void {
 		if (sizeChanged) {
-			var y:int=(height - symbolHeight) / 2;
+			var y:int = (height - SYMBOL_HEIGHT) / 2;
 
 			graphics.clear();
 
 			graphics.beginFill(data.color);
-			graphics.drawRect(13, y, symbolWidth, symbolHeight);
+			graphics.drawRect(13, y, SYMBOL_WIDTH, SYMBOL_HEIGHT);
 			graphics.endFill();
 		}
 	}

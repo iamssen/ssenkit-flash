@@ -18,6 +18,8 @@
 		<devkit:Showcase type="ssen.components.grid.headers.Showcase__GridHeaders" description="Component : Grid Header" />
 		<devkit:Showcase type="ssen.components.grid.Showcase__GridContainer" description="Component : Grid Container" />
 		<devkit:Showcase type="ssen.components.grid.contents.tables.Showcase__Table" description="Component : Grid Table" />
+		<devkit:Showcase type="ssen.components.chart.pola.Showcase__RadarChart" description="Component : Pola Chart + Radar Axis" />
+		<devkit:Showcase type="ssen.components.chart.pola.Showcase__PieChart" description="Component : Pola Chart + Pie Axis" />
 		<!--<devkit:Showcase type="ssen.components.simpleGrid.Showcase__SimpleGrid" description="Component : SimpleTextGrid" />-->
 	</devkit:ShowcaseContainer>
 </s:Application>

@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:pola="ssen.components.chart.pola.*"
+		 xmlns:pieaxis="ssen.components.chart.pola.pieAxis.*"
+
+		 preinitialize="init()">
+
+	<fx:Script>
+		<![CDATA[
+		import mx.collections.ArrayList;
+		import mx.collections.IList;
+
+		import ssen.common.MathUtils;
+
+		[Bindable]
+		private var data:IList;
+
+		private function init():void {
+			refresh();
+		}
+
+		private function refresh():void {
+			var arr:Array = [];
+
+			var f:int = -1;
+			var fmax:int = MathUtils.rand(3, 12);
+
+			while (++f < fmax) {
+				arr.push({
+					label: "Label" + f,
+					value: MathUtils.rand(20, 100),
+					value2: MathUtils.rand(20, 100)
+				});
+			}
+
+			data = new ArrayList(arr);
+		}
+
+		private static function categoryLabelClick(event:PolaChartEvent):void {
+			trace("test.categoryLabelClick()", event);
+		}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<fx:Component id="RadarCategoryPointRenderer">
+			<pola:OldPolaPointLabelRenderer fontFamily="notoSans"
+											fontColor="#999999"
+											fontSize="17"
+											textAlign="center"
+											labelField="label"/>
+		</fx:Component>
+		<fx:Component id="RadarSeriesPointRenderer">
+			<pola:OldPolaPointLabelRenderer fontFamily="notoSans"
+											fontColor="#000000"
+											fontSize="14"
+											textAlign="center"
+											labelField="value"
+											labelFunction="pointLabelFunction">
+				<fx:Script>
+					<![CDATA[
+					import mx.utils.StringUtil;
+
+					private static function pointLabelFunction(data:Object, labelField:String):String {
+						return StringUtil.substitute("{0}<br/>{1}", data["label"], data["value"]);
+					}
+					]]>
+				</fx:Script>
+
+				<!--<pola:filters>-->
+				<!--<s:DropShadowFilter/>-->
+				<!--</pola:filters>-->
+			</pola:OldPolaPointLabelRenderer>
+		</fx:Component>
+	</fx:Declarations>
+
+	<pola:PolaChart left="10" right="10" top="10" bottom="10"
+					gutterLeft="40" gutterRight="40" gutterTop="40" gutterBottom="40">
+		<pieaxis:PieAxis dataProvider="{data}">
+			<!--<pieaxis:PieAxis dataProvider="{data}" drawStartAngle="10" drawEndAngle="170">-->
+			<pieaxis:series>
+				<pieaxis:PieSeries dataField="value" innerRadiusRatio="0.3" outerRadiusRatio="1"/>
+				<pieaxis:PieSeries dataField="value2" innerRadiusRatio="0.5" outerRadiusRatio="0.8"/>
+			</pieaxis:series>
+		</pieaxis:PieAxis>
+	</pola:PolaChart>
+
+	<s:Button left="20" top="20" label="Refresh" click="refresh()"/>
+</s:Group>

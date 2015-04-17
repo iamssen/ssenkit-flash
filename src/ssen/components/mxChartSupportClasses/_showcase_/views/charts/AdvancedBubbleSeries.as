@@ -23,8 +23,8 @@ public class AdvancedBubbleSeries extends BubbleSeries {
 	}
 
 	public function set xBase(value:Number):void {
-		var oldValue:Number=_xBase;
-		_xBase=value;
+		var oldValue:Number = _xBase;
+		_xBase = value;
 
 		invalidateDisplayList();
 
@@ -45,8 +45,8 @@ public class AdvancedBubbleSeries extends BubbleSeries {
 	}
 
 	public function set yBase(value:Number):void {
-		var oldValue:Number=_yBase;
-		_yBase=value;
+		var oldValue:Number = _yBase;
+		_yBase = value;
 
 		invalidateDisplayList();
 
@@ -68,44 +68,44 @@ public class AdvancedBubbleSeries extends BubbleSeries {
 			return null;
 		}
 
-		var datas:IList=chart.dataProvider as IList;
+		var datas:IList = chart.dataProvider as IList;
 		var data:IAdvancedBubbleData;
 
-		var result:Array=[];
+		var result:Array = [];
 
 		var top:Boolean;
 		var right:Boolean;
 
-		var f:int=-1;
-		var fmax:int=datas.length;
+		var f:int = -1;
+		var fmax:int = datas.length;
 
 		var r:Boolean;
 
 		while (++f < fmax) {
-			data=datas.getItemAt(f) as IAdvancedBubbleData;
+			data = datas.getItemAt(f) as IAdvancedBubbleData;
 
-			top=!isNaN(_yBase) && data[yField] > _yBase;
-			right=!isNaN(_xBase) && data[xField] > _xBase;
+			top = !isNaN(_yBase) && data[yField] > _yBase;
+			right = !isNaN(_xBase) && data[xField] > _xBase;
 
-			r=false;
+			r = topLeft && top && !right;
 
-			if (topLeft && top && !right) {
-				r=true;
-			}
+			//			if (topLeft && top && !right) {
+			//				r=true;
+			//			}
 
 			if (topRight && top && right) {
-				r=true;
+				r = true;
 			}
 
 			if (bottomLeft && !top && !right) {
-				r=true;
+				r = true;
 			}
 
 			if (bottomRight && !top && right) {
-				r=true;
+				r = true;
 			}
 
-			data.selected=r;
+			data.selected = r;
 
 			if (r) {
 				result.push(data);

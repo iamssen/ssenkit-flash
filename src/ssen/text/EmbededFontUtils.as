@@ -1,5 +1,7 @@
 package ssen.text {
 
+import flash.text.engine.FontLookup;
+
 import flashx.textLayout.compose.ISWFContext;
 
 import mx.core.EmbeddedFont;
@@ -42,12 +44,28 @@ public class EmbededFontUtils {
 
 		while (++f < fmax) {
 			font = fonts[f];
-			info = new Info;
 
-			info.bold = font.bold;
-			info.italic = font.italic;
+			if (infos[font.fontName] !== undefined) {
+				info = infos[font.fontName];
+			} else {
+				info = new Info;
+				infos[font.fontName] = info;
+			}
 
-			infos[font.fontName] = info;
+			if (font.bold) {
+				if (font.italic) {
+					info.hasBoldItalicFont = true;
+				} else {
+					info.hasBoldFont = true;
+				}
+			} else {
+				if (font.italic) {
+					info.hasItalicFont = true;
+				} else {
+					info.hasNormalFont = true;
+				}
+			}
+
 			names.push(font.fontName);
 		}
 
@@ -58,7 +76,7 @@ public class EmbededFontUtils {
 	//==========================================================================================
 	// api
 	//==========================================================================================
-	public static function getFontNames():Vector.<String> {
+	public static function getEmbededFontNames():Vector.<String> {
 		if (!fontInfos) {
 			readFonts();
 		}
@@ -66,7 +84,29 @@ public class EmbededFontUtils {
 		return fontNames.slice();
 	}
 
-	public static function getSwfContext(component:UIComponent, fontFamily:String):ISWFContext {
+	public static function getFontLookup(font:String, isBold:Boolean = false, isItalic:Boolean = false):String {
+		if (!fontInfos[font]) {
+			return FontLookup.DEVICE;
+		}
+
+		var info:Info = fontInfos[font];
+
+		if (isBold) {
+			if (isItalic) {
+				return info.hasBoldItalicFont ? FontLookup.EMBEDDED_CFF : FontLookup.DEVICE;
+			} else {
+				return info.hasBoldFont ? FontLookup.EMBEDDED_CFF : FontLookup.DEVICE;
+			}
+		} else {
+			if (isItalic) {
+				return info.hasItalicFont ? FontLookup.EMBEDDED_CFF : FontLookup.DEVICE;
+			} else {
+				return info.hasNormalFont ? FontLookup.EMBEDDED_CFF : FontLookup.DEVICE;
+			}
+		}
+	}
+
+	public static function getSwfContext(component:UIComponent, fontFamily:String, isBold:Boolean = false, isItalic:Boolean = false):ISWFContext {
 		if (!fontInfos) {
 			readFonts();
 		}
@@ -83,12 +123,14 @@ public class EmbededFontUtils {
 		}
 
 		var info:Info = fontInfos[fontName];
-		return (info) ? component.getFontContext(fontName, info.bold, info.italic) as ISWFContext : null;
+		return (info) ? component.getFontContext(fontName, isBold, isItalic) as ISWFContext : null;
 	}
 }
 }
 
 class Info {
-	public var bold:Boolean;
-	public var italic:Boolean;
+	public var hasNormalFont:Boolean;
+	public var hasBoldFont:Boolean;
+	public var hasItalicFont:Boolean;
+	public var hasBoldItalicFont:Boolean;
 }

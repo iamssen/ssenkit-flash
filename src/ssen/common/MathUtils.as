@@ -66,15 +66,10 @@ public class MathUtils {
 	 * @param rotateDeg 회전할 각도
 	 */
 	public static function rotate(deg:Number, rotateDeg:Number = NaN):Number {
-		if (!isNaN(rotateDeg)) {
-			deg += rotateDeg;
-		}
+		if (!isNaN(rotateDeg)) deg += rotateDeg;
 
-		deg = deg % 360;
-
-		if (deg < 0) {
-			deg = 360 - deg;
-		}
+		if (deg > 360) deg = deg % 360;
+		if (deg < 0) deg = 360 + deg;
 
 		return deg;
 	}
@@ -211,10 +206,8 @@ class NotUse {
 
 	/** 정수인지 확인한다 */
 	public static function isInteger(x:Number):Boolean {
-		if (x - int(x) == 0) {
-			return true;
-		}
-		return false;
+		return x - int(x) == 0;
+
 	}
 
 	/** 숫자의 형태를 가져온다 */

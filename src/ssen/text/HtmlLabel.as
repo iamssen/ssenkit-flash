@@ -29,6 +29,7 @@ public class HtmlLabel extends SpriteVisualElement {
 	//----------------------------------------------------------------
 	// text source properties
 	//----------------------------------------------------------------
+
 	//---------------------------------------------
 	// text
 	//---------------------------------------------
@@ -297,9 +298,10 @@ public class HtmlLabel extends SpriteVisualElement {
 
 		invalidateSize();
 
-		//		graphics.beginFill(0x000000, 0.1);
-		//		graphics.drawRect(0, 0, _width, _height);
-		//		graphics.endFill();
+		graphics.clear();
+		graphics.beginFill(0, 0);
+		graphics.drawRect(0, 0, _width, _height);
+		graphics.endFill();
 	}
 }
 }
