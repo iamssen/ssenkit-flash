@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
-<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
-			   xmlns:devkit="ssen.devkit.*" xmlns:assets="ssen.assets.*" frameRate="60">
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:devkit="ssen.devkit.*"
+			   xmlns:assets="ssen.assets.*"
+
+			   frameRate="60">
 	<fx:Declarations>
 		<assets:NotoSans/>
 	</fx:Declarations>
@@ -11,7 +15,9 @@
 		<devkit:Showcase type="ssen.components.graphics.Showcase__LineBox" description="Graphic : LineBox" />
 		<devkit:Showcase type="ssen.components.dropdownAnchor.Showcase__DropDownAnchor" description="Container : DropDownAnchor" />
 		<devkit:Showcase type="ssen.components.scroll.Showcase__SimpleScrollBars" description="Container : SimpleScrollBar" />
+		<devkit:Showcase type="ssen.text.Showcase__HtmlLines" description="Text : HtmlLines" />
 		<devkit:Showcase type="ssen.text.Showcase__HtmlLabel" description="Text : HtmlLabel" />
+		<devkit:Showcase type="ssen.text.Showcase__HtmlRichText" description="Text : HtmlRichText" />
 		<devkit:Showcase type="ssen.components.graphics.Showcase__SVGImage" description="Graphic : SVGImage" />
 		<devkit:Showcase type="ssen.components.dialogs.Showcase__Alert" description="Component : Alert" />
 		<devkit:Showcase type="ssen.components.mxChartSupportClasses.cartesianChartElements.Showcase__CartesianChartElement" description="Chart Axis Test" />
@@ -20,6 +26,7 @@
 		<devkit:Showcase type="ssen.components.grid.contents.tables.Showcase__Table" description="Component : Grid Table" />
 		<devkit:Showcase type="ssen.components.chart.pola.Showcase__RadarChart" description="Component : Pola Chart + Radar Axis" />
 		<devkit:Showcase type="ssen.components.chart.pola.Showcase__PieChart" description="Component : Pola Chart + Pie Axis" />
+		<devkit:Showcase type="ssen.components.chart.pola.Showcase__PieChartPerformanceTest" description="Component : Pola Chart + Pie Axis Performance Test" />
 		<!--<devkit:Showcase type="ssen.components.simpleGrid.Showcase__SimpleGrid" description="Component : SimpleTextGrid" />-->
 	</devkit:ShowcaseContainer>
 </s:Application>

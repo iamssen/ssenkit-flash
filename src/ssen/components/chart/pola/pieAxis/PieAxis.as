@@ -5,6 +5,7 @@ import mx.collections.ICollectionView;
 import mx.collections.IList;
 import mx.events.CollectionEvent;
 
+import ssen.components.animate.Animation;
 import ssen.components.chart.pola.IPolaAxis;
 import ssen.components.chart.pola.PolaChart;
 import ssen.ssen_internal;
@@ -16,6 +17,21 @@ public class PieAxis extends EventDispatcher implements IPolaAxis {
 	// properties
 	//==========================================================================================
 	private var invalidated:Boolean;
+
+	//---------------------------------------------
+	// animation
+	//---------------------------------------------
+	private var _animation:Animation = new Animation(3);
+
+	/** animation */
+	public function get animation():Animation {
+		return _animation;
+	}
+
+	public function set animation(value:Animation):void {
+		if (_animation) _animation.stop();
+		_animation = value;
+	}
 
 	//---------------------------------------------
 	// drawStartAngle
@@ -72,6 +88,10 @@ public class PieAxis extends EventDispatcher implements IPolaAxis {
 			_dataProvider.addEventListener(CollectionEvent.COLLECTION_CHANGE, collectionChangeHandler, false, 0, true);
 		}
 
+		invalidate();
+	}
+
+	private function collectionChangeHandler(event:CollectionEvent):void {
 		invalidate();
 	}
 
@@ -163,6 +183,11 @@ public class PieAxis extends EventDispatcher implements IPolaAxis {
 			invalidated = false;
 		}
 
+		if (animation) animation.stop();
+		animation.start(renderFrame);
+	}
+
+	private function renderFrame(time:Number):void {
 		var f:int;
 		var fmax:int;
 
@@ -171,7 +196,7 @@ public class PieAxis extends EventDispatcher implements IPolaAxis {
 			f = -1;
 			fmax = _backgroundElements.length;
 			while (++f < fmax) {
-				_backgroundElements[f].render(this, _chart, _chart.backgroundElementsHolder);
+				_backgroundElements[f].render(this, _chart, _chart.backgroundElementsHolder, time);
 			}
 		}
 
@@ -180,7 +205,7 @@ public class PieAxis extends EventDispatcher implements IPolaAxis {
 			f = -1;
 			fmax = _series.length;
 			while (++f < fmax) {
-				_series[f].render(this, _chart, _chart.seriesHolder);
+				_series[f].render(this, _chart, _chart.seriesHolder, time);
 			}
 		}
 
@@ -189,21 +214,20 @@ public class PieAxis extends EventDispatcher implements IPolaAxis {
 			f = -1;
 			fmax = _annotationElements.length;
 			while (++f < fmax) {
-				_annotationElements[f].render(this, _chart, _chart.annotationElementsHolder);
+				_annotationElements[f].render(this, _chart, _chart.annotationElementsHolder, time);
 			}
 		}
 	}
 
+	//==========================================================================================
+	// invalidation
+	//==========================================================================================
 	private function invalidate():void {
 		invalidated = true;
 
 		if (chart) {
 			chart.render();
 		}
-	}
-
-	private function collectionChangeHandler(event:CollectionEvent):void {
-		invalidate();
 	}
 }
 }

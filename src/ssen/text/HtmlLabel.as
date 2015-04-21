@@ -1,307 +1,222 @@
 package ssen.text {
+import flash.display.Graphics;
 
-import flash.display.DisplayObjectContainer;
-import flash.text.engine.FontLookup;
-import flash.text.engine.TextLine;
-
-import flashx.textLayout.compose.ISWFContext;
 import flashx.textLayout.factory.TruncationOptions;
 import flashx.textLayout.formats.ITextLayoutFormat;
 import flashx.textLayout.formats.TextAlign;
-import flashx.textLayout.formats.TextLayoutFormat;
+import flashx.textLayout.formats.VerticalAlign;
 
-import mx.core.FlexGlobals;
 import mx.core.UIComponent;
 
-import spark.core.SpriteVisualElement;
-
-import ssen.common.StringUtils;
-import ssen.ssen_internal;
-
-use namespace ssen_internal;
-
-public class HtmlLabel extends SpriteVisualElement {
-	//==========================================================================================
-	// properties
-	//==========================================================================================
-	ssen_internal static var defaultFormat:ITextLayoutFormat;
-
-	//----------------------------------------------------------------
-	// text source properties
-	//----------------------------------------------------------------
+public class HtmlLabel extends UIComponent {
+	private var lines:SpriteHtmlLines;
 
 	//---------------------------------------------
 	// text
 	//---------------------------------------------
-	private var _text:String;
-
 	/** text */
 	public function get text():String {
-		return _text;
+		return lines.text;
 	}
 
 	public function set text(value:String):void {
-		_text = value;
-		invalidate_text();
+		lines.text = value;
+		invalidate_lines();
 	}
 
 	//---------------------------------------------
 	// format
 	//---------------------------------------------
-	private var _format:ITextLayoutFormat;
-
 	/** format */
 	public function get format():ITextLayoutFormat {
-		return _format;
+		return lines.format;
 	}
 
 	public function set format(value:ITextLayoutFormat):void {
-		_format = value;
-		invalidate_text();
+		lines.format = value;
+		invalidate_lines();
 	}
 
 	//---------------------------------------------
 	// truncationOptions
 	//---------------------------------------------
-	private var _truncationOptions:TruncationOptions;
-
 	/** truncationOptions */
 	public function get truncationOptions():TruncationOptions {
-		return _truncationOptions;
+		return lines.truncationOptions;
 	}
 
 	public function set truncationOptions(value:TruncationOptions):void {
-		_truncationOptions = value;
-		invalidate_text();
+		lines.truncationOptions = value;
+		invalidate_lines();
 	}
 
-	//----------------------------------------------------------------
-	// text align properties
-	//----------------------------------------------------------------
 	//---------------------------------------------
 	// textAlign
 	//---------------------------------------------
-	private var _textAlign:String = "left";
-
 	/** textAlign */
 	public function get textAlign():String {
-		return _textAlign;
+		return lines.textAlign;
 	}
 
+	[Inspectable(type="Array", enumeration="center,left,right", defaultValue="left")]
 	public function set textAlign(value:String):void {
-		_textAlign = value;
-		invalidate_position();
+		lines.textAlign = value;
+		invalidate_lines();
 	}
 
 	//---------------------------------------------
-	// width
+	// verticalAlign
 	//---------------------------------------------
-	private var _width:Number;
+	private var _verticalAlign:String = "top";
 
-	/** width */
-	override public function get width():Number {
-		return _width;
+	/** verticalAlign */
+	public function get verticalAlign():String {
+		return _verticalAlign;
 	}
 
-	override public function set width(value:Number):void {
+	[Inspectable(type="Array", enumeration="top,middle,bottom", defaultValue="top")]
+	public function set verticalAlign(value:String):void {
+		_verticalAlign = value;
+		invalidate_lines();
 	}
 
 	//---------------------------------------------
-	// height
+	// canZoomingOverActualSize
 	//---------------------------------------------
-	private var _height:Number;
+	private var _canZoomingOverActualSize:Boolean = false;
 
-	/** height */
-	override public function get height():Number {
-		return _height;
+	/** canZoomingOverActualSize */
+	public function get canZoomingOverActualSize():Boolean {
+		return _canZoomingOverActualSize;
 	}
 
-	override public function set height(value:Number):void {
+	public function set canZoomingOverActualSize(value:Boolean):void {
+		_canZoomingOverActualSize = value;
+		invalidate_lines();
 	}
 
 	//==========================================================================================
-	// constructor
+	// life cycle
 	//==========================================================================================
-	private var textLineCache:TextLineCache;
-
-	/** @private */
-	ssen_internal var textLines:Vector.<TextLine>;
-
 	public function HtmlLabel() {
-		textLineCache = new TextLineCache;
-
-		if (!defaultFormat) {
-			var format:TextLayoutFormat = new TextLayoutFormat;
-			format.fontFamily = "_sans";
-			format.fontSize = 12;
-			defaultFormat = format;
-		}
-
-		_format = defaultFormat;
-	}
-
-	//==========================================================================================
-	// validation
-	//==========================================================================================
-	//----------------------------------------------------------------
-	// invalidation
-	//----------------------------------------------------------------
-	//---------------------------------------------
-	// inavalidate text
-	//---------------------------------------------
-	private var textChanged:Boolean;
-
-	final protected function invalidate_text():void {
-		textChanged = true;
+		lines = new SpriteHtmlLines;
+		addChild(lines);
 	}
 
 	//---------------------------------------------
-	// inavalidate position
+	// inavalidate lines
 	//---------------------------------------------
-	private var positionChanged:Boolean;
+	private var linesChanged:Boolean;
 
-	final protected function invalidate_position():void {
-		positionChanged = true;
+	final protected function invalidate_lines():void {
+		linesChanged = true;
+		invalidateProperties();
 	}
 
 	//---------------------------------------------
-	// commit text
+	// commit lines
 	//---------------------------------------------
-	protected function commit_text():void {
-		textLineCache.clear();
-		textLines = null;
+	protected function commit_lines():void {
+		lines.createTextLines();
+	}
 
-		if (!StringUtils.isBlank(_text)) {
-			var swfContext:ISWFContext;
+	override protected function commitProperties():void {
+		super.commitProperties();
 
-			if (_format && _format.fontLookup === FontLookup.EMBEDDED_CFF) {
-				//---------------------------------------------
-				// get ui component context
-				//---------------------------------------------
-				var component:UIComponent;
-
-				if (parent) {
-					var display:DisplayObjectContainer = this;
-
-					while (display.parent) {
-						if (display.parent is UIComponent) {
-							component = display.parent as UIComponent;
-							break;
-						}
-						display = display.parent;
-					}
-				}
-
-				if (!component) {
-					component = FlexGlobals.topLevelApplication as UIComponent;
-				}
-
-				//---------------------------------------------
-				// get swf context
-				//---------------------------------------------
-				if (component) {
-					swfContext = EmbededFontUtils.getSwfContext(component, _format.fontFamily);
-				}
-			}
-
-			textLines = TextLineFactory.createTextLines(_text, _format, _truncationOptions, swfContext);
-			textLineCache.add(textLines);
-
-			var f:int = textLines.length;
-			var textLine:TextLine;
-			while (--f >= 0) {
-				textLine = textLines[f];
-				addChild(textLine);
-			}
+		if (linesChanged) {
+			trace("HtmlLabel.commitProperties()");
+			commit_lines();
+			linesChanged = false;
+			invalidateSize();
+			invalidateDisplayList();
 		}
 	}
 
-	//---------------------------------------------
-	// commit position
-	//---------------------------------------------
-	protected function commit_position():void {
-		if (!textLines || textLines.length === 0) {
-			_width = 0;
-			_height = 0;
-			return;
-		}
+	override protected function measure():void {
+		super.measure();
+		trace("HtmlLabel.measure()");
 
-		var f:int;
-		var fmax:int;
-		var textLine:TextLine;
+		var explicitWidth:Number = this.explicitWidth;
+		var explicitHeight:Number = this.explicitHeight;
+		var linesWidth:Number;
+		var linesHeight:Number;
 
-		var x:Number;
-		var xmax:Number = Number.MIN_VALUE;
-		var y:Number;
-		var ymax:Number = Number.MIN_VALUE;
+		if (!isNaN(explicitWidth) || !isNaN(explicitHeight)) {
+			linesWidth = lines.width;
+			linesHeight = lines.height;
 
-		f = -1;
-		fmax = textLines.length;
-		while (++f < fmax) {
-			textLine = textLines[f];
+			var scale:Number;
 
-			x = textLine.width;
-			if (x > xmax) {
-				xmax = x;
+			if (!isNaN(explicitWidth)) {
+				scale = fixActualScale(explicitWidth / linesWidth);
+				measuredWidth = linesWidth;
+				measuredHeight = linesHeight * scale;
+			} else {
+				scale = fixActualScale(explicitHeight / linesHeight);
+				measuredWidth = linesWidth * scale;
+				measuredHeight = linesHeight;
 			}
 
-			y = textLine.y + textLine.height - textLine.ascent;
-			if (y > ymax) {
-				ymax = y;
-			}
+			lines.scaleX = scale;
+			lines.scaleY = scale;
+
+			linesWidth = linesWidth * scale;
+			linesHeight = linesHeight * scale;
+		} else {
+			measuredWidth = lines.width;
+			measuredHeight = lines.height;
+
+			linesWidth = lines.width;
+			linesHeight = lines.height;
 		}
 
-		_width = xmax;
-		_height = ymax;
-
-		//		graphics.clear();
-		//		graphics.beginFill(0x000000, 0.3);
-
-		f = -1;
-		fmax = textLines.length;
-		while (++f < fmax) {
-			textLine = textLines[f];
-
-			switch (_textAlign) {
+		if (measuredWidth !== linesWidth) {
+			switch (textAlign) {
 				case TextAlign.RIGHT:
-					textLine.x = xmax - textLine.width;
+					lines.x = measuredWidth - linesWidth;
 					break;
 				case TextAlign.CENTER:
-					textLine.x = (xmax - textLine.width) / 2;
+					lines.x = (measuredWidth + linesWidth) / 2;
 					break;
 				default:
-					textLine.x = 0;
+					lines.x = 0;
+					break;
 			}
-
-			//			graphics.drawRect(textLine.x, textLine.y - textLine.ascent, textLine.width, textLine.height);
+		} else {
+			lines.x = 0;
 		}
 
-		//		graphics.endFill();
-
-
+		if (measuredHeight !== linesHeight) {
+			switch (verticalAlign) {
+				case VerticalAlign.BOTTOM:
+					lines.y = measuredHeight - linesHeight;
+					break;
+				case VerticalAlign.MIDDLE:
+					lines.y = (measuredHeight + lines.height) / 2;
+					break;
+				default:
+					lines.y = 0;
+					break;
+			}
+		} else {
+			lines.y = 0;
+		}
 	}
 
-	//==========================================================================================
-	// commit
-	//==========================================================================================
-	public function createTextLines():void {
-		if (textChanged) {
-			commit_text();
-			textChanged = false;
-			positionChanged = true;
-		}
+	private function fixActualScale(scale:Number):Number {
+		return (scale > 1 && !_canZoomingOverActualSize) ? 1 : scale;
+	}
 
-		if (positionChanged) {
-			commit_position();
-			positionChanged = false;
-		}
+	override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
+		trace("HtmlLabel.updateDisplayList()");
+		super.updateDisplayList(unscaledWidth, unscaledHeight);
 
-		invalidateSize();
+		var g:Graphics = graphics;
 
-		graphics.clear();
-		graphics.beginFill(0, 0);
-		graphics.drawRect(0, 0, _width, _height);
-		graphics.endFill();
+		g.clear();
+		g.beginFill(0, 0);
+		g.drawRect(0, 0, unscaledWidth, unscaledHeight);
+		g.endFill();
 	}
 }
 }

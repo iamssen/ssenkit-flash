@@ -4,6 +4,7 @@ import mx.core.mx_internal;
 
 import spark.components.supportClasses.SkinnableComponent;
 
+import ssen.common.DisposableUtils;
 import ssen.ssen_internal;
 
 use namespace mx_internal;
@@ -225,9 +226,9 @@ public class PolaChart extends SkinnableComponent {
 	override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 		super.updateDisplayList(unscaledWidth, unscaledHeight);
 
-		clearContainer(backgroundElementsHolder);
-		clearContainer(seriesHolder);
-		clearContainer(annotationElementsHolder);
+		DisposableUtils.disposeDisplayContainer(backgroundElementsHolder, true);
+		DisposableUtils.disposeDisplayContainer(seriesHolder, true);
+		DisposableUtils.disposeDisplayContainer(annotationElementsHolder, true);
 
 		if (!renderChanged || !_axis || _axis.length === 0 || !backgroundElementsHolder || !annotationElementsHolder || !seriesHolder) {
 			return;
@@ -282,19 +283,6 @@ public class PolaChart extends SkinnableComponent {
 		if (instance === seriesHolder || instance === annotationElementsHolder || instance === backgroundElementsHolder) {
 			invalidate_render();
 		}
-	}
-
-	//	override protected function partRemoved(partName:String, instance:Object):void {
-	//		super.partRemoved(partName, instance);
-	//	}
-
-
-	private function clearContainer(container:UIComponent):void {
-		var f:int = container.numChildren;
-		while (--f >= 0) {
-			container.removeChildAt(f);
-		}
-		container.graphics.clear();
 	}
 }
 }

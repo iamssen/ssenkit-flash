@@ -1,5 +1,5 @@
 package ssen.components.chart.pola.radarAxis {
-import ssen.components.chart.pola.*;
+import com.greensock.easing.Elastic;
 
 import flash.display.DisplayObject;
 import flash.display.Graphics;
@@ -15,7 +15,14 @@ import mx.graphics.IStroke;
 import mx.graphics.SolidColor;
 import mx.graphics.SolidColorStroke;
 
+import ssen.common.DisposableUtils;
 import ssen.common.MathUtils;
+import ssen.components.animate.AnimationTrack;
+import ssen.components.chart.pola.*;
+import ssen.components.chart.pola.renderers.IPolaPointRenderer;
+import ssen.ssen_internal;
+
+use namespace ssen_internal;
 
 [Event(name="itemClick", type="ssen.components.chart.pola.PolaChartEvent")]
 
@@ -23,12 +30,26 @@ public class RadarSeries extends EventDispatcher implements IRadarElement {
 	//==========================================================================================
 	// properties
 	//==========================================================================================
+	//----------------------------------------------------------------
+	// chart field
+	//----------------------------------------------------------------
 	public var dataField:String;
-	public var drawRadiusRatio:Number;
 	public var axis:IPolaAxis;
+	//----------------------------------------------------------------
+	// style
+	//----------------------------------------------------------------
+	public var drawRadiusRatio:Number;
 	public var stroke:IStroke;
 	public var fill:IFill;
+	//----------------------------------------------------------------
+	// renderer
+	//----------------------------------------------------------------
 	public var pointRenderer:IFactory;
+	//----------------------------------------------------------------
+	// animate
+	//----------------------------------------------------------------
+	public var animationTrack:AnimationTrack = new AnimationTrack(0.5, 1, Elastic.easeOut);
+	private var lastAnimationTime:Number;
 
 	//==========================================================================================
 	// compute
@@ -64,12 +85,26 @@ public class RadarSeries extends EventDispatcher implements IRadarElement {
 		display = new UIComponent();
 	}
 
-	public function render(radarItems:Vector.<RadarItem>, axis:RadarAxis, chart:PolaChart, targetContainer:UIComponent):void {
+	public function render(radarItems:Vector.<RadarItem>, axis:RadarAxis, chart:PolaChart, targetContainer:UIComponent, animationTime:Number):void {
+		//----------------------------------------------------------------
+		// time tracking
+		//----------------------------------------------------------------
+		animationTime = animationTrack.getTime(animationTime);
+
+		if (isNaN(animationTime)) {
+			display.alpha = 0;
+			return;
+		} else if (animationTime === lastAnimationTime) {
+			return;
+		}
+
+		lastAnimationTime = animationTime;
+
 		//----------------------------------------------------------------
 		// init display
 		//----------------------------------------------------------------
-		targetContainer.addChild(display);
-		clearContainer(display);
+		if (display.parent !== targetContainer) targetContainer.addChild(display);
+		DisposableUtils.disposeDisplayContainer(display);
 
 		var g:Graphics = display.graphics;
 
@@ -80,7 +115,9 @@ public class RadarSeries extends EventDispatcher implements IRadarElement {
 		var maximum:Number = axis.computedMaximum;
 		var centerX:Number = chart.computedCenterX;
 		var centerY:Number = chart.computedCenterY;
-		var radius:Number = chart.computedContentRadius * radiusRatio;
+		var radius:Number = chart.computedContentRadius * radiusRatio * animationTime;
+
+		display.alpha = animationTime;
 
 		//----------------------------------------------------------------
 		// draw properties
@@ -172,24 +209,11 @@ public class RadarSeries extends EventDispatcher implements IRadarElement {
 				pt = pts[f];
 
 				renderer = pointRenderer.newInstance();
-				renderer.item = pt.data;
-				renderer.setPoint(centerX, centerY, pt.x, pt.y);
-				renderer.dispatchTarget = this;
+				renderer.data = pt.data;
+				renderer.item = this;
+				renderer.render(centerX, centerY, pt.x, pt.y);
 
 				display.addChild(renderer as DisplayObject);
-			}
-		}
-	}
-
-	private static function clearContainer(display:UIComponent):void {
-		display.graphics.clear();
-
-		var f:int = display.numChildren;
-		while (--f >= 0) {
-			display.removeChild(display.getChildAt(f));
-
-			if (display is IPolaPointRenderer) {
-				IPolaPointRenderer(display).dispose();
 			}
 		}
 	}

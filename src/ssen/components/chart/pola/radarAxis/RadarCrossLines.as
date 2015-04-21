@@ -1,5 +1,5 @@
 package ssen.components.chart.pola.radarAxis {
-import ssen.components.chart.pola.*;
+import com.greensock.easing.Back;
 
 import flash.display.Graphics;
 import flash.display.Shape;
@@ -10,6 +10,12 @@ import mx.collections.IList;
 import mx.core.UIComponent;
 import mx.graphics.IStroke;
 import mx.graphics.SolidColorStroke;
+
+import ssen.components.animate.AnimationTrack;
+import ssen.components.chart.pola.*;
+import ssen.ssen_internal;
+
+use namespace ssen_internal;
 
 [DefaultProperty("stroke")]
 
@@ -23,7 +29,12 @@ public class RadarCrossLines implements IRadarElement {
 	/** strokeFunction `function(radarItem:RadarItem):IStroke` */
 	public var strokeFunction:Function;
 
-	/** @private */
+	public var animationTrack:AnimationTrack = new AnimationTrack(0, 0.4, Back.easeOut);
+	private var lastAnimationTime:Number;
+
+	//==========================================================================================
+	// compute
+	//==========================================================================================
 	public function computeMaximumValue(dataProvider:IList):Number {
 		return NaN;
 	}
@@ -40,11 +51,25 @@ public class RadarCrossLines implements IRadarElement {
 	//==========================================================================================
 	// render
 	//==========================================================================================
-	public function render(radarItems:Vector.<RadarItem>, axis:RadarAxis, chart:PolaChart, targetContainer:UIComponent):void {
+	public function render(radarItems:Vector.<RadarItem>, axis:RadarAxis, chart:PolaChart, targetContainer:UIComponent, animationTime:Number):void {
+		//----------------------------------------------------------------
+		// time tracking
+		//----------------------------------------------------------------
+		animationTime = animationTrack.getTime(animationTime);
+
+		if (isNaN(animationTime)) {
+			display.alpha = 0;
+			return;
+		} else if (animationTime === lastAnimationTime) {
+			return;
+		}
+
+		lastAnimationTime = animationTime;
+
 		//----------------------------------------------------------------
 		// init display
 		//----------------------------------------------------------------
-		targetContainer.addChild(display);
+		if (display.parent !== targetContainer) targetContainer.addChild(display);
 
 		var g:Graphics = display.graphics;
 		g.clear();
@@ -54,7 +79,9 @@ public class RadarCrossLines implements IRadarElement {
 		//----------------------------------------------------------------
 		var centerX:Number = chart.computedCenterX;
 		var centerY:Number = chart.computedCenterY;
-		var radius:Number = chart.computedContentRadius * axis.drawRadiusRatio;
+		var radius:Number = chart.computedContentRadius * axis.drawRadiusRatio * animationTime;
+
+		display.alpha = animationTime;
 
 		//----------------------------------------------------------------
 		// draw properties

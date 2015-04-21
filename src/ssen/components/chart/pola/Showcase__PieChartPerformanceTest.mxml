@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:pola="ssen.components.chart.pola.*"
+		 xmlns:pieaxis="ssen.components.chart.pola.pieAxis.*"
+		 xmlns:renderers="ssen.components.chart.pola.renderers.*" xmlns:animate="ssen.components.animate.*"
+
+		 preinitialize="init()">
+
+	<fx:Script>
+		<![CDATA[
+		import com.greensock.easing.Back;
+
+		import mx.collections.ArrayList;
+		import mx.collections.IList;
+
+		import ssen.common.MathUtils;
+
+		[Bindable]
+		private var data:IList;
+
+		private function init():void {
+			refresh();
+		}
+
+		private function refresh():void {
+			var arr:Array = [];
+
+			var f:int = -1;
+			var fmax:int = MathUtils.rand(3, 12);
+
+			while (++f < fmax) {
+				arr.push({
+					label: "Label" + f,
+					value: MathUtils.rand(20, 100),
+					value2: MathUtils.rand(20, 100)
+				});
+			}
+
+			data = new ArrayList(arr);
+		}
+
+		private static function categoryLabelClick(event:PolaChartEvent):void {
+			trace("test.categoryLabelClick()", event);
+		}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<fx:Component id="RadarCategoryPointRenderer">
+			<renderers:LabelPolaPointRenderer labelField="label">
+				<renderers:format>
+					<s:TextLayoutFormat fontFamily="notoSans" color="#999999" fontSize="17" textAlign="center"/>
+				</renderers:format>
+			</renderers:LabelPolaPointRenderer>
+		</fx:Component>
+
+		<fx:Component id="RadarSeriesPointRenderer">
+			<renderers:LabelPolaPointRenderer labelField="value" labelFunction="pointLabelFunction">
+				<renderers:format>
+					<s:TextLayoutFormat fontFamily="notoSans" color="#000000" fontSize="14" textAlign="center"/>
+				</renderers:format>
+
+				<fx:Script>
+					<![CDATA[
+					import mx.utils.StringUtil;
+
+					private static function pointLabelFunction(data:Object, labelField:String):String {
+						return StringUtil.substitute("{0}<br/>{1}", data["label"], data["value"]);
+					}
+					]]>
+				</fx:Script>
+			</renderers:LabelPolaPointRenderer>
+		</fx:Component>
+	</fx:Declarations>
+
+	<s:Group left="10" right="10" top="10" bottom="10">
+		<pola:PolaChart width="50%" height="50%">
+			<pieaxis:PieAxis dataProvider="{data}">
+				<pieaxis:animation>
+					<animate:Animation duration="4"/>
+				</pieaxis:animation>
+				<!--<pieaxis:PieAxis dataProvider="{data}" drawStartAngle="10" drawEndAngle="170">-->
+				<pieaxis:series>
+					<pieaxis:PieSeries dataField="value" innerRadiusRatio="0.7" outerRadiusRatio="1">
+						<pieaxis:animationTrack>
+							<animate:AnimationTrack start="0" end="0.6" ease="Back.easeOut"/>
+						</pieaxis:animationTrack>
+					</pieaxis:PieSeries>
+					<pieaxis:PieSeries dataField="value2" innerRadiusRatio="0.3" outerRadiusRatio="0.6">
+						<pieaxis:animationTrack>
+							<animate:AnimationTrack start="0.4" end="1" ease="Back.easeOut"/>
+						</pieaxis:animationTrack>
+					</pieaxis:PieSeries>
+				</pieaxis:series>
+			</pieaxis:PieAxis>
+		</pola:PolaChart>
+
+		<pola:PolaChart width="50%" height="50%" right="0">
+			<pieaxis:PieAxis dataProvider="{data}">
+				<pieaxis:animation>
+					<animate:Animation duration="4"/>
+				</pieaxis:animation>
+				<!--<pieaxis:PieAxis dataProvider="{data}" drawStartAngle="10" drawEndAngle="170">-->
+				<pieaxis:series>
+					<pieaxis:PieSeries dataField="value" innerRadiusRatio="0.7" outerRadiusRatio="1">
+						<pieaxis:animationTrack>
+							<animate:AnimationTrack start="0" end="0.6" ease="Back.easeOut"/>
+						</pieaxis:animationTrack>
+					</pieaxis:PieSeries>
+					<pieaxis:PieSeries dataField="value2" innerRadiusRatio="0.3" outerRadiusRatio="0.6">
+						<pieaxis:animationTrack>
+							<animate:AnimationTrack start="0.4" end="1" ease="Back.easeOut"/>
+						</pieaxis:animationTrack>
+					</pieaxis:PieSeries>
+				</pieaxis:series>
+			</pieaxis:PieAxis>
+		</pola:PolaChart>
+
+		<pola:PolaChart width="50%" height="50%" right="0" bottom="0">
+			<pieaxis:PieAxis dataProvider="{data}">
+				<pieaxis:animation>
+					<animate:Animation duration="4"/>
+				</pieaxis:animation>
+				<!--<pieaxis:PieAxis dataProvider="{data}" drawStartAngle="10" drawEndAngle="170">-->
+				<pieaxis:series>
+					<pieaxis:PieSeries dataField="value" innerRadiusRatio="0.7" outerRadiusRatio="1">
+						<pieaxis:animationTrack>
+							<animate:AnimationTrack start="0" end="0.6" ease="Back.easeOut"/>
+						</pieaxis:animationTrack>
+					</pieaxis:PieSeries>
+					<pieaxis:PieSeries dataField="value2" innerRadiusRatio="0.3" outerRadiusRatio="0.6">
+						<pieaxis:animationTrack>
+							<animate:AnimationTrack start="0.4" end="1" ease="Back.easeOut"/>
+						</pieaxis:animationTrack>
+					</pieaxis:PieSeries>
+				</pieaxis:series>
+			</pieaxis:PieAxis>
+		</pola:PolaChart>
+
+		<pola:PolaChart width="50%" height="50%" bottom="0">
+			<pieaxis:PieAxis dataProvider="{data}">
+				<pieaxis:animation>
+					<animate:Animation duration="4"/>
+				</pieaxis:animation>
+				<!--<pieaxis:PieAxis dataProvider="{data}" drawStartAngle="10" drawEndAngle="170">-->
+				<pieaxis:series>
+					<pieaxis:PieSeries dataField="value" innerRadiusRatio="0.7" outerRadiusRatio="1">
+						<pieaxis:animationTrack>
+							<animate:AnimationTrack start="0" end="0.6" ease="Back.easeOut"/>
+						</pieaxis:animationTrack>
+					</pieaxis:PieSeries>
+					<pieaxis:PieSeries dataField="value2" innerRadiusRatio="0.3" outerRadiusRatio="0.6">
+						<pieaxis:animationTrack>
+							<animate:AnimationTrack start="0.4" end="1" ease="Back.easeOut"/>
+						</pieaxis:animationTrack>
+					</pieaxis:PieSeries>
+				</pieaxis:series>
+			</pieaxis:PieAxis>
+		</pola:PolaChart>
+	</s:Group>
+
+	<s:Button left="20" top="20" label="Refresh" click="refresh()"/>
+</s:Group>

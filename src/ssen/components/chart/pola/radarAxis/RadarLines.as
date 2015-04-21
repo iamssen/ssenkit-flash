@@ -1,5 +1,5 @@
 package ssen.components.chart.pola.radarAxis {
-import ssen.components.chart.pola.*;
+import com.greensock.easing.Back;
 
 import flash.display.Graphics;
 import flash.display.Shape;
@@ -12,6 +12,8 @@ import mx.graphics.IStroke;
 import mx.graphics.SolidColorStroke;
 
 import ssen.common.MathUtils;
+import ssen.components.animate.AnimationTrack;
+import ssen.components.chart.pola.*;
 
 [DefaultProperty("lines")]
 
@@ -26,7 +28,12 @@ public class RadarLines implements IRadarElement {
 	/** stroke */
 	public var stroke:IStroke = new SolidColorStroke(0, 1, 0.3, true);
 
-	/** @private */
+	public var animationTrack:AnimationTrack = new AnimationTrack(0, 0.4, Back.easeOut);
+	private var lastAnimationTime:Number;
+
+	//==========================================================================================
+	// compute
+	//==========================================================================================
 	public function computeMaximumValue(dataProvider:IList):Number {
 		return NaN;
 	}
@@ -43,11 +50,28 @@ public class RadarLines implements IRadarElement {
 	//==========================================================================================
 	// render
 	//==========================================================================================
-	public function render(radarItems:Vector.<RadarItem>, axis:RadarAxis, chart:PolaChart, targetContainer:UIComponent):void {
+	private static var bound:Rectangle = new Rectangle;
+	private static var point:Point = new Point;
+
+	public function render(radarItems:Vector.<RadarItem>, axis:RadarAxis, chart:PolaChart, targetContainer:UIComponent, animationTime:Number):void {
+		//----------------------------------------------------------------
+		// time tracking
+		//----------------------------------------------------------------
+		animationTime = animationTrack.getTime(animationTime);
+
+		if (isNaN(animationTime)) {
+			display.alpha = 0;
+			return;
+		} else if (animationTime === lastAnimationTime) {
+			return;
+		}
+
+		lastAnimationTime = animationTime;
+
 		//----------------------------------------------------------------
 		// init display
 		//----------------------------------------------------------------
-		targetContainer.addChild(display);
+		if (display.parent !== targetContainer) targetContainer.addChild(display);
 
 		var g:Graphics = display.graphics;
 		g.clear();
@@ -58,13 +82,15 @@ public class RadarLines implements IRadarElement {
 		var maximum:Number = axis.computedMaximum;
 		var centerX:Number = chart.computedCenterX;
 		var centerY:Number = chart.computedCenterY;
-		var radius:Number = chart.computedContentRadius * axis.drawRadiusRatio;
+		var radius:Number = chart.computedContentRadius * axis.drawRadiusRatio * animationTime;
+
+		display.alpha = animationTime;
 
 		//----------------------------------------------------------------
 		// draw properties
 		//----------------------------------------------------------------
-		var bound:Rectangle = new Rectangle();
-		var point:Point = new Point();
+		//		var bound:Rectangle = new Rectangle();
+		//		var point:Point = new Point();
 		var line:RadarLine;
 		var r:Number;
 		var st:IStroke;

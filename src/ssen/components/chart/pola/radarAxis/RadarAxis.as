@@ -5,6 +5,7 @@ import mx.collections.ICollectionView;
 import mx.collections.IList;
 import mx.events.CollectionEvent;
 
+import ssen.components.animate.Animation;
 import ssen.components.chart.pola.*;
 import ssen.ssen_internal;
 
@@ -15,6 +16,21 @@ public class RadarAxis extends EventDispatcher implements IPolaAxis {
 	// properties
 	//==========================================================================================
 	private var invalidated:Boolean;
+
+	//---------------------------------------------
+	// animation
+	//---------------------------------------------
+	private var _animation:Animation = new Animation(3);
+
+	/** animation */
+	public function get animation():Animation {
+		return _animation;
+	}
+
+	public function set animation(value:Animation):void {
+		if (_animation) _animation.stop();
+		_animation = value;
+	}
 
 	//---------------------------------------------
 	// maximum
@@ -56,6 +72,10 @@ public class RadarAxis extends EventDispatcher implements IPolaAxis {
 			_dataProvider.addEventListener(CollectionEvent.COLLECTION_CHANGE, collectionChangeHandler, false, 0, true);
 		}
 
+		invalidate();
+	}
+
+	private function collectionChangeHandler(event:CollectionEvent):void {
 		invalidate();
 	}
 
@@ -163,6 +183,11 @@ public class RadarAxis extends EventDispatcher implements IPolaAxis {
 			return;
 		}
 
+		if (animation) animation.stop();
+		animation.start(renderFrame);
+	}
+
+	private function renderFrame(time:Number):void {
 		var f:int;
 		var fmax:int;
 
@@ -171,7 +196,7 @@ public class RadarAxis extends EventDispatcher implements IPolaAxis {
 			f = -1;
 			fmax = _backgroundElements.length;
 			while (++f < fmax) {
-				_backgroundElements[f].render(items, this, _chart, _chart.backgroundElementsHolder);
+				_backgroundElements[f].render(items, this, _chart, _chart.backgroundElementsHolder, time);
 			}
 		}
 
@@ -180,7 +205,7 @@ public class RadarAxis extends EventDispatcher implements IPolaAxis {
 			f = -1;
 			fmax = _series.length;
 			while (++f < fmax) {
-				_series[f].render(items, this, _chart, _chart.seriesHolder);
+				_series[f].render(items, this, _chart, _chart.seriesHolder, time);
 			}
 		}
 
@@ -189,7 +214,7 @@ public class RadarAxis extends EventDispatcher implements IPolaAxis {
 			f = -1;
 			fmax = _annotationElements.length;
 			while (++f < fmax) {
-				_annotationElements[f].render(items, this, _chart, _chart.annotationElementsHolder);
+				_annotationElements[f].render(items, this, _chart, _chart.annotationElementsHolder, time);
 			}
 		}
 	}
@@ -254,18 +279,6 @@ public class RadarAxis extends EventDispatcher implements IPolaAxis {
 		items = vos;
 	}
 
-	private function invalidate():void {
-		invalidated = true;
-
-		if (chart) {
-			chart.render();
-		}
-	}
-
-	private function collectionChangeHandler(event:CollectionEvent):void {
-		invalidate();
-	}
-
 	private static function rotate(angle:Number):Number {
 		angle -= 90;
 
@@ -276,6 +289,17 @@ public class RadarAxis extends EventDispatcher implements IPolaAxis {
 		}
 
 		return angle;
+	}
+
+	//==========================================================================================
+	// invalidation
+	//==========================================================================================
+	private function invalidate():void {
+		invalidated = true;
+
+		if (chart) {
+			chart.render();
+		}
 	}
 }
 }

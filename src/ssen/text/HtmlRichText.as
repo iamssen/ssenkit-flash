@@ -1,9 +1,9 @@
-package ssen.components.text {
+package ssen.text {
 import spark.components.RichText;
 
 import ssen.text.TextLineFactory;
 
-public class DisplayHtml extends RichText {
+public class HtmlRichText extends RichText {
 	//---------------------------------------------
 	// text
 	//---------------------------------------------

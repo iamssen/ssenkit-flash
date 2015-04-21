@@ -1,13 +1,17 @@
 package ssen.components.chart.pola.radarAxis {
-import ssen.components.chart.pola.*;
+import com.greensock.easing.Quad;
 
 import flash.display.DisplayObject;
-import flash.display.DisplayObjectContainer;
 import flash.events.EventDispatcher;
 
 import mx.collections.IList;
 import mx.core.IFactory;
 import mx.core.UIComponent;
+
+import ssen.common.DisposableUtils;
+import ssen.components.animate.AnimationTrack;
+import ssen.components.chart.pola.*;
+import ssen.components.chart.pola.renderers.IPolaPointRenderer;
 
 [Event(name="itemClick", type="ssen.components.chart.pola.PolaChartEvent")]
 
@@ -16,6 +20,9 @@ public class RadarCategoryPoints extends EventDispatcher implements IRadarElemen
 	// properties
 	//==========================================================================================
 	public var pointRenderer:IFactory;
+
+	public var animationTrack:AnimationTrack = new AnimationTrack(0.7, 1, Quad.easeOut);
+	private var lastAnimationTime:Number;
 
 	/** @private */
 	public function computeMaximumValue(dataProvider:IList):Number {
@@ -35,20 +42,35 @@ public class RadarCategoryPoints extends EventDispatcher implements IRadarElemen
 	//==========================================================================================
 	// render
 	//==========================================================================================
-	public function render(radarItems:Vector.<RadarItem>, axis:RadarAxis, chart:PolaChart, targetContainer:UIComponent):void {
+	public function render(radarItems:Vector.<RadarItem>, axis:RadarAxis, chart:PolaChart, targetContainer:UIComponent, animationTime:Number):void {
+		//----------------------------------------------------------------
+		// time tracking
+		//----------------------------------------------------------------
+		animationTime = animationTrack.getTime(animationTime);
+
+		if (isNaN(animationTime)) {
+			display.alpha = 0;
+			return;
+		} else if (animationTime === lastAnimationTime) {
+			return;
+		}
+
+		lastAnimationTime = animationTime;
+
 		//----------------------------------------------------------------
 		// init display
 		//----------------------------------------------------------------
-		targetContainer.addChild(display);
-
-		clearContainer(display);
+		if (display.parent !== targetContainer) targetContainer.addChild(display);
+		DisposableUtils.disposeDisplayContainer(display);
 
 		//----------------------------------------------------------------
 		// coordinate info
 		//----------------------------------------------------------------
 		var centerX:Number = chart.computedCenterX;
 		var centerY:Number = chart.computedCenterY;
-		var radius:Number = (chart.computedContentRadius * axis.drawRadiusRatio) + 10;
+		var radius:Number = (chart.computedContentRadius * axis.drawRadiusRatio) + (10 * animationTime);
+
+		display.alpha = animationTime;
 
 		//----------------------------------------------------------------
 		// draw properties
@@ -71,22 +93,11 @@ public class RadarCategoryPoints extends EventDispatcher implements IRadarElemen
 			x = (Math.cos(radarItem.radian) * radius) + centerX;
 			y = (Math.sin(radarItem.radian) * radius) + centerY;
 
-			renderer.item = radarItem.data;
-			renderer.setPoint(centerX, centerY, x, y);
-			renderer.dispatchTarget = this;
+			renderer.data = radarItem.data;
+			renderer.render(centerX, centerY, x, y);
+			renderer.item = this;
 
 			display.addChild(renderer as DisplayObject);
-		}
-	}
-
-	private function clearContainer(display:DisplayObjectContainer):void {
-		var f:int = display.numChildren;
-		while (--f >= 0) {
-			display.removeChild(display.getChildAt(f));
-
-			if (display is IPolaPointRenderer) {
-				IPolaPointRenderer(display).dispose();
-			}
 		}
 	}
 }

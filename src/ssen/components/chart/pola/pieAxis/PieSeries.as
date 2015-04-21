@@ -1,35 +1,43 @@
 package ssen.components.chart.pola.pieAxis {
+import com.greensock.easing.Quad;
+
 import flash.display.Graphics;
-import flash.display.GraphicsPath;
 import flash.events.EventDispatcher;
 
 import mx.collections.IList;
 import mx.core.UIComponent;
+import mx.graphics.IFill;
+import mx.graphics.SolidColor;
 
-import ssen.common.MathUtils;
-
-import ssen.common.MathUtils;
-
-import ssen.common.MathUtils;
-
+import ssen.common.DisposableUtils;
 import ssen.common.MathUtils;
 import ssen.common.NullUtils;
+import ssen.components.animate.AnimationTrack;
 import ssen.components.chart.pola.IPolaAxis;
-import ssen.components.chart.pola.IPolaPointRenderer;
 import ssen.components.chart.pola.PolaChart;
-import ssen.drawing.PathMaker;
 
 public class PieSeries extends EventDispatcher implements IPieElement {
 	//==========================================================================================
 	// properties
 	//==========================================================================================
+	//----------------------------------------------------------------
+	// chart field
+	//----------------------------------------------------------------
 	public var dataField:String;
-	public var fillField:String;
-	public var strokeField:String;
-
+	public var axis:IPolaAxis;
+	//----------------------------------------------------------------
+	// style
+	//----------------------------------------------------------------
 	public var outerRadiusRatio:Number = 1;
 	public var innerRadiusRatio:Number = 0;
-	public var axis:IPolaAxis;
+	public var fills:Vector.<IFill> = new <IFill>[new SolidColor(0xFF9480), new SolidColor(0xE85349), new SolidColor(0xFFEFA3), new SolidColor(0x00A178), new SolidColor(0x2C656B), new SolidColor(0x225F50), new SolidColor(0xD3F7EF), new SolidColor(0x4EDEBB), new SolidColor(0x386A5E), new SolidColor(0x308872)];
+	public var fillField:String;
+	public var strokeField:String;
+	//----------------------------------------------------------------
+	// animate
+	//----------------------------------------------------------------
+	public var animationTrack:AnimationTrack = new AnimationTrack(0, 1, Quad.easeOut);
+	private var lastAnimationTime:Number;
 
 	//---------------------------------------------
 	// maximum
@@ -61,12 +69,28 @@ public class PieSeries extends EventDispatcher implements IPieElement {
 		display = new UIComponent;
 	}
 
-	public function render(axis:PieAxis, chart:PolaChart, targetContainer:UIComponent):void {
+	public function render(axis:PieAxis, chart:PolaChart, targetContainer:UIComponent, animationTime:Number):void {
+		//----------------------------------------------------------------
+		// time tracking
+		//----------------------------------------------------------------
+		animationTime = animationTrack.getTime(animationTime);
+
+		if (isNaN(animationTime)) {
+			display.alpha = 0;
+			return;
+		} else if (animationTime === lastAnimationTime) {
+			return;
+		}
+
+		lastAnimationTime = animationTime;
+
+		//		trace("PieSeries.render()", animationTime);
+
 		//----------------------------------------------------------------
 		// init display
 		//----------------------------------------------------------------
 		targetContainer.addChild(display);
-		clearContainer(display);
+		DisposableUtils.disposeDisplayContainer(display);
 
 		var g:Graphics = display.graphics;
 
@@ -78,11 +102,15 @@ public class PieSeries extends EventDispatcher implements IPieElement {
 		//----------------------------------------------------------------
 		// coordinate info
 		//----------------------------------------------------------------
+		var outerRadiusRatio:Number = this.outerRadiusRatio - (this.outerRadiusRatio * (1 - animationTime));
+		var innerRadiusRatio:Number = this.innerRadiusRatio * animationTime;
 		var isDonut:Boolean = innerRadiusRatio > 0;
 		var outerRadius:Number = chart.computedContentRadius * axis.drawRadiusRatio * outerRadiusRatio;
 		var innerRadius:Number = chart.computedContentRadius * axis.drawRadiusRatio * innerRadiusRatio;
 		//		var radiusRatio:Number = (isNaN(outerRadiusRatio)) ? axis.drawRadiusRatio : outerRadiusRatio;
 		//		var radius:Number = chart.computedContentRadius * radiusRatio;
+
+		display.alpha = animationTime;
 
 		//----------------------------------------------------------------
 		// test
@@ -97,18 +125,17 @@ public class PieSeries extends EventDispatcher implements IPieElement {
 		var f:int = -1;
 		var fmax:int = pies.list.length;
 		var pie:Pie;
-		var path:GraphicsPath;
-		var startDeg:Number;
-		var endDeg:Number;
+		var renderer:PieSeriesWedgeRenderer;
+
 		while (++f < fmax) {
 			pie = pies.list[f];
-			startDeg = pie.startDeg;
-			endDeg = pie.endDeg;
-			path = PathMaker.donut(chart.computedCenterX, chart.computedCenterY, outerRadius, innerRadius, startDeg, endDeg);
 
-			g.beginFill(MathUtils.rand(0, 0xffffff), 0.7);
-			g.drawPath(path.commands, path.data, path.winding);
-			g.endFill();
+			renderer = new PieSeriesWedgeRenderer;
+			renderer.render(outerRadius, innerRadius, pie, fills[f % fills.length], f / fmax, animationTime);
+			renderer.x = chart.computedCenterX;
+			renderer.y = chart.computedCenterY;
+
+			display.addChild(renderer);
 		}
 	}
 
@@ -168,32 +195,12 @@ public class PieSeries extends EventDispatcher implements IPieElement {
 
 		return pies;
 	}
-
-	private static function clearContainer(display:UIComponent):void {
-		display.graphics.clear();
-
-		var f:int = display.numChildren;
-		while (--f >= 0) {
-			display.removeChild(display.getChildAt(f));
-
-			if (display is IPolaPointRenderer) {
-				IPolaPointRenderer(display).dispose();
-			}
-		}
-	}
 }
 }
+
+import ssen.components.chart.pola.pieAxis.Pie;
 
 class Pies {
 	public var list:Vector.<Pie> = new Vector.<Pie>;
 	public var total:Number = 0;
-}
-
-class Pie {
-	public var value:Number;
-	public var ratioValue:Number;
-	public var startRatio:Number;
-	public var endRatio:Number;
-	public var startDeg:Number;
-	public var endDeg:Number;
 }

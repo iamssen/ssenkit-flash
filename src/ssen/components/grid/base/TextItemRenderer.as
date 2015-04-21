@@ -11,7 +11,7 @@ import mx.formatters.IFormatter;
 
 import ssen.common.IDisposable;
 import ssen.common.NullUtils;
-import ssen.text.HtmlLabel;
+import ssen.text.SpriteHtmlLines;
 
 // [Style(name="fontLookup", type="String", enumeration="auto,device,embeddedCFF", inherit="yes")]
 // [Style(name="fontStyle", type="String", enumeration="normal,italic", inherit="yes")]
@@ -25,13 +25,13 @@ import ssen.text.HtmlLabel;
 [Style(name="trackingRight", type="Object", inherit="yes")]
 
 public class TextItemRenderer extends UIComponent implements IDisposable {
-	private var label:HtmlLabel = new HtmlLabel;
+	private var label:SpriteHtmlLines = new SpriteHtmlLines;
 	private var format:TextLayoutFormat = new TextLayoutFormat;
 
 	public function TextItemRenderer() {
 		format = new TextLayoutFormat;
 
-		label = new HtmlLabel;
+		label = new SpriteHtmlLines;
 		label.format = format;
 
 		addChild(label);

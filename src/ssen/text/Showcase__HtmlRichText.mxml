@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
 		 xmlns:s="library://ns.adobe.com/flex/spark"
-		 xmlns:text="ssen.text.*"
-		 xmlns:factory="flashx.textLayout.factory.*">
+		 xmlns:text="ssen.text.*">
 
 	<fx:Declarations>
 		<s:TextLayoutFormat id="format"
@@ -18,20 +17,19 @@
 		]]>
 	</fx:Script>
 
-	<text:HtmlLabel x="10" y="30"
-					text="{string}"/>
+	<text:HtmlRichText x="10" y="30"
+					   text="{string}"/>
 
-	<text:HtmlLabel x="210" y="30"
-					format="{format}"
-					textAlign="center"
-					text="{string}"/>
+	<text:HtmlRichText x="210" y="30"
+					   fontFamily="notoSans"
+					   fontSize="15"
+					   textAlign="center"
+					   text="{string}"/>
 
-	<text:HtmlLabel x="410" y="30"
-					format="{format}"
-					textAlign="left"
-					text="{string2}">
-		<text:truncationOptions>
-			<factory:TruncationOptions truncationIndicator="..." lineCountLimit="3"/>
-		</text:truncationOptions>
-	</text:HtmlLabel>
+	<text:HtmlRichText x="410" y="30"
+					   fontFamily="notoSans"
+					   fontSize="15"
+					   textAlign="left"
+					   text="{string2}"
+					   maxDisplayedLines="3"/>
 </s:Group>

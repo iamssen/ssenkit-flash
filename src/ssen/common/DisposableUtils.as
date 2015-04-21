@@ -7,7 +7,7 @@ import mx.core.IVisualElement;
 import mx.core.IVisualElementContainer;
 
 public class DisposableUtils {
-	public static function disposeContainer(container:IVisualElementContainer):void {
+	public static function disposeContainer(container:IVisualElementContainer, clearGraphics:Boolean = true):void {
 		var el:IVisualElement;
 		var f:int = container.numElements;
 		while (--f >= 0) {
@@ -15,10 +15,11 @@ public class DisposableUtils {
 			if (el is IDisposable) IDisposable(el).dispose();
 		}
 		container.removeAllElements();
-		if (container["graphics"] is Graphics) Graphics(container["graphics"]).clear();
+
+		if (clearGraphics && container["graphics"] is Graphics) Graphics(container["graphics"]).clear();
 	}
 
-	public static function disposeDisplayContainer(container:DisplayObjectContainer):void {
+	public static function disposeDisplayContainer(container:DisplayObjectContainer, clearGraphics:Boolean = true):void {
 		var d:DisplayObject;
 		var f:int = container.numChildren;
 		while (--f >= 0) {
@@ -26,7 +27,8 @@ public class DisposableUtils {
 			if (d is IDisposable) IDisposable(d).dispose();
 			container.removeChildAt(f);
 		}
-		if (container["graphics"] is Graphics) Graphics(container["graphics"]).clear();
+
+		if (clearGraphics && container["graphics"] is Graphics) Graphics(container["graphics"]).clear();
 	}
 }
 }
