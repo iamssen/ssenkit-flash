@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:grids="ssen.components.mxDatagridSupportClasses.chartWeaver.*"
+		 xmlns:chart="ssen.components.mxDatagridSupportClasses.chartWeaver.*"
+
+		 initialize="init(event)">
+	<fx:Script>
+		<![CDATA[
+		import mx.collections.ArrayList;
+		import mx.collections.IList;
+		import mx.events.FlexEvent;
+
+		import ssen.common.MathUtils;
+
+		//==========================================================================================
+		// initialize
+		//==========================================================================================
+		private function init(event:FlexEvent):void {
+			createChartData();
+			createGridData();
+		}
+
+		//==========================================================================================
+		// set data
+		//==========================================================================================
+		[Bindable]
+		public var chartData:IList;
+
+		[Bindable]
+		public var gridData:IList;
+
+		// DataGridColumnGroup 을 사용하게 될 경우
+		// lockedColumnCount로 선언되어야 하는 값과
+		// 실제 잠그는 column의 갯수가 틀리게 된다.
+		// 선언되어야 하는 것은 group의 갯수로 선언되어져야 하고,
+		// 실제 잠기는 column들은 group의 하위 항목들을 세어서 잠기게 된다.
+		private const lockedTopColumns:int = 1;
+		private const lockedColumns:int = 2;
+
+		// Grid의 Column과 Chart의 항목들은 반드시 매칭되어야 한다.
+		// Grid의 Column들이 A | B | C | D | E | F 일 때, lockedColumnCount가 2라면
+		// Chart 에서는 lockedColumnCount 에 맞춰서
+		// C | D | E | F 의 데이터가 들어가야 한다.
+		// (lockedColumnCount는 Category로 판단한다)
+		//
+		// @Chart의 데이터 구조 : dataProvider = [{C}, {D}, {E}, {F}]
+		// |	|	|C	|D	|E	|F
+		//
+		// @Grid의 데이터 구조 : dataProvider = [].<{A, B, C, D, E, F}>
+		// |A	|B	|C	|D	|E	|F
+		// |---row---
+		// |---row---
+		private function createChartData():void {
+			var labels:Vector.<String> = new <String>["A", "B", "C", "D", "E", "F", "G"];
+			labels = labels.slice(lockedColumns);
+
+			var arr:Array = [];
+			var f:int = -1;
+			var fmax:int = labels.length;
+
+			while (++f < fmax) {
+				arr.push(new Showcase__GridAndChartWeaverValueObject(f, labels[f], MathUtils.rand(100, 1000)));
+			}
+
+			chartData = new ArrayList(arr);
+		}
+
+		private function createGridData():void {
+			var arr:Array = [];
+			var obj:Showcase__GridAndChartWeaverGridValueObject;
+			var f:int = -1;
+			var fmax:int = MathUtils.rand(20, 40);
+
+			while (++f < fmax) {
+				obj = new Showcase__GridAndChartWeaverGridValueObject;
+				obj.A = MathUtils.rand(10, 100);
+				obj.B = MathUtils.rand(10, 100);
+				obj.C = MathUtils.rand(10, 100);
+				obj.D = MathUtils.rand(10, 100);
+				obj.E = MathUtils.rand(10, 100);
+				obj.F = MathUtils.rand(10, 100);
+				obj.G = MathUtils.rand(10, 100);
+				arr.push(obj);
+			}
+
+			gridData = new ArrayList(arr);
+		}
+
+		//		private function chartDataTipFunction(hitData:HitData):DataTipItem {
+		//			var item:DataTipItem = new DataTipItem;
+		//			var data:Showcase__GridAndChartWeaverValueObject = hitData.chartItem.item as Showcase__GridAndChartWeaverValueObject;
+		//
+		//			item.title = data.label;
+		//			item.addDataTip("Value", data.value1.toString());
+		//			item.addDataTip("Hello", "World");
+		//			return item;
+		//		}
+		]]>
+	</fx:Script>
+
+	<grids:GridAndChartWeaver bottom="10" left="10" right="10" top="10">
+		<grids:layout>
+			<s:VerticalLayout horizontalAlign="left"
+							  paddingBottom="0"
+							  paddingLeft="0"
+							  paddingRight="0"
+							  paddingTop="0"
+							  verticalAlign="top"
+							  gap="0"/>
+		</grids:layout>
+
+		<mx:ColumnChart dataProvider="{chartData}" height="100%" width="100%" showDataTips="true">
+			<mx:backgroundElements>
+				<mx:GridLines>
+					<mx:horizontalStroke>
+						<s:SolidColorStroke color="#494949"/>
+					</mx:horizontalStroke>
+				</mx:GridLines>
+
+				<grids:GridAndChartWeaverChartHighlightElement/>
+			</mx:backgroundElements>
+
+			<mx:verticalAxis>
+				<mx:LinearAxis id="vaxis"/>
+			</mx:verticalAxis>
+
+			<mx:verticalAxisRenderers>
+				<mx:AxisRenderer color="#999999"
+								 fontFamily="Verdana"
+								 fontSize="12"
+								 axis="{vaxis}"
+								 minorTickPlacement="none"
+								 tickPlacement="none">
+					<mx:axisStroke>
+						<s:SolidColorStroke color="#808080" weight="1"/>
+					</mx:axisStroke>
+				</mx:AxisRenderer>
+			</mx:verticalAxisRenderers>
+
+			<mx:horizontalAxis>
+				<!-- horizontalAxis를 LinearAxis로 지정해야 한다 -->
+				<mx:LinearAxis id="haxis"/>
+			</mx:horizontalAxis>
+
+			<mx:horizontalAxisRenderers>
+				<!-- horizontalAxis를 안보이게 하기 위해서 InvisibleHorizontalAxisRenderer를 사용한다 -->
+				<chart:InvisibleHorizontalAxisRenderer axis="{haxis}"/>
+			</mx:horizontalAxisRenderers>
+
+			<mx:series>
+				<!-- xField는 무조건 IGridAndChartWeaverValueObject.horizontalPosition 으로 지정해야 한다. -->
+				<mx:ColumnSeries maxColumnWidth="30" xField="horizontalPosition" yField="value1">
+					<mx:stroke>
+						<s:SolidColorStroke color="#0491c0"/>
+					</mx:stroke>
+					<mx:fill>
+						<s:SolidColor color="#0491c0" alpha="0.5"/>
+					</mx:fill>
+				</mx:ColumnSeries>
+			</mx:series>
+		</mx:ColumnChart>
+
+		<!-- lockedColumnCount는 0 이상 이어야 한다. (Chart의 gutterLeft 사이즈가 됨) -->
+		<!-- groupedColumns로 되어있는 경우 lockedColumnCount는 group 단위로 이루어져야 한다. 실제 column의 갯수가 아니라, group 갯수를 기준으로 한다. 즉 <group><column/><column/></group> 의 경우 2가 아니라 1로 해야 한다 -->
+		<mx:AdvancedDataGrid dataProvider="{gridData}"
+							 height="100%"
+							 width="100%"
+							 lockedColumnCount="{lockedTopColumns}">
+			<!-- columns 와 groupedColumns 는 구분해서 사용한다. -->
+			<!-- 마지막에 반드시 공백 Column 하나를 넣어준다. AdvancedDataGrid가 찌그러지는 것을 방지해준다 -->
+			<!--<components:columns>
+				<components:ExtendedDataGridColumn width="100" dataField="A"/>
+				<components:ExtendedDataGridColumn width="100" dataField="B"/>
+				<components:ExtendedDataGridColumn width="250" dataField="C"/>
+				<components:ExtendedDataGridColumn width="200" dataField="D"/>
+				<components:ExtendedDataGridColumn width="200" dataField="E"/>
+				<components:ExtendedDataGridColumn width="220" dataField="F"/>
+				<components:ExtendedDataGridColumn width="200" dataField="G"/>
+				<components:ExtendedDataGridColumn/>
+			</components:columns>-->
+			<mx:groupedColumns>
+				<!-- AB를 lockedColumnCount로 선언하고 싶을때는 A,B의 2가 아니라, AB의 1이 되어야 한다. -->
+				<!--<components:ExtendedDataGridColumnGroup headerText="AB">
+					<components:ExtendedDataGridColumn width="100" dataField="A"/>
+					<components:ExtendedDataGridColumn width="100" dataField="B"/>
+				</components:ExtendedDataGridColumnGroup>-->
+				<mx:AdvancedDataGridColumnGroup headerText="AB">
+					<mx:AdvancedDataGridColumn width="100" dataField="A"/>
+					<mx:AdvancedDataGridColumn width="100" dataField="B"/>
+				</mx:AdvancedDataGridColumnGroup>
+				<mx:AdvancedDataGridColumnGroup headerText="CDEF">
+					<mx:AdvancedDataGridColumn width="250" dataField="C"/>
+					<mx:AdvancedDataGridColumnGroup headerText="DE">
+						<mx:AdvancedDataGridColumn width="200" dataField="D"/>
+						<mx:AdvancedDataGridColumn width="200" dataField="E"/>
+					</mx:AdvancedDataGridColumnGroup>
+					<mx:AdvancedDataGridColumn width="220" dataField="F"/>
+				</mx:AdvancedDataGridColumnGroup>
+				<mx:AdvancedDataGridColumn width="200" dataField="G"/>
+				<mx:AdvancedDataGridColumn/>
+			</mx:groupedColumns>
+		</mx:AdvancedDataGrid>
+	</grids:GridAndChartWeaver>
+</s:Group>

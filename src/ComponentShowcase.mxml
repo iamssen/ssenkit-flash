@@ -10,23 +10,49 @@
 	</fx:Declarations>
 
 	<devkit:ShowcaseContainer>
+		<!-- @formatter:off -->
+		<!-- Graphics -->
 		<devkit:Showcase type="ssen.components.fills.Showcase__Stripe" description="Fill : Stripe" />
 		<devkit:Showcase type="ssen.components.fills.Showcase__Dotted" description="Fill : Dotted" />
 		<devkit:Showcase type="ssen.components.graphics.Showcase__LineBox" description="Graphic : LineBox" />
+		<devkit:Showcase type="ssen.drawing.Showcase__BitmapOverlay" description="Bitmap : Color Overlay" />
+		<!-- Media -->
+		<devkit:Showcase type="ssen.components.graphics.Showcase__SVGImage" description="Graphic : SVGImage" />
+		<!-- Base Containers -->
 		<devkit:Showcase type="ssen.components.dropdownAnchor.Showcase__DropDownAnchor" description="Container : DropDownAnchor" />
-		<devkit:Showcase type="ssen.components.scroll.Showcase__SimpleScrollBars" description="Container : SimpleScrollBar" />
+		<devkit:Showcase type="ssen.components.dialogs.Showcase__Alert" description="Component : Alert" />
+		<devkit:Showcase type="ssen.components.tooltips.Showcase__ToolTip" description="Component : ToolTip" />
+		<!-- Text -->
 		<devkit:Showcase type="ssen.text.Showcase__HtmlLines" description="Text : HtmlLines" />
 		<devkit:Showcase type="ssen.text.Showcase__HtmlLabel" description="Text : HtmlLabel" />
 		<devkit:Showcase type="ssen.text.Showcase__HtmlRichText" description="Text : HtmlRichText" />
-		<devkit:Showcase type="ssen.components.graphics.Showcase__SVGImage" description="Graphic : SVGImage" />
-		<devkit:Showcase type="ssen.components.dialogs.Showcase__Alert" description="Component : Alert" />
+		<!-- Base Components -->
+		<devkit:Showcase type="ssen.components.scroll.Showcase__SimpleScrollBars" description="Container : SimpleScrollBar" />
 		<devkit:Showcase type="ssen.components.mxChartSupportClasses.cartesianChartElements.Showcase__CartesianChartElement" description="Chart Axis Test" />
+		<!-- Grid -->
 		<devkit:Showcase type="ssen.components.grid.headers.Showcase__GridHeaders" description="Component : Grid Header" />
 		<devkit:Showcase type="ssen.components.grid.Showcase__GridContainer" description="Component : Grid Container" />
 		<devkit:Showcase type="ssen.components.grid.contents.tables.Showcase__Table" description="Component : Grid Table" />
+		<!-- Pola Chart -->
 		<devkit:Showcase type="ssen.components.chart.pola.Showcase__RadarChart" description="Component : Pola Chart + Radar Axis" />
 		<devkit:Showcase type="ssen.components.chart.pola.Showcase__PieChart" description="Component : Pola Chart + Pie Axis" />
 		<devkit:Showcase type="ssen.components.chart.pola.Showcase__PieChartPerformanceTest" description="Component : Pola Chart + Pie Axis Performance Test" />
-		<!--<devkit:Showcase type="ssen.components.simpleGrid.Showcase__SimpleGrid" description="Component : SimpleTextGrid" />-->
+		<!-- MX Chart -->
+		<devkit:Showcase type="ssen.components.mxChartSupportClasses.cartesianChartElements.Showcase__StackedColumnSetLine" description="Chart : Stacked Column Set Line" />
+		<devkit:Showcase type="ssen.components.mxChartSupportClasses.cartesianChartElements.Showcase__StackedColumnOverHeadLabel" description="Chart : Stacked Column Over Head Label" />
+		<devkit:Showcase type="ssen.components.mxChartSupportClasses.cartesianChartElements.Showcase__StackedColumnComparingWire" description="Chart : Stacked Column Comparing Wire" />
+		<devkit:Showcase type="ssen.components.mxChartSupportClasses.cartesianChartElements.Showcase__ClusteredColumnOverHeadLabel" description="Chart : Clustered Column Over Head Label" />
+		<devkit:Showcase type="ssen.components.mxChartSupportClasses.cartesianChartElements.Showcase__CategoryAxisHighlighterElement" description="Chart : Category Axis Highlighter Element" />
+		<devkit:Showcase type="ssen.components.mxChartSupportClasses.cartesianChartElements.Showcase__DashedLineChart" description="Chart : Dashed Line Chart" />
+		<devkit:Showcase type="ssen.components.mxChartSupportClasses.cartesianChartElements.Showcase__CuttedBoxRenderer" description="Chart : Cutted Box Renderer" />
+		<devkit:Showcase type="ssen.components.mxChartSupportClasses.cartesianChartElements.Showcase__ChartHighlightController" description="Chart : Chart Highlight Controller" />
+		<devkit:Showcase type="ssen.components.mxChartSupportClasses.axisLabelRenderers.Showcase__AxisLabelRenderer" description="Chart : Axis Label Renderer" />
+		<devkit:Showcase type="ssen.components.mxChartSupportClasses.legend.Showcase__CheckBoxLegend" description="Chart : Check Box Legend" />
+		<devkit:Showcase type="ssen.components.mxChartSupportClasses.pieChartElements.Showcase__PieWedgeHighlight" description="Chart : Pie Wedge Highlight" />
+		<!-- MX Chart And Grid Weaver -->
+		<devkit:Showcase type="ssen.components.mxDatagridSupportClasses.chartWeaver.Showcase__GridAndChartWeaver" description="Grid And Chart Weaver" />
+		<devkit:Showcase type="ssen.components.mxDatagridSupportClasses.chartWeaver.Showcase__GridAndChartWeaverWithStackedColumn" description="Grid And Chart Weaver : With Stacked Column" />
+		<devkit:Showcase type="ssen.components.mxDatagridSupportClasses.chartWeaver.Showcase__GridAndChartWeaverHighlighted" description="Grid And Chart Weaver : Highlighted" />
+		<devkit:Showcase type="ssen.components.mxDatagridSupportClasses.chartWeaver.Showcase__GridAndChartWeaverWithPercentageColumn" description="Grid And Chart Weaver : With Percentage Column" />
 	</devkit:ShowcaseContainer>
 </s:Application>

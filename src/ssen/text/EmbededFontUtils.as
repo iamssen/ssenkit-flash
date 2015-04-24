@@ -77,17 +77,14 @@ public class EmbededFontUtils {
 	// api
 	//==========================================================================================
 	public static function getEmbededFontNames():Vector.<String> {
-		if (!fontInfos) {
-			readFonts();
-		}
-
+		if (!fontInfos) readFonts();
 		return fontNames.slice();
 	}
 
 	public static function getFontLookup(font:String, isBold:Boolean = false, isItalic:Boolean = false):String {
-		if (!fontInfos[font]) {
-			return FontLookup.DEVICE;
-		}
+		if (!fontInfos) readFonts();
+
+		if (!fontInfos[font]) return FontLookup.DEVICE;
 
 		var info:Info = fontInfos[font];
 
@@ -107,9 +104,7 @@ public class EmbededFontUtils {
 	}
 
 	public static function getSwfContext(component:UIComponent, fontFamily:String, isBold:Boolean = false, isItalic:Boolean = false):ISWFContext {
-		if (!fontInfos) {
-			readFonts();
-		}
+		if (!fontInfos) readFonts();
 
 		var fontName:String;
 

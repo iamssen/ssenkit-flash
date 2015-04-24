@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:grids="ssen.components.mxDatagridSupportClasses.chartWeaver.*"
+		 xmlns:chart="ssen.components.mxDatagridSupportClasses.chartWeaver.*"
+
+		 initialize="init(event)">
+	<fx:Script>
+		<![CDATA[
+		import mx.collections.ArrayList;
+		import mx.collections.IList;
+		import mx.events.FlexEvent;
+
+		import ssen.common.MathUtils;
+
+		//==========================================================================================
+		// initialize
+		//==========================================================================================
+		private function init(event:FlexEvent):void {
+			createChartData();
+			createGridData();
+		}
+
+		//==========================================================================================
+		// set data
+		//==========================================================================================
+		[Bindable]
+		public var chartData:IList;
+
+		[Bindable]
+		public var gridData:IList;
+
+		private const lockedTopColumns:int = 1;
+		private const lockedColumns:int = 2;
+
+		private function createChartData():void {
+			var labels:Vector.<String> = new <String>["A", "B", "C", "D", "E", "F", "G"];
+			labels = labels.slice(lockedColumns);
+
+			var arr:Array = [];
+			var f:int = -1;
+			var fmax:int = labels.length;
+
+			while (++f < fmax) {
+				// Stacked Data를 위해 value를 3개 넣음
+				arr.push(new Showcase__GridAndChartWeaverValueObject(f, labels[f], MathUtils.rand(500, 1000), MathUtils.rand(500, 1000), MathUtils.rand(500, 1000)));
+			}
+
+			chartData = new ArrayList(arr);
+		}
+
+		private function createGridData():void {
+			var arr:Array = [];
+			var obj:Object;
+			var f:int = -1;
+			var fmax:int = MathUtils.rand(20, 40);
+
+			while (++f < fmax) {
+				obj = {};
+				obj["A"] = MathUtils.rand(10, 100);
+				obj["B"] = MathUtils.rand(10, 100);
+				obj["C"] = MathUtils.rand(10, 100);
+				obj["D"] = MathUtils.rand(10, 100);
+				obj["E"] = MathUtils.rand(10, 100);
+				obj["F"] = MathUtils.rand(10, 100);
+				obj["G"] = MathUtils.rand(10, 100);
+				arr.push(obj);
+			}
+
+			gridData = new ArrayList(arr);
+		}
+
+		//			private function chartDataTipFunction(hitData:HitData):DataTipItem {
+		//				var item:DataTipItem=new DataTipItem;
+		//				var data:Showcase__GridAndChartWeaverValueObject=hitData.chartItem.item as Showcase__GridAndChartWeaverValueObject;
+		//
+		//				item.title=data.label;
+		//				item.addDataTip("Value1", data.value1.toString());
+		//				item.addDataTip("Value2", data.value2.toString());
+		//				item.addDataTip("Value3", data.value3.toString());
+		//				return item;
+		//			}
+		]]>
+	</fx:Script>
+
+	<grids:GridAndChartWeaver bottom="10" left="10" right="10" top="10">
+		<grids:layout>
+			<s:VerticalLayout horizontalAlign="left"
+							  paddingBottom="0"
+							  paddingLeft="0"
+							  paddingRight="0"
+							  paddingTop="0"
+							  verticalAlign="top"
+							  gap="0"/>
+		</grids:layout>
+
+		<mx:ColumnChart dataProvider="{chartData}" height="100%" width="100%" showDataTips="true">
+			<mx:backgroundElements>
+				<mx:GridLines>
+					<mx:horizontalStroke>
+						<s:SolidColorStroke color="#494949"/>
+					</mx:horizontalStroke>
+				</mx:GridLines>
+			</mx:backgroundElements>
+
+			<mx:verticalAxis>
+				<mx:LinearAxis id="vaxis"/>
+			</mx:verticalAxis>
+
+			<mx:verticalAxisRenderers>
+				<mx:AxisRenderer color="#999999"
+								 fontFamily="Verdana"
+								 fontSize="12"
+								 axis="{vaxis}"
+								 minorTickPlacement="none"
+								 tickPlacement="none">
+					<mx:axisStroke>
+						<s:SolidColorStroke color="#808080" weight="1"/>
+					</mx:axisStroke>
+				</mx:AxisRenderer>
+			</mx:verticalAxisRenderers>
+
+			<mx:horizontalAxis>
+				<mx:LinearAxis id="haxis"/>
+			</mx:horizontalAxis>
+
+			<mx:horizontalAxisRenderers>
+				<chart:InvisibleHorizontalAxisRenderer axis="{haxis}"/>
+			</mx:horizontalAxisRenderers>
+
+			<mx:series>
+				<!-- Stacked -->
+				<mx:ColumnSet maxColumnWidth="30" type="stacked">
+					<mx:ColumnSeries xField="horizontalPosition" yField="value3">
+						<mx:stroke>
+							<s:SolidColorStroke color="#0491c0"/>
+						</mx:stroke>
+						<mx:fill>
+							<s:SolidColor color="#0491c0" alpha="0.5"/>
+						</mx:fill>
+					</mx:ColumnSeries>
+					<mx:ColumnSeries xField="horizontalPosition" yField="value2">
+						<mx:stroke>
+							<s:SolidColorStroke color="#7fd4ef"/>
+						</mx:stroke>
+						<mx:fill>
+							<s:SolidColor color="#7fd4ef" alpha="0.7"/>
+						</mx:fill>
+					</mx:ColumnSeries>
+					<mx:ColumnSeries xField="horizontalPosition" yField="value1">
+						<mx:stroke>
+							<s:SolidColorStroke color="#19df72"/>
+						</mx:stroke>
+						<mx:fill>
+							<s:SolidColor color="#19df72" alpha="0.7"/>
+						</mx:fill>
+					</mx:ColumnSeries>
+				</mx:ColumnSet>
+			</mx:series>
+		</mx:ColumnChart>
+
+		<mx:AdvancedDataGrid dataProvider="{gridData}"
+							 height="100%"
+							 width="100%"
+							 lockedColumnCount="{lockedTopColumns}">
+			<mx:groupedColumns>
+				<mx:AdvancedDataGridColumnGroup headerText="AB">
+					<mx:AdvancedDataGridColumn width="100" dataField="A"/>
+					<mx:AdvancedDataGridColumn width="100" dataField="B"/>
+				</mx:AdvancedDataGridColumnGroup>
+				<mx:AdvancedDataGridColumnGroup headerText="CDEF">
+					<mx:AdvancedDataGridColumn width="250" dataField="C"/>
+					<mx:AdvancedDataGridColumnGroup headerText="DE">
+						<mx:AdvancedDataGridColumn width="200" dataField="D"/>
+						<mx:AdvancedDataGridColumn width="200" dataField="E"/>
+					</mx:AdvancedDataGridColumnGroup>
+					<mx:AdvancedDataGridColumn width="220" dataField="F"/>
+				</mx:AdvancedDataGridColumnGroup>
+				<mx:AdvancedDataGridColumn width="200" dataField="G"/>
+				<mx:AdvancedDataGridColumn/>
+			</mx:groupedColumns>
+		</mx:AdvancedDataGrid>
+	</grids:GridAndChartWeaver>
+</s:Group>

@@ -22,7 +22,10 @@ public class StackedColumnSeriesRenderBaseElement extends CartesianChartElement 
 		graphics.clear();
 		//		clearDottedLines();
 
-		if (!chart || !chart["horizontalAxis"] || !(chart["horizontalAxis"] is IAxis)) {
+		var dataProvider:IList=chart.dataProvider as IList;
+
+		if (!chart || !chart["horizontalAxis"] || !(chart["horizontalAxis"] is IAxis) || !dataProvider) {
+			callLater(invalidateDisplayList);
 			return;
 		}
 
@@ -90,25 +93,16 @@ public class StackedColumnSeriesRenderBaseElement extends CartesianChartElement 
 
 				fill=series.getStyle("fill");
 
-				drawWireOfColumnStacks(p.x, p.y, columnData1, columnData2, series.yField, fill);
+//				drawWireOfColumnStacks(p.x, p.y, columnData1, columnData2, series.yField, fill);
 
 				// increase vertical values
-				v1+=columnData1[series.yField];
-				v2+=columnData2[series.yField];
+				v1+=Number(columnData1[series.yField]);
+				v2+=Number(columnData2[series.yField]);
 
 				columnRect1=columnRects[f - 1];
 				columnRect2=columnRects[f];
 
-					//				dottedLine=DottedLine.create(columnRect1.x + columnRect1.width, getVerticalPosition(v1), columnRect2.x, getVerticalPosition(v2), 0x000000, 1, 4, 1);
-					//				addChild(dottedLine);
-					//				dottedLines.push(dottedLine);
-
-					//				graphics.lineStyle(1);
-					//				graphics.beginFill(0, 0);
-					//				graphics.moveTo(columnRect1.x + columnRect1.width, getVerticalPosition(v1));
-					//				graphics.lineTo(columnRect2.x, getVerticalPosition(v2));
-					//				graphics.endFill();
-					//				graphics.lineStyle(0, 0, 0);
+				drawWireOfColumnStacks(p.x, p.y, columnData1, columnData2, v1, v2, columnRect1, columnRect2, series.yField, fill);
 			}
 		}
 
@@ -126,7 +120,7 @@ public class StackedColumnSeriesRenderBaseElement extends CartesianChartElement 
 
 			while (++s < smax) {
 				series=columnSetSeries[s];
-				v+=columnData[series.yField];
+				v+=Number(columnData[series.yField]);
 			}
 
 			columnRect.y=getVerticalPosition(v);
@@ -199,7 +193,8 @@ public class StackedColumnSeriesRenderBaseElement extends CartesianChartElement 
 		graphics.endFill();
 	}
 
-	protected function drawWireOfColumnStacks(x:int, y:int, data1:Object, data2:Object, dataField:String, fill:IFill):void {
+	protected function drawWireOfColumnStacks(x:int, y:int, data1:Object, data2:Object, v1:Number, v2:Number, columnRect1:Rectangle, columnRect2:Rectangle, dataField:String,
+											  fill:IFill):void {
 		fill.begin(graphics, null, null);
 		graphics.drawCircle(x, y, 5);
 		fill.end(graphics);

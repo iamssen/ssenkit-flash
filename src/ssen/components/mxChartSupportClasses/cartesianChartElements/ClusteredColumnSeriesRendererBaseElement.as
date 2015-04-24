@@ -1,4 +1,14 @@
-    override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
+package ssen.components.mxChartSupportClasses.cartesianChartElements {
+import flash.geom.Rectangle;
+
+import mx.charts.chartClasses.IAxis;
+import mx.charts.series.ColumnSeries;
+import mx.charts.series.ColumnSet;
+import mx.collections.IList;
+
+public class ClusteredColumnSeriesRendererBaseElement extends CartesianChartElement {
+
+	override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 		super.updateDisplayList(unscaledWidth, unscaledHeight);
 
 		graphics.clear();
@@ -27,6 +37,9 @@
 		var series:ColumnSeries;
 		var fields:Vector.<String>;
 		var field:String;
+		
+		if (!dataProvider)
+			return;
 
 		begin();
 
@@ -91,6 +104,9 @@
 		var columnSetMaxWidth:Number=columnSet.maxColumnWidth * 2;
 		var columnSetWidthRatio:Number=columnSet.columnWidthRatio;
 
+		if (!dataProvider)
+			return null;
+		
 		var columnSetSpaceWidth:Number=w / dataProvider.length;
 		var columnSetWidth:Number=columnSetSpaceWidth * columnSetWidthRatio;
 
@@ -153,3 +169,5 @@
 		graphics.drawRect(rect.x, rect.y, rect.width, rect.height);
 		graphics.endFill();
 	}
+}
+}

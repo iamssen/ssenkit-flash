@@ -22,9 +22,13 @@ public class PieSeriesWedgeRenderer extends SpriteVisualElement {
 
 		graphics.clear();
 
+		graphics.lineStyle(4, 0xffffff);
+
 		fill.begin(graphics, null, null);
 		graphics.drawPath(path.commands, path.data, path.winding);
 		fill.end(graphics);
+
+		graphics.lineStyle();
 	}
 }
 }

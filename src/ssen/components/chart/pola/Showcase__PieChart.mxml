@@ -10,6 +10,7 @@
 	<fx:Script>
 		<![CDATA[
 		import com.greensock.easing.Back;
+		import com.greensock.easing.Quad;
 
 		import mx.collections.ArrayList;
 		import mx.collections.IList;
@@ -78,13 +79,13 @@
 					gutterLeft="40" gutterRight="40" gutterTop="40" gutterBottom="40">
 		<pieaxis:PieAxis dataProvider="{data}">
 			<pieaxis:animation>
-				<animate:Animation duration="4"/>
+				<animate:Animation duration="3"/>
 			</pieaxis:animation>
 			<!--<pieaxis:PieAxis dataProvider="{data}" drawStartAngle="10" drawEndAngle="170">-->
 			<pieaxis:series>
 				<pieaxis:PieSeries dataField="value" innerRadiusRatio="0.7" outerRadiusRatio="1">
 					<pieaxis:animationTrack>
-						<animate:AnimationTrack start="0" end="0.6" ease="Back.easeOut"/>
+						<animate:AnimationTrack start="0" end="1" ease="Back.easeOut"/>
 					</pieaxis:animationTrack>
 				</pieaxis:PieSeries>
 				<pieaxis:PieSeries dataField="value2" innerRadiusRatio="0.3" outerRadiusRatio="0.6">
