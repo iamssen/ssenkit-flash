@@ -1,5 +1,5 @@
 package ssen.common {
-
+import mx.utils.StringUtil;
 
 /** 시간을 제외한 날짜 계산을 할 때 사용 */
 public class Day {
@@ -187,7 +187,7 @@ public class Day {
 
 	/** @private */
 	public function toString():String {
-		return StringUtils.formatToString('[Day {0}년 {1}월 {2}일 {3}요일]', date.fullYear, date.month + 1, date.date, days[date.day]);
+		return StringUtil.substitute('[Day {0}년 {1}월 {2}일 {3}요일]', date.fullYear, date.month + 1, date.date, days[date.day]);
 	}
 }
 }

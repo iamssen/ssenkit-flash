@@ -1,4 +1,4 @@
-namespace: "http://ssen.name/ns/ssen"
+namespace: "http://ssen.name/ns/devkit"
 description: |
   개발시에 도움이 되는 유틸리티 모음 입니다.
 components:

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
-			   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:grid="ssen.components.sparkDatagridSupportClasses.*"
-			   xmlns:columns="ssen.components.sparkDatagridSupportClasses.columns.*"
-			   xmlns:components="ssen.components.sparkDatagridSupportClasses._showcase_.views.components.*"
-			   initialize="init()"
-		>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:grid="ssen.components.sparkDatagridSupportClasses.*"
+		 xmlns:columns="ssen.components.sparkDatagridSupportClasses.columns.*"
+		 xmlns:components="ssen.components.sparkDatagridSupportClasses._showcase_.views.components.*"
+
+		 initialize="init()">
 	<fx:Script>
 		<![CDATA[
 		import mx.collections.IList;
@@ -51,20 +53,27 @@
 	</fx:Declarations>
 
 	<s:layout>
-		<s:VerticalLayout paddingTop="2" paddingBottom="2" paddingLeft="2" paddingRight="2" gap="10" horizontalAlign="center" verticalAlign="top"/>
+		<s:VerticalLayout paddingTop="2" paddingBottom="2" paddingLeft="2" paddingRight="2" gap="10"
+						  horizontalAlign="center" verticalAlign="top"/>
 	</s:layout>
 
 	<grid:LinedDataGrid id="testDG" width="100%" height="100%" rowHeight="26">
 		<grid:typicalItem>
-			<fx:Object product="XXXXXXXXXXXXXXXXXXXXXX" q1="XXXXXXXXXXXXX" q2="XXXXXXXXXXXXX" q3="XXXXXXXXXXXXX" q4="XXXXXXXXXXXXX"/>
+			<fx:Object product="XXXXXXXXXXXXXXXXXXXXXX" q1="XXXXXXXXXXXXX" q2="XXXXXXXXXXXXX" q3="XXXXXXXXXXXXX"
+					   q4="XXXXXXXXXXXXX"/>
 		</grid:typicalItem>
 		<grid:columns>
 			<s:ArrayList>
-				<columns:BasicGridColumn dataField="product" headerText="Product" itemRenderer="ssen.components.sparkDatagridSupportClasses.editors.HierarchicalDisclosureGridRenderer"/>
-				<columns:NumberGridColumn dataField="q1" headerText="2012 Q3" itemRenderer="ssen.components.sparkDatagridSupportClasses.renderers.HierarchicalSumRenderer"/>
-				<columns:NumberGridColumn dataField="q2" headerText="2012 Q3" itemRenderer="ssen.components.sparkDatagridSupportClasses.renderers.HierarchicalSumRenderer"/>
-				<columns:NumberGridColumn dataField="q3" headerText="2013 Q1" itemRenderer="ssen.components.sparkDatagridSupportClasses.renderers.HierarchicalSumRenderer"/>
-				<columns:NumberGridColumn dataField="q4" headerText="2013 Q2" itemRenderer="ssen.components.sparkDatagridSupportClasses.renderers.HierarchicalSumRenderer"/>
+				<columns:BasicGridColumn dataField="product" headerText="Product"
+										 itemRenderer="ssen.components.sparkDatagridSupportClasses.editors.HierarchicalDisclosureGridRenderer"/>
+				<columns:NumberGridColumn dataField="q1" headerText="2012 Q3"
+										  itemRenderer="ssen.components.sparkDatagridSupportClasses.renderers.HierarchicalSumRenderer"/>
+				<columns:NumberGridColumn dataField="q2" headerText="2012 Q3"
+										  itemRenderer="ssen.components.sparkDatagridSupportClasses.renderers.HierarchicalSumRenderer"/>
+				<columns:NumberGridColumn dataField="q3" headerText="2013 Q1"
+										  itemRenderer="ssen.components.sparkDatagridSupportClasses.renderers.HierarchicalSumRenderer"/>
+				<columns:NumberGridColumn dataField="q4" headerText="2013 Q2"
+										  itemRenderer="ssen.components.sparkDatagridSupportClasses.renderers.HierarchicalSumRenderer"/>
 			</s:ArrayList>
 		</grid:columns>
 	</grid:LinedDataGrid>
@@ -72,4 +81,4 @@
 	<s:HGroup width="100%" gap="5" verticalAlign="middle">
 		<components:LinedButton label="Change Data" click="changeDataCell(event)"/>
 	</s:HGroup>
-</s:Application>
+</s:Group>

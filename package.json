@@ -23,5 +23,8 @@
     "done-exec": "^0.1.0",
     "flbuild": "^0.1.0",
     "gulp": "^3.8.7"
+  },
+  "devDependencies": {
+    "gulp-sequence": "^0.3.2"
   }
 }

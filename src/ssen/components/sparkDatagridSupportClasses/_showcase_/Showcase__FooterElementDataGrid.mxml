@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
-			   xmlns:components="ssen.components.sparkDatagridSupportClasses._showcase_.views.components.*"
-			   initialize="init(event)" xmlns:grid="ssen.components.sparkDatagridSupportClasses.*"
-			   xmlns:columns="ssen.components.sparkDatagridSupportClasses.columns.*">
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:components="ssen.components.sparkDatagridSupportClasses._showcase_.views.components.*"
+		 xmlns:grid="ssen.components.sparkDatagridSupportClasses.*"
+		 xmlns:columns="ssen.components.sparkDatagridSupportClasses.columns.*"
+
+		 initialize="init(event)">
 	<fx:Script>
 		<![CDATA[
 		import mx.collections.IList;
@@ -79,4 +82,4 @@
 		<s:Spacer width="100%"/>
 		<s:Label text="Focus Move : Ctrl + Alt + Arrow Keys"/>
 	</s:HGroup>
-</s:Application>
+</s:Group>

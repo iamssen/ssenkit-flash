@@ -12,32 +12,32 @@
 	<devkit:ShowcaseContainer>
 		<!-- @formatter:off -->
 		<!-- Graphics -->
-		<devkit:Showcase type="ssen.components.fills.Showcase__Stripe" description="Fill : Stripe" />
-		<devkit:Showcase type="ssen.components.fills.Showcase__Dotted" description="Fill : Dotted" />
-		<devkit:Showcase type="ssen.components.graphics.Showcase__LineBox" description="Graphic : LineBox" />
-		<devkit:Showcase type="ssen.drawing.Showcase__BitmapOverlay" description="Bitmap : Color Overlay" />
+		<devkit:Showcase type="ssen.components.fills.Showcase__Stripe" description="Graphics : Stripe Fill" />
+		<devkit:Showcase type="ssen.components.fills.Showcase__Dotted" description="Graphics : Dotted Fill" />
+		<devkit:Showcase type="ssen.components.graphics.Showcase__LineBox" description="Graphics : LineBox Primitive" />
+		<devkit:Showcase type="ssen.drawing.Showcase__BitmapOverlay" description="Graphics : Bitmap Color Overlay" />
 		<!-- Media -->
-		<devkit:Showcase type="ssen.components.graphics.Showcase__SVGImage" description="Graphic : SVGImage" />
+		<devkit:Showcase type="ssen.components.graphics.Showcase__SVGImage" description="Graphics : SVGImage" />
 		<!-- Base Containers -->
 		<devkit:Showcase type="ssen.components.dropdownAnchor.Showcase__DropDownAnchor" description="Container : DropDownAnchor" />
-		<devkit:Showcase type="ssen.components.dialogs.Showcase__Alert" description="Component : Alert" />
-		<devkit:Showcase type="ssen.components.tooltips.Showcase__ToolTip" description="Component : ToolTip" />
+		<devkit:Showcase type="ssen.components.dialogs.Showcase__Alert" description="Container : Alert" />
+		<devkit:Showcase type="ssen.components.tooltips.Showcase__ToolTip" description="Container : ToolTip" />
 		<!-- Text -->
 		<devkit:Showcase type="ssen.text.Showcase__HtmlLines" description="Text : HtmlLines" />
 		<devkit:Showcase type="ssen.text.Showcase__HtmlLabel" description="Text : HtmlLabel" />
 		<devkit:Showcase type="ssen.text.Showcase__HtmlRichText" description="Text : HtmlRichText" />
 		<!-- Base Components -->
-		<devkit:Showcase type="ssen.components.scroll.Showcase__SimpleScrollBars" description="Container : SimpleScrollBar" />
-		<devkit:Showcase type="ssen.components.mxChartSupportClasses.cartesianChartElements.Showcase__CartesianChartElement" description="Chart Axis Test" />
+		<devkit:Showcase type="ssen.components.scroll.Showcase__SimpleScrollBars" description="Component : SimpleScrollBar" />
 		<!-- Grid -->
-		<devkit:Showcase type="ssen.components.grid.headers.Showcase__GridHeaders" description="Component : Grid Header" />
-		<devkit:Showcase type="ssen.components.grid.Showcase__GridContainer" description="Component : Grid Container" />
-		<devkit:Showcase type="ssen.components.grid.contents.tables.Showcase__Table" description="Component : Grid Table" />
+		<devkit:Showcase type="ssen.components.grid.headers.Showcase__GridHeaders" description="Grid : Grid Header" />
+		<devkit:Showcase type="ssen.components.grid.Showcase__GridContainer" description="Grid : Grid Container" />
+		<devkit:Showcase type="ssen.components.grid.contents.tables.Showcase__Table" description="Grid : Grid Table" />
 		<!-- Pola Chart -->
-		<devkit:Showcase type="ssen.components.chart.pola.Showcase__RadarChart" description="Component : Pola Chart + Radar Axis" />
-		<devkit:Showcase type="ssen.components.chart.pola.Showcase__PieChart" description="Component : Pola Chart + Pie Axis" />
-		<devkit:Showcase type="ssen.components.chart.pola.Showcase__PieChartPerformanceTest" description="Component : Pola Chart + Pie Axis Performance Test" />
+		<devkit:Showcase type="ssen.components.chart.pola.Showcase__RadarChart" description="Chart : Pola Chart + Radar Axis" />
+		<devkit:Showcase type="ssen.components.chart.pola.Showcase__PieChart" description="Chart : Pola Chart + Pie Axis" />
+		<devkit:Showcase type="ssen.components.chart.pola.Showcase__PieChartPerformanceTest" description="Chart : Pola Chart + Pie Axis Performance Test" />
 		<!-- MX Chart -->
+		<devkit:Showcase type="ssen.components.mxChartSupportClasses.cartesianChartElements.Showcase__CartesianChartElement" description="Chart : Chart Axis Test" />
 		<devkit:Showcase type="ssen.components.mxChartSupportClasses.cartesianChartElements.Showcase__StackedColumnSetLine" description="Chart : Stacked Column Set Line" />
 		<devkit:Showcase type="ssen.components.mxChartSupportClasses.cartesianChartElements.Showcase__StackedColumnOverHeadLabel" description="Chart : Stacked Column Over Head Label" />
 		<devkit:Showcase type="ssen.components.mxChartSupportClasses.cartesianChartElements.Showcase__StackedColumnComparingWire" description="Chart : Stacked Column Comparing Wire" />
@@ -54,5 +54,11 @@
 		<devkit:Showcase type="ssen.components.mxDatagridSupportClasses.chartWeaver.Showcase__GridAndChartWeaverWithStackedColumn" description="Grid And Chart Weaver : With Stacked Column" />
 		<devkit:Showcase type="ssen.components.mxDatagridSupportClasses.chartWeaver.Showcase__GridAndChartWeaverHighlighted" description="Grid And Chart Weaver : Highlighted" />
 		<devkit:Showcase type="ssen.components.mxDatagridSupportClasses.chartWeaver.Showcase__GridAndChartWeaverWithPercentageColumn" description="Grid And Chart Weaver : With Percentage Column" />
+		<!-- Spark Data Grid -->
+		<devkit:Showcase type="ssen.components.sparkDatagridSupportClasses._showcase_.Showcase__EditableDataGrid" description="Spark Grid : Editable Data Grid" />
+		<devkit:Showcase type="ssen.components.sparkDatagridSupportClasses._showcase_.Showcase__FooterElementDataGrid" description="Spark Grid : Footer Element Data Grid" />
+		<devkit:Showcase type="ssen.components.sparkDatagridSupportClasses._showcase_.Showcase__FooterGraphDataGrid" description="Spark Grid : Footer Graph Data Grid" />
+		<devkit:Showcase type="ssen.components.sparkDatagridSupportClasses._showcase_.Showcase__HierarchicalDataGrid" description="Spark Grid : Hierarchical Data Grid" />
+		<devkit:Showcase type="ssen.components.sparkDatagridSupportClasses._showcase_.Showcase__LockedDataGrid" description="Spark Grid : Locked Data Grid" />
 	</devkit:ShowcaseContainer>
 </s:Application>

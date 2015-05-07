@@ -1,3 +1,5 @@
 namespace: "http://ssen.name/ns/ssen"
 components:
-- DropDownAnchor
+- Table
+- TableFlagColumn
+- TableColumn

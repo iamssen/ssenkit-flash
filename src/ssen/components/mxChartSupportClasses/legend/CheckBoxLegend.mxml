@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Legend xmlns:mx="http://www.adobe.com/2006/mxml"
+<mx:Legend xmlns:fx="http://ns.adobe.com/mxml/2009"
+		   xmlns:mx="library://ns.adobe.com/flex/mx"
+
 		   legendItemClass="ssen.components.mxChartSupportClasses.legend.CheckBoxLegendItem"
-		   childAdd="legendItemAdded(event)" childRemove="legendItemRemoved(event)">
+		   childAdd="legendItemAdded(event)"
+		   childRemove="legendItemRemoved(event)">
 
-	<mx:Metadata>
+	<fx:Metadata>
 		[Event(name="change", type="ssen.components.mxChartSupportClasses.legend.CheckBoxLegendItemChangeEvent")]
-	</mx:Metadata>
+	</fx:Metadata>
 
-	<mx:Script>
+	<fx:Script>
         <![CDATA[
 		import mx.charts.chartClasses.ChartBase;
 		import mx.charts.chartClasses.IChartElement;
@@ -129,6 +132,6 @@
 			}
 		}
 		]]>
-    </mx:Script>
+    </fx:Script>
 
 </mx:Legend>
