@@ -12,6 +12,54 @@ public class TableColumn {
 	//==========================================================================================
 	// fields
 	//==========================================================================================
+	//----------------------------------------------------------------
+	// events
+	//----------------------------------------------------------------
+	//---------------------------------------------
+	// click
+	//---------------------------------------------
+	private var _click:Function;
+
+	/** click = (column:TableColumn, row:Row) => void */
+	public function get click():Function {
+		return _click;
+	}
+
+	public function set click(value:Function):void {
+		_click = value;
+		if (table) table.refreshCellStyles(this);
+	}
+
+//	//---------------------------------------------
+//	// rollOver
+//	//---------------------------------------------
+//	private var _rollOver:Function;
+//
+//	/** rollOver = (column:TableColumn, row:Row) => void */
+//	public function get rollOver():Function {
+//		return _rollOver;
+//	}
+//
+//	public function set rollOver(value:Function):void {
+//		_rollOver = value;
+//		if (table) table.refreshCellStyles(this);
+//	}
+//
+//	//---------------------------------------------
+//	// rollOut
+//	//---------------------------------------------
+//	private var _rollOut:Function;
+//
+//	/** rollOut = (column:TableColumn, row:Row) => void */
+//	public function get rollOut():Function {
+//		return _rollOut;
+//	}
+//
+//	public function set rollOut(value:Function):void {
+//		_rollOut = value;
+//		if (table) table.refreshCellStyles(this);
+//	}
+
 	//---------------------------------------------
 	// dataField
 	//---------------------------------------------

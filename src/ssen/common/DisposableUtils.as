@@ -2,6 +2,9 @@ package ssen.common {
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
 import flash.display.Graphics;
+import flash.text.engine.TextLine;
+
+import flashx.textLayout.compose.TextLineRecycler;
 
 import mx.core.IVisualElement;
 import mx.core.IVisualElementContainer;
@@ -13,6 +16,7 @@ public class DisposableUtils {
 		while (--f >= 0) {
 			el = container.getElementAt(f);
 			if (el is IDisposable) IDisposable(el).dispose();
+			if (el is TextLine) TextLineRecycler.addLineForReuse(el as TextLine);
 		}
 		container.removeAllElements();
 
@@ -25,6 +29,7 @@ public class DisposableUtils {
 		while (--f >= 0) {
 			d = container.getChildAt(f);
 			if (d is IDisposable) IDisposable(d).dispose();
+			if (d is TextLine) TextLineRecycler.addLineForReuse(d as TextLine);
 			container.removeChildAt(f);
 		}
 

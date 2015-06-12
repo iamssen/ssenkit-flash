@@ -12,6 +12,7 @@ import mx.graphics.IFill;
 import mx.graphics.SolidColor;
 
 import ssen.components.grid.base.TextItemRenderer;
+import ssen.text.LabelComponentUtils;
 
 public class HeaderColumnRenderer extends TextItemRenderer implements IHeaderColumnRenderer {
 
@@ -170,18 +171,18 @@ public class HeaderColumnRenderer extends TextItemRenderer implements IHeaderCol
 		//---------------------------------------------
 		// test
 		//---------------------------------------------
-//		var line:int = getLineWeight(column);
-//
-//		for each (var space:Rectangle in contentSpaces) {
-//			g.beginFill(0, 0.2);
-//			g.drawRect(space.x, space.y, space.width, space.height);
-//			g.drawRect(space.x + line, space.y + line, space.width - (line * 2), space.height - (line * 2));
-//			g.endFill();
-//		}
+		//		var line:int = getLineWeight(column);
+		//
+		//		for each (var space:Rectangle in contentSpaces) {
+		//			g.beginFill(0, 0.2);
+		//			g.drawRect(space.x, space.y, space.width, space.height);
+		//			g.drawRect(space.x + line, space.y + line, space.width - (line * 2), space.height - (line * 2));
+		//			g.endFill();
+		//		}
 	}
 
 	override protected function getLabelText():String {
-		return (formatter) ? formatter.format(column.headerContent) : column.headerContent.toString();
+		return LabelComponentUtils.getLabel(column, "headerContent", formatter, labelFunction);
 	}
 
 	private function getContentSpace():Rectangle {

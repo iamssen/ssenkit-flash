@@ -1,8 +1,14 @@
 package ssen.text {
 
+import flash.display.DisplayObject;
+import flash.display.DisplayObjectContainer;
+import flash.display.Stage;
+import flash.text.FontStyle;
 import flash.text.engine.FontLookup;
+import flash.text.engine.FontWeight;
 
 import flashx.textLayout.compose.ISWFContext;
+import flashx.textLayout.formats.ITextLayoutFormat;
 
 import mx.core.EmbeddedFont;
 import mx.core.IEmbeddedFontRegistry;
@@ -119,6 +125,30 @@ public class EmbededFontUtils {
 
 		var info:Info = fontInfos[fontName];
 		return (info) ? component.getFontContext(fontName, isBold, isItalic) as ISWFContext : null;
+	}
+
+	public static function getSwfContextWithContainer(container:DisplayObjectContainer, format:ITextLayoutFormat):ISWFContext {
+		if (format.fontLookup === FontLookup.DEVICE) return null;
+
+		var display:DisplayObject = container;
+		var component:UIComponent;
+
+		while (true) {
+			if (display is UIComponent) {
+				component = display as UIComponent;
+				break;
+			} else if (display is Stage) {
+				break;
+			}
+		}
+
+		if (component) {
+			var isBold:Boolean = format.fontWeight === FontWeight.BOLD || format.fontStyle === FontStyle.BOLD || format.fontStyle === FontStyle.BOLD_ITALIC;
+			var isItalic:Boolean = format.fontStyle === FontStyle.ITALIC || format.fontStyle === FontStyle.BOLD_ITALIC;
+			return getSwfContext(component, format.fontFamily, isBold, isItalic);
+		}
+
+		return null;
 	}
 }
 }

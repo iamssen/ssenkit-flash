@@ -19,9 +19,36 @@
 
 package ssen.components.mxChartSupportClasses.axisLabelRenderers {
 
-import spark.components.RichText;
+import mx.charts.AxisLabel;
+import mx.core.IDataRenderer;
+import mx.events.PropertyChangeEvent;
 
-public class AxisLabelRenderer extends RichText {
+import ssen.text.HtmlRichText;
 
+public class AxisLabelRenderer extends HtmlRichText implements IDataRenderer {
+	//---------------------------------------------
+	// data
+	//---------------------------------------------
+	private var _data:Object;
+
+	/** data */
+	[Bindable]
+	public function get data():Object {
+		return _data;
+	}
+
+	public function set data(value:Object):void {
+		var oldValue:Object = _data;
+		_data = value;
+
+		if (value is AxisLabel) {
+			var label:AxisLabel = value as AxisLabel;
+			text = label.text;
+		}
+
+		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
+			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "data", oldValue, _data));
+		}
+	}
 }
 }

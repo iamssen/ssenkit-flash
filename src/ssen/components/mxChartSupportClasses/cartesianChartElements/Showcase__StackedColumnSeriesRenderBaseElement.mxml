@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:cartesianChartElements="ssen.components.mxChartSupportClasses.cartesianChartElements.*"
+
+		 creationComplete="init(event)">
+	<fx:Script>
+		<![CDATA[
+		import mx.collections.ArrayList;
+		import mx.collections.IList;
+		import mx.events.FlexEvent;
+		import mx.graphics.IFill;
+		import mx.graphics.SolidColor;
+		import mx.utils.ColorUtil;
+
+		import ssen.common.MathUtils;
+
+		//==========================================================================================
+		// initialize sample data
+		//==========================================================================================
+		[Bindable]
+		private var data:IList;
+
+		[Bindable]
+		private var dataMax:Number;
+
+		private function init(event:FlexEvent):void {
+			var arr:Array = [];
+			var v:Object;
+			var max:Number = Number.MIN_VALUE;
+
+			var f:int = -1;
+			var fmax:int = MathUtils.rand(4, 9);
+
+			while (++f < fmax) {
+				v = {
+					cate: "Category" + f,
+					v1  : MathUtils.rand(10, 20),
+					v2  : MathUtils.rand(10, 20),
+					v3  : MathUtils.rand(10, 20),
+					v4  : MathUtils.rand(10, 20)
+				};
+				arr.push(v);
+				max = Math.max(max, v.v1 + v.v2 + v.v3 + v.v4);
+			}
+
+			data = new ArrayList(arr);
+			dataMax = max + (max / 4);
+		}
+		]]>
+	</fx:Script>
+
+	<mx:ColumnChart dataProvider="{data}"
+					bottom="10"
+					left="10"
+					right="10"
+					top="10"
+					showDataTips="true">
+
+		<mx:seriesFilters>
+			<fx:Array/>
+		</mx:seriesFilters>
+
+		<mx:backgroundElements>
+			<cartesianChartElements:StackedColumnSeriesRenderBaseElement/>
+		</mx:backgroundElements>
+
+		<mx:horizontalAxis>
+			<mx:CategoryAxis id="haxis" categoryField="cate"/>
+		</mx:horizontalAxis>
+
+		<mx:verticalAxis>
+			<mx:LinearAxis id="vaxis" maximum="{dataMax}"/>
+		</mx:verticalAxis>
+
+		<mx:verticalAxisRenderers>
+			<mx:AxisRenderer fontSize="12" axis="{vaxis}"/>
+		</mx:verticalAxisRenderers>
+
+		<mx:horizontalAxisRenderers>
+			<mx:AxisRenderer fontSize="12" axis="{haxis}"/>
+		</mx:horizontalAxisRenderers>
+
+		<mx:series>
+			<mx:ColumnSet maxColumnWidth="50" type="stacked">
+				<mx:ColumnSeries displayName="Value 1" xField="cate" yField="v1"/>
+				<mx:ColumnSeries displayName="Value 2" xField="cate" yField="v2"/>
+				<mx:ColumnSeries displayName="Value 3" xField="cate" yField="v3"/>
+				<mx:ColumnSeries displayName="Value 4" xField="cate" yField="v4"/>
+			</mx:ColumnSet>
+		</mx:series>
+	</mx:ColumnChart>
+</s:Group>

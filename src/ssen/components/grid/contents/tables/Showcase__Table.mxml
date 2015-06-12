@@ -12,6 +12,10 @@
 		import mx.events.FlexEvent;
 
 		import ssen.common.MathUtils;
+		import ssen.components.grid.base.TextItemRenderer;
+		import ssen.ssen_internal;
+
+		use namespace ssen_internal;
 
 		[Bindable]
 		private var treeData:Object;
@@ -20,148 +24,154 @@
 		private var summaryData:Object;
 
 		private function init(event:FlexEvent):void {
+			TextItemRenderer.isDebugMode = true;
+
 			treeData = [
 				{
-					category: "총 합계",
-					y2015: MathUtils.rand(100, 1000),
-					y2016: MathUtils.rand(100, 1000),
-					y2017: MathUtils.rand(100, 1000),
-					y2018: MathUtils.rand(100, 1000),
-					y2019: MathUtils.rand(100, 1000),
-					y2020: MathUtils.rand(100, 1000),
-					rowHeight: 30,
-					mergeDirection: "bottom",
+					category          : "총 합계",
+					y2015             : MathUtils.rand(100, 1000),
+					y2016             : MathUtils.rand(100, 1000),
+					y2017             : MathUtils.rand(100, 1000),
+					y2018             : MathUtils.rand(100, 1000),
+					y2019             : MathUtils.rand(100, 1000),
+					y2020             : MathUtils.rand(100, 1000),
+					rowHeight         : 30,
+					mergeDirection    : "bottom",
 					rowBackgroundColor: 0xF99979,
-					children: [
+					children          : [
 						{
 							category: "모듈",
-							y2015: MathUtils.rand(100, 1000),
-							y2016: MathUtils.rand(100, 1000),
-							y2017: MathUtils.rand(100, 1000),
-							y2018: MathUtils.rand(100, 1000),
-							y2019: MathUtils.rand(100, 1000),
-							y2020: MathUtils.rand(100, 1000)
+							y2015   : MathUtils.rand(100, 1000),
+							y2016   : MathUtils.rand(100, 1000),
+							y2017   : MathUtils.rand(100, 1000),
+							y2018   : MathUtils.rand(100, 1000),
+							y2019   : MathUtils.rand(100, 1000),
+							y2020   : MathUtils.rand(100, 1000)
 						},
 						{
-							category: "핵심부품 계",
-							y2015: MathUtils.rand(100, 1000),
-							y2016: MathUtils.rand(100, 1000),
-							y2017: MathUtils.rand(100, 1000),
-							y2018: MathUtils.rand(100, 1000),
-							y2019: MathUtils.rand(100, 1000),
-							y2020: MathUtils.rand(100, 1000),
-							rowHeight: 60,
-							mergeDirection: "bottom",
+							category          : "핵심부품 계",
+							y2015             : MathUtils.rand(100, 1000),
+							y2016             : MathUtils.rand(100, 1000),
+							y2017             : MathUtils.rand(100, 1000),
+							y2018             : MathUtils.rand(100, 1000),
+							y2019             : MathUtils.rand(100, 1000),
+							y2020             : MathUtils.rand(100, 1000),
+							rowHeight         : 60,
+							mergeDirection    : "bottom",
 							rowBackgroundColor: 0xF9D1AD,
-							children: [
+							children          : [
 								{
 									category: "부품",
-									y2015: MathUtils.rand(100, 1000),
-									y2016: MathUtils.rand(100, 1000),
-									y2017: MathUtils.rand(100, 1000),
-									y2018: MathUtils.rand(100, 1000),
-									y2019: MathUtils.rand(100, 1000),
-									y2020: MathUtils.rand(100, 1000)
+									y2015   : MathUtils.rand(100, 1000),
+									y2016   : MathUtils.rand(100, 1000),
+									y2017   : MathUtils.rand(100, 1000),
+									y2018   : MathUtils.rand(100, 1000),
+									y2019   : MathUtils.rand(100, 1000),
+									y2020   : MathUtils.rand(100, 1000)
 								},
 								{
 									category: "전장",
-									y2015: MathUtils.rand(100, 1000),
-									y2016: MathUtils.rand(100, 1000),
-									y2017: MathUtils.rand(100, 1000),
-									y2018: MathUtils.rand(100, 1000),
-									y2019: MathUtils.rand(100, 1000),
-									y2020: MathUtils.rand(100, 1000)
+									y2015   : MathUtils.rand(100, 1000),
+									y2016   : MathUtils.rand(100, 1000),
+									y2017   : MathUtils.rand(100, 1000),
+									y2018   : MathUtils.rand(100, 1000),
+									y2019   : MathUtils.rand(100, 1000),
+									y2020   : MathUtils.rand(100, 1000)
 								}
 							]
 						},
 						{
 							category: "AS",
-							y2015: MathUtils.rand(100, 1000),
-							y2016: MathUtils.rand(100, 1000),
-							y2017: MathUtils.rand(100, 1000),
-							y2018: MathUtils.rand(100, 1000),
-							y2019: MathUtils.rand(100, 1000),
-							y2020: MathUtils.rand(100, 1000)
+							y2015   : MathUtils.rand(100, 1000),
+							y2016   : MathUtils.rand(100, 1000),
+							y2017   : MathUtils.rand(100, 1000),
+							y2018   : MathUtils.rand(100, 1000),
+							y2019   : MathUtils.rand(100, 1000),
+							y2020   : MathUtils.rand(100, 1000)
 						}
 					]
 				},
 				{
-					category: "총 합계",
-					y2015: MathUtils.rand(100, 1000),
-					y2016: MathUtils.rand(100, 1000),
-					y2017: MathUtils.rand(100, 1000),
-					y2018: MathUtils.rand(100, 1000),
-					y2019: MathUtils.rand(100, 1000),
-					y2020: MathUtils.rand(100, 1000),
-					rowHeight: 40,
-					mergeDirection: "top",
+					category          : "총 합계",
+					y2015             : MathUtils.rand(100, 1000),
+					y2016             : MathUtils.rand(100, 1000),
+					y2017             : MathUtils.rand(100, 1000),
+					y2018             : MathUtils.rand(100, 1000),
+					y2019             : MathUtils.rand(100, 1000),
+					y2020             : MathUtils.rand(100, 1000),
+					rowHeight         : 40,
+					mergeDirection    : "top",
 					rowBackgroundColor: 0xA3BFE3,
-					children: [
+					children          : [
 						{
 							category: "모듈",
-							y2015: MathUtils.rand(100, 1000),
-							y2016: MathUtils.rand(100, 1000),
-							y2017: MathUtils.rand(100, 1000),
-							y2018: MathUtils.rand(100, 1000),
-							y2019: MathUtils.rand(100, 1000),
-							y2020: MathUtils.rand(100, 1000)
+							y2015   : MathUtils.rand(100, 1000),
+							y2016   : MathUtils.rand(100, 1000),
+							y2017   : MathUtils.rand(100, 1000),
+							y2018   : MathUtils.rand(100, 1000),
+							y2019   : MathUtils.rand(100, 1000),
+							y2020   : MathUtils.rand(100, 1000)
 						},
 						{
-							category: "핵심부품 계",
-							y2015: MathUtils.rand(100, 1000),
-							y2016: MathUtils.rand(100, 1000),
-							y2017: MathUtils.rand(100, 1000),
-							y2018: MathUtils.rand(100, 1000),
-							y2019: MathUtils.rand(100, 1000),
-							y2020: MathUtils.rand(100, 1000),
-							mergeDirection: "top",
+							category          : "핵심부품 계",
+							y2015             : MathUtils.rand(100, 1000),
+							y2016             : MathUtils.rand(100, 1000),
+							y2017             : MathUtils.rand(100, 1000),
+							y2018             : MathUtils.rand(100, 1000),
+							y2019             : MathUtils.rand(100, 1000),
+							y2020             : MathUtils.rand(100, 1000),
+							mergeDirection    : "top",
 							rowBackgroundColor: 0xCAE6F9,
-							children: [
+							children          : [
 								{
 									category: "부품",
-									y2015: MathUtils.rand(100, 1000),
-									y2016: MathUtils.rand(100, 1000),
-									y2017: MathUtils.rand(100, 1000),
-									y2018: MathUtils.rand(100, 1000),
-									y2019: MathUtils.rand(100, 1000),
-									y2020: MathUtils.rand(100, 1000)
+									y2015   : MathUtils.rand(100, 1000),
+									y2016   : MathUtils.rand(100, 1000),
+									y2017   : MathUtils.rand(100, 1000),
+									y2018   : MathUtils.rand(100, 1000),
+									y2019   : MathUtils.rand(100, 1000),
+									y2020   : MathUtils.rand(100, 1000)
 								},
 								{
-									category: "전장",
-									y2015: MathUtils.rand(100, 1000),
-									y2016: MathUtils.rand(100, 1000),
-									y2017: MathUtils.rand(100, 1000),
-									y2018: MathUtils.rand(100, 1000),
-									y2019: MathUtils.rand(100, 1000),
-									y2020: MathUtils.rand(100, 1000),
+									category : "전장",
+									y2015    : MathUtils.rand(100, 1000),
+									y2016    : MathUtils.rand(100, 1000),
+									y2017    : MathUtils.rand(100, 1000),
+									y2018    : MathUtils.rand(100, 1000),
+									y2019    : MathUtils.rand(100, 1000),
+									y2020    : MathUtils.rand(100, 1000),
 									rowHeight: 90
 								}
 							]
 						},
 						{
 							category: "AS",
-							y2015: MathUtils.rand(100, 1000),
-							y2016: MathUtils.rand(100, 1000),
-							y2017: MathUtils.rand(100, 1000),
-							y2018: MathUtils.rand(100, 1000),
-							y2019: MathUtils.rand(100, 1000),
-							y2020: MathUtils.rand(100, 1000)
+							y2015   : MathUtils.rand(100, 1000),
+							y2016   : MathUtils.rand(100, 1000),
+							y2017   : MathUtils.rand(100, 1000),
+							y2018   : MathUtils.rand(100, 1000),
+							y2019   : MathUtils.rand(100, 1000),
+							y2020   : MathUtils.rand(100, 1000)
 						}
 					]
 				}
 			];
 
 			summaryData = {
-				category: "총 합계",
-				y2015: MathUtils.rand(100, 1000),
-				y2016: MathUtils.rand(100, 1000),
-				y2017: MathUtils.rand(100, 1000),
-				y2018: MathUtils.rand(100, 1000),
-				y2019: MathUtils.rand(100, 1000),
-				y2020: MathUtils.rand(100, 1000),
-				rowHeight: 100,
+				category          : "총 합계",
+				y2015             : MathUtils.rand(100, 1000),
+				y2016             : MathUtils.rand(100, 1000),
+				y2017             : MathUtils.rand(100, 1000),
+				y2018             : MathUtils.rand(100, 1000),
+				y2019             : MathUtils.rand(100, 1000),
+				y2020             : MathUtils.rand(100, 1000),
+				rowHeight         : 100,
 				rowBackgroundColor: 0xD6433F
 			};
+		}
+
+		private function clickHandler(column:TableColumn, row:Row):void {
+			trace("Showcase__Table.clickHandler()", column, row);
 		}
 		]]>
 	</fx:Script>
@@ -171,16 +181,26 @@
 	</s:layout>
 
 	<s:Group width="100%">
-		<s:Rect left="0" right="0" top="0" bottom="0">
-			<s:fill>
-				<s:SolidColor color="#000000"/>
-			</s:fill>
-		</s:Rect>
+		<!--<s:Rect left="0" right="0" top="0" bottom="0">-->
+			<!--<s:fill>-->
+				<!--<s:SolidColor color="#000000" alpha="0.4"/>-->
+			<!--</s:fill>-->
+		<!--</s:Rect>-->
 
 		<grid:GridContainer left="1" right="1" top="1" bottom="1" gap="1">
 			<headers:Header columnLayoutMode="fixed" frontLockedColumnCount="1" backLockedColumnCount="1">
-			<!--<headers:Header columnLayoutMode="ratio">-->
-				<headers:HeaderColumn columnWidth="130" headerContent="HEADER A"/>
+				<!--<headers:Header columnLayoutMode="ratio">-->
+				<headers:HeaderColumn columnWidth="130" headerContent="HEADER A">
+					<headers:renderer>
+						<fx:Component>
+							<headers:HeaderColumnRenderer textAlign="center"
+														  verticalAlign="middle"
+														  fontFamily="notoSans"
+														  fontLookup="embeddedCFF"
+														  fontSize="14"/>
+						</fx:Component>
+					</headers:renderer>
+				</headers:HeaderColumn>
 				<headers:HeaderColumn columnWidth="130" headerContent="HEADER B"/>
 				<headers:HeaderGroupedColumn headerContent="HEADER GROUP">
 					<headers:HeaderColumn columnWidth="130" headerContent="HEADER C"/>
@@ -192,14 +212,15 @@
 				</headers:HeaderSubTopicColumn>
 			</headers:Header>
 
-			<tables:Table height="300" dataProvider="{treeData}">
+			<tables:Table maxHeight="200" dataProvider="{treeData}">
 				<tables:TableFlagColumn dataField="category"
 										mergeDirectionField="mergeDirection"
 										rowHeightField="rowHeight"
 										rowBackgroundColorField="rowBackgroundColor"/>
 				<tables:TableColumn dataField="y2015"
 									columnBackgroundColor="#acb8e2"
-									columnBackgroundBlendMode="overwrite"/>
+									columnBackgroundBlendMode="overwrite"
+									click="clickHandler"/>
 				<tables:TableColumn dataField="y2016"
 									columnBackgroundColor="#acb8e2"
 									columnBackgroundBlendMode="multiply"/>
@@ -209,21 +230,21 @@
 				<tables:TableColumn dataField="y2020"/>
 			</tables:Table>
 
-			<tables:Table dataProvider="{summaryData}">
-				<tables:TableColumn dataField="category"
-									rowHeightField="rowHeight"
-									rowBackgroundColorField="rowBackgroundColor"/>
-				<tables:TableColumn dataField="y2015"
-									columnBackgroundColor="#acb8e2"
-									columnBackgroundBlendMode="overwrite"/>
-				<tables:TableColumn dataField="y2016"
-									columnBackgroundColor="#acb8e2"
-									columnBackgroundBlendMode="multiply"/>
-				<tables:TableColumn dataField="y2017"/>
-				<tables:TableColumn dataField="y2018"/>
-				<tables:TableColumn dataField="y2019"/>
-				<tables:TableColumn dataField="y2020"/>
-			</tables:Table>
+			<!--<tables:Table dataProvider="{summaryData}">-->
+				<!--<tables:TableColumn dataField="category"-->
+									<!--rowHeightField="rowHeight"-->
+									<!--rowBackgroundColorField="rowBackgroundColor"/>-->
+				<!--<tables:TableColumn dataField="y2015"-->
+									<!--columnBackgroundColor="#acb8e2"-->
+									<!--columnBackgroundBlendMode="overwrite"/>-->
+				<!--<tables:TableColumn dataField="y2016"-->
+									<!--columnBackgroundColor="#acb8e2"-->
+									<!--columnBackgroundBlendMode="multiply"/>-->
+				<!--<tables:TableColumn dataField="y2017"/>-->
+				<!--<tables:TableColumn dataField="y2018"/>-->
+				<!--<tables:TableColumn dataField="y2019"/>-->
+				<!--<tables:TableColumn dataField="y2020"/>-->
+			<!--</tables:Table>-->
 			<s:HScrollBar/>
 		</grid:GridContainer>
 	</s:Group>

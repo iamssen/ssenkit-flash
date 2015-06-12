@@ -2,6 +2,8 @@ package ssen.text {
 import flashx.textLayout.factory.TruncationOptions;
 import flashx.textLayout.formats.ITextLayoutFormat;
 
+[Deprecated(message="change text engine")]
+
 public interface IHtmlLines {
 	//---------------------------------------------
 	// text

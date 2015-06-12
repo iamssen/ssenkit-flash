@@ -1,4 +1,0 @@
-namespace: "http://ssen-mxchart.iamssen.com/ns"
-components:
-- AxisLabelRenderer
-- DashedLineSegmentItemRenderer

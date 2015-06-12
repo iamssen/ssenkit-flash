@@ -23,7 +23,7 @@ gulp.task('build', function (done) {
 
 	lib.filterFunction = function (asclass) {
 		return asclass.classpath.indexOf('ssen.') === 0
-			&& asclass.classpath.toLowerCase().indexOf('ssen.components.mxChartSupportClasses') === -1
+				//&& asclass.classpath.toLowerCase().indexOf('ssen.components.mxChartSupportClasses') === -1
 			&& asclass.classpath.toLowerCase().indexOf('ssen.components.sparkDatagridSupportClasses') === -1
 			&& asclass.classpath.toLowerCase().indexOf('showcase__') === -1
 			&& asclass.classpath.toLowerCase().indexOf('_showcase_') === -1
@@ -37,7 +37,7 @@ gulp.task('build', function (done) {
 	})
 })
 
-gulp.task('publish', function() {
+gulp.task('publish', function () {
 	return gulp.src('bin/ssenkit.swc')
 		.pipe(gulp.dest('C:\\Users\\ssen\\Workspace\\LPIMS_FLEX_EXECUTOR\\libs'))
 })

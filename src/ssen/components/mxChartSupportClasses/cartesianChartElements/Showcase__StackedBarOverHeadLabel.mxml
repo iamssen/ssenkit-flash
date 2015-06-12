@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:cartesianChartElements="ssen.components.mxChartSupportClasses.cartesianChartElements.*"
+
+		 creationComplete="init(event)">
+	<fx:Script>
+		<![CDATA[
+		import mx.collections.ArrayList;
+		import mx.collections.IList;
+		import mx.events.FlexEvent;
+
+		import ssen.common.MathUtils;
+
+		//==========================================================================================
+		// initialize sample data
+		//==========================================================================================
+		[Bindable]
+		private var data:IList;
+
+		private function init(event:FlexEvent):void {
+			var arr:Array = [];
+
+			var f:int = -1;
+			var fmax:int = MathUtils.rand(4, 9);
+
+			while (++f < fmax) {
+				arr.push({
+					cate: "Category" + f,
+					v1  : MathUtils.rand(10, 20),
+					v2  : MathUtils.rand(10, 20),
+					v3  : MathUtils.rand(10, 20),
+					v4  : MathUtils.rand(10, 20)
+				});
+			}
+
+			data = new ArrayList(arr);
+		}
+
+		private static function barSetOverheadLabelFunction(data:Object):String {
+			return data.v1.toString();
+		}
+		]]>
+	</fx:Script>
+
+	<mx:BarChart dataProvider="{data}"
+				 bottom="10"
+				 left="10"
+				 right="10"
+				 top="10"
+				 showDataTips="true">
+
+		<mx:seriesFilters>
+			<fx:Array/>
+		</mx:seriesFilters>
+
+		<mx:backgroundElements>
+			<!-- 넣어주면 ColumnSet의 Column 상단에 label 처리를 해준다 -->
+			<cartesianChartElements:StackedBarOverHeadLabel labelFunction="barSetOverheadLabelFunction"/>
+		</mx:backgroundElements>
+
+		<mx:horizontalAxis>
+			<mx:LinearAxis id="vaxis"/>
+		</mx:horizontalAxis>
+
+		<mx:verticalAxis>
+			<mx:CategoryAxis id="haxis" categoryField="cate"/>
+		</mx:verticalAxis>
+
+		<mx:verticalAxisRenderers>
+			<mx:AxisRenderer fontSize="12" axis="{vaxis}"/>
+		</mx:verticalAxisRenderers>
+
+		<mx:horizontalAxisRenderers>
+			<mx:AxisRenderer fontSize="12" axis="{haxis}"/>
+		</mx:horizontalAxisRenderers>
+
+		<mx:series>
+			<mx:BarSet maxBarWidth="50" type="stacked">
+				<mx:BarSeries displayName="Value 1" xField="v1" yField="cate"/>
+				<mx:BarSeries displayName="Value 2" xField="v2" yField="cate"/>
+				<mx:BarSeries displayName="Value 3" xField="v3" yField="cate"/>
+				<mx:BarSeries displayName="Value 4" xField="v4" yField="cate"/>
+			</mx:BarSet>
+		</mx:series>
+	</mx:BarChart>
+</s:Group>

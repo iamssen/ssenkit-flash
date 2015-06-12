@@ -1,0 +1,9 @@
+- commitProperties()
+	- `refreshChildrenElements()` 하위 항목들의 변경이 있을 경우 Element들을 새로 작성한다
+	- contentWidth / contentHeight 를 작성해 놓는다 (하위 항목들의 크기)
+	- data에 의한 drawing 조건들은 모두 여기서 작성해놓는다 (가능하면 pooling을 사용하는게 좋을듯)
+- canSkipMeasurement()
+- measure()
+- updateDisplayList()
+	- commitProperties()에서 작성된 data에 의한 drawing 조건들과
+	- event loop에 의한 state 조건들을 취합해서 실제 그리기를 한다

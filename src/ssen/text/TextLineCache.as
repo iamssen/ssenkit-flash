@@ -6,6 +6,8 @@ import flashx.textLayout.compose.TextLineRecycler;
 
 import mx.collections.IList;
 
+[Deprecated(message="change text engine")]
+
 public class TextLineCache {
 
 	private var textLines:Vector.<TextLine> = new Vector.<TextLine>;

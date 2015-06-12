@@ -1,8 +1,11 @@
 package ssen.components.grid.contents.tables {
+import flash.events.Event;
 import flash.geom.Rectangle;
 
 import mx.core.IFactory;
+import mx.core.mx_internal;
 import mx.events.PropertyChangeEvent;
+import mx.events.ResizeEvent;
 
 import spark.components.Group;
 import spark.core.IViewport;
@@ -14,6 +17,8 @@ import ssen.components.grid.GridUtils;
 import ssen.components.grid.contents.IGridContent;
 import ssen.components.grid.headers.HeaderLayoutMode;
 import ssen.components.grid.headers.IHeader;
+
+use namespace mx_internal;
 
 [DefaultProperty("columns")]
 
@@ -46,10 +51,12 @@ public class Table extends GridElement implements IGridContent, IViewport {
 	private var refreshCellStylesCallColumns:Vector.<TableColumn> = new <TableColumn>[];
 
 	internal function refreshRows():void {
+		// trace("Table.refreshRows()", name);
 		invalidate_rows();
 	}
 
 	internal function refreshCellContents(column:TableColumn):void {
+		// trace("Table.refreshCellContents()", name);
 		if (refreshCellContentsCallColumns.indexOf(column) === -1) {
 			refreshCellContentsCallColumns.push(column);
 		}
@@ -57,10 +64,18 @@ public class Table extends GridElement implements IGridContent, IViewport {
 	}
 
 	internal function refreshCellStyles(column:TableColumn):void {
+		// trace("Table.refreshCellStyles()", name);
 		if (refreshCellStylesCallColumns.indexOf(column) === -1) {
 			refreshCellStylesCallColumns.push(column);
 		}
 		invalidate_draw();
+	}
+
+	//---------------------------------------------
+	// event hook
+	//---------------------------------------------
+	internal function cellMouseClick(column:TableColumn, row:Row):void {
+
 	}
 
 	//----------------------------------------------------------------
@@ -71,7 +86,7 @@ public class Table extends GridElement implements IGridContent, IViewport {
 	}
 
 	public function invalidateScroll():void {
-		commit_layout();
+		//		commit_layout();
 		commit_scroll();
 	}
 
@@ -572,16 +587,34 @@ public class Table extends GridElement implements IGridContent, IViewport {
 		_backContentWidth = backContentWidth;
 		_unlockContentWidth = unlockContentWidth;
 		set_contentHeight(contentHeight);
-		measuredHeight = contentHeight;
+		//		trace("Table.commit_cellCreation() explicit height is", explicitHeight, explicitMinHeight, explicitMaxHeight, minHeight, maxHeight);
+		measuredHeight = getContainerHeight(contentHeight);
+		//		trace("@ Table.commit_cellCreation()", measuredHeight, contentHeight);
+	}
+
+	private function getContainerHeight(contentHeight:Number):Number {
+		if (!isNaN(explicitHeight)) {
+			//			trace("Table.getContainerHeight() use explicitHeight", name, contentHeight, explicitHeight, explicitMinHeight, explicitMaxHeight);
+			return explicitHeight;
+		} else if (!isNaN(explicitMinHeight) && contentHeight < explicitMinHeight) {
+			//			trace("Table.getContainerHeight() use explicitMinHeight", name, contentHeight, explicitHeight, explicitMinHeight, explicitMaxHeight);
+			return explicitMinHeight;
+		} else if (!isNaN(explicitMaxHeight) && contentHeight > explicitMaxHeight) {
+			//			trace("Table.getContainerHeight() use explicitMaxHeight", name, contentHeight, explicitHeight, explicitMinHeight, explicitMaxHeight);
+			return explicitMaxHeight;
+		}
+		//		trace("Table.getContainerHeight() use contentHeight", name, contentHeight, explicitHeight, explicitMinHeight, explicitMaxHeight);
+		return contentHeight;
 	}
 
 	//---------------------------------------------
 	// commit layout
 	//---------------------------------------------
 	protected function commit_layout():void {
-		var containerHeight:Number = isNaN(explicitHeight) ? measuredHeight : explicitHeight;
+		//		trace("Table.commit_layout() height values is", explicitHeight, explicitMinHeight, explicitMaxHeight, measuredHeight);
+		var containerHeight:Number = getContainerHeight(_contentHeight);
 		var containerWidth:Number = 0;
-		var enabledScroll:Boolean = measuredHeight >= containerHeight;
+		var enabledScroll:Boolean = _contentHeight > containerHeight;
 
 		if (header.columnLayoutMode === HeaderLayoutMode.FIXED) {
 			// front / back container visible
@@ -661,7 +694,14 @@ public class Table extends GridElement implements IGridContent, IViewport {
 	override protected function createChildren():void {
 		super.createChildren();
 		if (scrollBar) scrollBar.viewport = this;
+		//		if (scrollBar) {
+		//			scrollBar.addEventListener(Event.CHANGE, scrollChanged);
+		//		}
 	}
+
+	//	private function scrollChanged(event:Event):void {
+	//		trace("Table.scrollChanged()", scrollBar.maximum, scrollBar.value);
+	//	}
 
 	//---------------------------------------------
 	// commit draw
@@ -679,6 +719,7 @@ public class Table extends GridElement implements IGridContent, IViewport {
 	protected function commit_scroll():void {
 		if (!_header) return;
 		horizontalScrollPosition = _header.horizontalScrollPosition;
+//		trace("Table.commit_scroll()", this.height, this.contentHeight);
 	}
 
 	//==========================================================================================
@@ -697,11 +738,18 @@ public class Table extends GridElement implements IGridContent, IViewport {
 		}
 	}
 
+	//	override public function invalidateDisplayList():void {
+	//		super.invalidateDisplayList();
+	//		// trace("Table.invalidateDisplayList()", name);
+	//	}
+
 	override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 		//----------------------------------------------------------------
 		// commit rows
 		//----------------------------------------------------------------
 		if (rowsChanged) {
+			// trace("Table.updateDisplayList() rowChanged", name);
+
 			if (canCommitRows()) {
 				commit_rows();
 				rowsChanged = false;
@@ -717,10 +765,25 @@ public class Table extends GridElement implements IGridContent, IViewport {
 		// cell creation
 		//----------------------------------------------------------------
 		if (cellCreationChanged) {
+			// trace("Table.updateDisplayList() cellCreationChanged", name);
+
 			if (canCommitCellCreation()) {
 				commit_cellCreation();
 				cellCreationChanged = false;
 				drawChanged = true;
+
+				if (unscaledHeight != measuredHeight) {
+					var oldWidth:Number = width;
+					var oldHeight:Number = height;
+
+					unscaledHeight = measuredHeight;
+					_height = measuredHeight;
+
+					invalidateParentSizeAndDisplayList();
+					if (hasEventListener("heightChanged")) dispatchEvent(new Event("heightChanged"));
+					if (hasEventListener(ResizeEvent.RESIZE)) dispatchEvent(new ResizeEvent(ResizeEvent.RESIZE, false, false, oldWidth, oldHeight));
+					//					if (scrollBar.visible) scrollBar.maximum = contentHeight - height;
+				}
 			} else {
 				invalidateDisplayList();
 				return;
@@ -731,6 +794,10 @@ public class Table extends GridElement implements IGridContent, IViewport {
 		// layout
 		//----------------------------------------------------------------
 		commit_layout();
+		if (scrollBar.visible) {
+			scrollBar.height = unscaledHeight;
+			scrollBar.maximum = contentHeight - height;
+		}
 
 		//----------------------------------------------------------------
 		// scroll
@@ -741,6 +808,8 @@ public class Table extends GridElement implements IGridContent, IViewport {
 		// draw
 		//----------------------------------------------------------------
 		if (drawChanged) {
+			// trace("Table.updateDisplayList() drawChanged", name);
+
 			if (canCommitDraw()) {
 				commit_draw();
 				drawChanged = false;

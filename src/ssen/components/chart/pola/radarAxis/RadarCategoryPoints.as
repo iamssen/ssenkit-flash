@@ -22,7 +22,7 @@ public class RadarCategoryPoints extends EventDispatcher implements IRadarElemen
 	public var pointRenderer:IFactory;
 
 	public var animationTrack:AnimationTrack = new AnimationTrack(0.7, 1, Quad.easeOut);
-	private var lastAnimationTime:Number;
+	private var lastAnimationRatio:Number;
 
 	/** @private */
 	public function computeMaximumValue(dataProvider:IList):Number {
@@ -42,20 +42,20 @@ public class RadarCategoryPoints extends EventDispatcher implements IRadarElemen
 	//==========================================================================================
 	// render
 	//==========================================================================================
-	public function render(radarItems:Vector.<RadarItem>, axis:RadarAxis, chart:PolaChart, targetContainer:UIComponent, animationTime:Number):void {
+	public function render(radarItems:Vector.<RadarItem>, axis:RadarAxis, chart:PolaChart, targetContainer:UIComponent, animationRatio:Number):void {
 		//----------------------------------------------------------------
 		// time tracking
 		//----------------------------------------------------------------
-		animationTime = animationTrack.getTime(animationTime);
+		animationRatio = animationTrack.getTime(animationRatio);
 
-		if (isNaN(animationTime)) {
+		if (isNaN(animationRatio)) {
 			display.alpha = 0;
 			return;
-		} else if (animationTime === lastAnimationTime) {
+		} else if (animationRatio === lastAnimationRatio) {
 			return;
 		}
 
-		lastAnimationTime = animationTime;
+		lastAnimationRatio = animationRatio;
 
 		//----------------------------------------------------------------
 		// init display
@@ -68,9 +68,9 @@ public class RadarCategoryPoints extends EventDispatcher implements IRadarElemen
 		//----------------------------------------------------------------
 		var centerX:Number = chart.computedCenterX;
 		var centerY:Number = chart.computedCenterY;
-		var radius:Number = (chart.computedContentRadius * axis.drawRadiusRatio) + (10 * animationTime);
+		var radius:Number = (chart.computedContentRadius * axis.drawRadiusRatio) + (10 * animationRatio);
 
-		display.alpha = animationTime;
+		display.alpha = animationRatio;
 
 		//----------------------------------------------------------------
 		// draw properties

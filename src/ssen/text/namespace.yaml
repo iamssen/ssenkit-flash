@@ -2,3 +2,5 @@ namespace: "http://ssen.name/ns/ssen"
 components:
 - HtmlLabel
 - HtmlRichText
+- UITextComponent
+- SpriteVisualElementTextComponent

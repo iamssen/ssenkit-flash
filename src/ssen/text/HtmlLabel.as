@@ -8,6 +8,8 @@ import flashx.textLayout.formats.VerticalAlign;
 
 import mx.core.UIComponent;
 
+[Deprecated(message="change text engine")]
+
 public class HtmlLabel extends UIComponent {
 	private var lines:SpriteHtmlLines;
 
@@ -208,7 +210,6 @@ public class HtmlLabel extends UIComponent {
 	}
 
 	override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
-		trace("HtmlLabel.updateDisplayList()");
 		super.updateDisplayList(unscaledWidth, unscaledHeight);
 
 		var g:Graphics = graphics;

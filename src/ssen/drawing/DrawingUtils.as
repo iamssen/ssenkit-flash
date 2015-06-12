@@ -29,7 +29,6 @@ public class DrawingUtils {
 		var vratio:Number = (bounds.height > targetCoordinateSpace.height) ? targetCoordinateSpace.height / bounds.height : 1;
 
 		return (hratio > vratio) ? vratio : hratio;
-
 	}
 }
 }

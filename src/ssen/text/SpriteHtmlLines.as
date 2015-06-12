@@ -10,6 +10,9 @@ import spark.core.SpriteVisualElement;
  *
  * <p>MXML에 사용하기엔 좀 애매함...</p>
  */
+
+[Deprecated(message="change text engine")]
+
 public class SpriteHtmlLines extends SpriteVisualElement implements IHtmlLines {
 
 	private var mixin:HtmlLinesMixin;

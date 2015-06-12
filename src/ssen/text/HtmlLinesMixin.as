@@ -19,6 +19,8 @@ import ssen.ssen_internal;
 
 use namespace ssen_internal;
 
+[Deprecated(message="change text engine")]
+
 public class HtmlLinesMixin {
 	private var container:Sprite;
 

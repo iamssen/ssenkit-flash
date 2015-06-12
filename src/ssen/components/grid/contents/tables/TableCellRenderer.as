@@ -1,4 +1,5 @@
 package ssen.components.grid.contents.tables {
+import flash.events.MouseEvent;
 import flash.geom.Rectangle;
 
 import mx.core.ClassFactory;
@@ -6,6 +7,7 @@ import mx.core.IFactory;
 
 import ssen.components.grid.base.TextItemRenderer;
 import ssen.drawing.RGB;
+import ssen.text.LabelComponentUtils;
 
 public class TableCellRenderer extends TextItemRenderer implements ITableCellRenderer {
 
@@ -160,10 +162,23 @@ public class TableCellRenderer extends TextItemRenderer implements ITableCellRen
 		if (row && row.data && column && column.dataField) {
 			renderContent(contentBound);
 		}
+
+		//----------------------------------------------------------------
+		// event
+		//----------------------------------------------------------------
+		if (column.click !== null) {
+			addEventListener(MouseEvent.CLICK, mouseEventHandler, false, 0, true);
+		} else if (hasEventListener(MouseEvent.CLICK)) {
+			removeEventListener(MouseEvent.CLICK, mouseEventHandler);
+		}
+	}
+
+	private function mouseEventHandler(event:MouseEvent):void {
+		if (column.click !== null) column.click(column, row);
 	}
 
 	override protected function getLabelText():String {
-		return (formatter) ? formatter.format(row.data[column.dataField]) : row.data[column.dataField].toString();
+		return LabelComponentUtils.getLabel(row.data, column.dataField, formatter, labelFunction, this);
 	}
 
 	private function getBackgroundColor():RGB {

@@ -9,18 +9,28 @@ import flashx.textLayout.elements.TextFlow;
 import flashx.textLayout.factory.TextFlowTextLineFactory;
 import flashx.textLayout.factory.TruncationOptions;
 import flashx.textLayout.formats.ITextLayoutFormat;
+import flashx.textLayout.formats.TextAlign;
+import flashx.textLayout.formats.TextLayoutFormat;
+import flashx.textLayout.formats.VerticalAlign;
+import flashx.textLayout.tlf_internal;
 
 import ssen.common.StringUtils;
 
+use namespace tlf_internal;
+
 public class TextLineFactory {
 
-	public static function createTextLine(str:String, format:ITextLayoutFormat, swfContext:ISWFContext = null):TextLine {
+	public static function createTextLine(text:String, format:ITextLayoutFormat, swfContext:ISWFContext = null):TextLine {
+		_format.copy(format);
+		_format.textAlign = TextAlign.LEFT;
+		_format.verticalAlign = VerticalAlign.TOP;
+
 		var textLine:TextLine = null;
 		var factory:TextFlowTextLineFactory = getTextLineFactory();
 		if (swfContext) factory.swfContext = swfContext;
 
-		var textFlow:TextFlow = getTextFlow(str);
-		textFlow.hostFormat = format;
+		var textFlow:TextFlow = getTextFlow(text);
+		textFlow.hostFormat = _format;
 
 		factory.createTextLines(function (line:TextLine):void {
 			if (textLine) {
@@ -33,14 +43,18 @@ public class TextLineFactory {
 		return textLine;
 	}
 
-	public static function createTextLines(str:String, format:ITextLayoutFormat, truncationOptions:TruncationOptions = null, swfContext:ISWFContext = null):Vector.<TextLine> {
+	public static function createTextLines(text:String, format:ITextLayoutFormat, truncationOptions:TruncationOptions = null, swfContext:ISWFContext = null):Vector.<TextLine> {
+		_format.copy(format);
+		_format.textAlign = TextAlign.LEFT;
+		_format.verticalAlign = VerticalAlign.TOP;
+
 		var textLines:Vector.<TextLine> = new Vector.<TextLine>;
 		var factory:TextFlowTextLineFactory = getTextLineFactory();
 		if (truncationOptions) factory.truncationOptions = truncationOptions;
 		if (swfContext) factory.swfContext = swfContext;
 
-		var textFlow:TextFlow = getTextFlow(str);
-		textFlow.hostFormat = format;
+		var textFlow:TextFlow = getTextFlow(text);
+		textFlow.hostFormat = _format;
 
 		factory.createTextLines(function (line:TextLine):void {
 			textLines.push(line);
@@ -49,17 +63,17 @@ public class TextLineFactory {
 		return textLines;
 	}
 
-	public static function getTextFlow(str:String):TextFlow {
-		var format:String = (StringUtils.isRichText(str)) ? TextConverter.TEXT_FIELD_HTML_FORMAT : TextConverter.PLAIN_TEXT_FORMAT;
-		return TextConverter.importToFlow(str, format);
+	public static function getTextFlow(text:String):TextFlow {
+		var format:String = (StringUtils.isRichText(text)) ? TextConverter.TEXT_FIELD_HTML_FORMAT : TextConverter.PLAIN_TEXT_FORMAT;
+		return TextConverter.importToFlow(text, format);
 	}
 
 	//==========================================================================================
 	// utils
 	//==========================================================================================
-	//----------------------------------------------------------------
+	//---------------------------------------------
 	// reuseble text line factory
-	//----------------------------------------------------------------
+	//---------------------------------------------
 	private static var _textLineFactory:TextFlowTextLineFactory;
 
 	private static function getTextLineFactory():TextFlowTextLineFactory {
@@ -70,5 +84,7 @@ public class TextLineFactory {
 
 		return _textLineFactory;
 	}
+
+	private static var _format:TextLayoutFormat = new TextLayoutFormat;
 }
 }

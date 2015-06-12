@@ -30,7 +30,7 @@ public class RadarCrossLines implements IRadarElement {
 	public var strokeFunction:Function;
 
 	public var animationTrack:AnimationTrack = new AnimationTrack(0, 0.4, Back.easeOut);
-	private var lastAnimationTime:Number;
+	private var lastAnimationRatio:Number;
 
 	//==========================================================================================
 	// compute
@@ -51,20 +51,20 @@ public class RadarCrossLines implements IRadarElement {
 	//==========================================================================================
 	// render
 	//==========================================================================================
-	public function render(radarItems:Vector.<RadarItem>, axis:RadarAxis, chart:PolaChart, targetContainer:UIComponent, animationTime:Number):void {
+	public function render(radarItems:Vector.<RadarItem>, axis:RadarAxis, chart:PolaChart, targetContainer:UIComponent, animationRatio:Number):void {
 		//----------------------------------------------------------------
 		// time tracking
 		//----------------------------------------------------------------
-		animationTime = animationTrack.getTime(animationTime);
+		animationRatio = animationTrack.getTime(animationRatio);
 
-		if (isNaN(animationTime)) {
+		if (isNaN(animationRatio)) {
 			display.alpha = 0;
 			return;
-		} else if (animationTime === lastAnimationTime) {
+		} else if (animationRatio === lastAnimationRatio) {
 			return;
 		}
 
-		lastAnimationTime = animationTime;
+		lastAnimationRatio = animationRatio;
 
 		//----------------------------------------------------------------
 		// init display
@@ -79,9 +79,9 @@ public class RadarCrossLines implements IRadarElement {
 		//----------------------------------------------------------------
 		var centerX:Number = chart.computedCenterX;
 		var centerY:Number = chart.computedCenterY;
-		var radius:Number = chart.computedContentRadius * axis.drawRadiusRatio * animationTime;
+		var radius:Number = chart.computedContentRadius * axis.drawRadiusRatio * animationRatio;
 
-		display.alpha = animationTime;
+		display.alpha = animationRatio;
 
 		//----------------------------------------------------------------
 		// draw properties

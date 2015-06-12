@@ -6,7 +6,7 @@
 		clipAndEnableScrolling="true">
 	<fx:Metadata>
 		<![CDATA[
-		[HostComponent("ssen.components.grid.headers.Header")]
+		[HostComponent("ssen.components.grid.GridElement")]
 		]]>
 	</fx:Metadata>
 

@@ -4,6 +4,8 @@ import flashx.textLayout.formats.ITextLayoutFormat;
 
 import mx.core.UIComponent;
 
+[Deprecated(message="change text engine")]
+
 public class UIHtmlLines extends UIComponent implements IHtmlLines {
 	private var mixin:HtmlLinesMixin;
 

@@ -4,6 +4,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:grids="ssen.components.mxDatagridSupportClasses.chartWeaver.*"
 		 xmlns:chart="ssen.components.mxDatagridSupportClasses.chartWeaver.*"
+		 xmlns:axisrenderers="ssen.components.mxChartSupportClasses.axisRenderers.*"
 
 		 initialize="init(event)">
 	<fx:Script>
@@ -146,7 +147,7 @@
 
 			<mx:horizontalAxisRenderers>
 				<!-- horizontalAxis를 안보이게 하기 위해서 InvisibleHorizontalAxisRenderer를 사용한다 -->
-				<chart:InvisibleHorizontalAxisRenderer axis="{haxis}"/>
+				<axisrenderers:InvisibleHorizontalAxisRenderer axis="{haxis}"/>
 			</mx:horizontalAxisRenderers>
 
 			<mx:series>

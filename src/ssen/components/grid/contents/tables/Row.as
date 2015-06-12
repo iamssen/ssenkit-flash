@@ -1,7 +1,7 @@
 package ssen.components.grid.contents.tables {
 import ssen.common.StringUtils;
 
-internal class Row {
+public class Row {
 	// data
 	public var data:Object;
 

@@ -1,0 +1,4 @@
+namespace: "http://ssen.name/ns/mxchart"
+components:
+- InvisibleHorizontalAxisRenderer
+- InvisibleVerticalAxisRenderer

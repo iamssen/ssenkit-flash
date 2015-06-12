@@ -49,7 +49,7 @@ public class RadarSeries extends EventDispatcher implements IRadarElement {
 	// animate
 	//----------------------------------------------------------------
 	public var animationTrack:AnimationTrack = new AnimationTrack(0.5, 1, Elastic.easeOut);
-	private var lastAnimationTime:Number;
+	private var lastAnimationRatio:Number;
 
 	//==========================================================================================
 	// compute
@@ -85,20 +85,20 @@ public class RadarSeries extends EventDispatcher implements IRadarElement {
 		display = new UIComponent();
 	}
 
-	public function render(radarItems:Vector.<RadarItem>, axis:RadarAxis, chart:PolaChart, targetContainer:UIComponent, animationTime:Number):void {
+	public function render(radarItems:Vector.<RadarItem>, axis:RadarAxis, chart:PolaChart, targetContainer:UIComponent, animationRatio:Number):void {
 		//----------------------------------------------------------------
 		// time tracking
 		//----------------------------------------------------------------
-		animationTime = animationTrack.getTime(animationTime);
+		animationRatio = animationTrack.getTime(animationRatio);
 
-		if (isNaN(animationTime)) {
+		if (isNaN(animationRatio)) {
 			display.alpha = 0;
 			return;
-		} else if (animationTime === lastAnimationTime) {
+		} else if (animationRatio === lastAnimationRatio) {
 			return;
 		}
 
-		lastAnimationTime = animationTime;
+		lastAnimationRatio = animationRatio;
 
 		//----------------------------------------------------------------
 		// init display
@@ -115,9 +115,9 @@ public class RadarSeries extends EventDispatcher implements IRadarElement {
 		var maximum:Number = axis.computedMaximum;
 		var centerX:Number = chart.computedCenterX;
 		var centerY:Number = chart.computedCenterY;
-		var radius:Number = chart.computedContentRadius * radiusRatio * animationTime;
+		var radius:Number = chart.computedContentRadius * radiusRatio * animationRatio;
 
-		display.alpha = animationTime;
+		display.alpha = animationRatio;
 
 		//----------------------------------------------------------------
 		// draw properties

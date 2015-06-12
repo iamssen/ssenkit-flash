@@ -2,6 +2,7 @@ package ssen.components.grid.base {
 import flash.geom.Rectangle;
 
 import flashx.textLayout.factory.TruncationOptions;
+import flashx.textLayout.formats.ITextLayoutFormat;
 import flashx.textLayout.formats.TextAlign;
 import flashx.textLayout.formats.TextLayoutFormat;
 import flashx.textLayout.formats.VerticalAlign;
@@ -10,21 +11,16 @@ import mx.core.UIComponent;
 import mx.formatters.IFormatter;
 
 import ssen.common.IDisposable;
-import ssen.common.NullUtils;
+import ssen.ssen_internal;
+import ssen.text.IFormattedTextComponent;
+import ssen.text.LabelComponentUtils;
 import ssen.text.SpriteHtmlLines;
 
-// [Style(name="fontLookup", type="String", enumeration="auto,device,embeddedCFF", inherit="yes")]
-// [Style(name="fontStyle", type="String", enumeration="normal,italic", inherit="yes")]
-//[Style(name="textAlign", type="String", enumeration="left,right,center", inherit="yes")]
-[Style(name="color", type="uint", format="Color", inherit="yes")]
-[Style(name="fontFamily", type="String", inherit="yes")]
-[Style(name="fontSize", type="Number", format="Length", inherit="yes", minValue="1.0", maxValue="720.0")]
-[Style(name="fontWeight", type="String", enumeration="normal,bold", inherit="yes")]
-[Style(name="lineHeight", type="Object", inherit="yes")]
-[Style(name="trackingLeft", type="Object", inherit="yes")]
-[Style(name="trackingRight", type="Object", inherit="yes")]
+use namespace ssen_internal;
 
-public class TextItemRenderer extends UIComponent implements IDisposable {
+public class TextItemRenderer extends UIComponent implements IDisposable, IFormattedTextComponent {
+	ssen_internal static var isDebugMode:Boolean = false;
+
 	private var label:SpriteHtmlLines = new SpriteHtmlLines;
 	private var format:TextLayoutFormat = new TextLayoutFormat;
 
@@ -40,6 +36,21 @@ public class TextItemRenderer extends UIComponent implements IDisposable {
 	//==========================================================================================
 	// Style
 	//==========================================================================================
+	//---------------------------------------------
+	// labelFunction
+	//---------------------------------------------
+	private var _labelFunction:Function;
+
+	/** labelFunction */
+	public function get labelFunction():Function {
+		return _labelFunction;
+	}
+
+	public function set labelFunction(value:Function):void {
+		_labelFunction = value;
+		invalidateDisplayList();
+	}
+
 	//---------------------------------------------
 	// formatter
 	//---------------------------------------------
@@ -140,8 +151,115 @@ public class TextItemRenderer extends UIComponent implements IDisposable {
 		return _verticalAlign;
 	}
 
+	[Inspectable(type="Array", enumeration="top,middle,bottom", defaultValue="top")]
 	public function set verticalAlign(value:String):void {
 		_verticalAlign = value;
+		invalidateDisplayList();
+	}
+
+	//---------------------------------------------
+	// fontLookup
+	//---------------------------------------------
+	/** fontLookup */
+	public function get fontLookup():String {
+		return format.fontLookup;
+	}
+
+	[Inspectable(type="Array", enumeration="auto,device,embeddedCFF", defaultValue="device")]
+	public function set fontLookup(value:String):void {
+		format.fontLookup = value;
+		invalidateDisplayList();
+	}
+
+	//---------------------------------------------
+	// color
+	//---------------------------------------------
+	/** color */
+	public function get color():uint {
+		return format.color;
+	}
+
+	public function set color(value:uint):void {
+		format.color = value;
+		invalidateDisplayList();
+	}
+
+	//---------------------------------------------
+	// fontFamily
+	//---------------------------------------------
+	/** fontFamily */
+	public function get fontFamily():String {
+		return format.fontFamily;
+	}
+
+	public function set fontFamily(value:String):void {
+		format.fontFamily = value;
+		invalidateDisplayList();
+	}
+
+	//---------------------------------------------
+	// fontSize
+	//---------------------------------------------
+	/** fontSize */
+	public function get fontSize():uint {
+		return format.fontSize;
+	}
+
+	public function set fontSize(value:uint):void {
+		format.fontSize = value;
+		invalidateDisplayList();
+	}
+
+	//---------------------------------------------
+	// fontWeight
+	//---------------------------------------------
+	/** fontWeight */
+	public function get fontWeight():String {
+		return format.fontWeight;
+	}
+
+	[Inspectable(type="Array", enumeration="normal,bold", defaultValue="normal")]
+	public function set fontWeight(value:String):void {
+		format.fontWeight = value;
+		invalidateDisplayList();
+	}
+
+	//---------------------------------------------
+	// lineHeight
+	//---------------------------------------------
+	/** lineHeight */
+	public function get lineHeight():Object {
+		return format.lineHeight;
+	}
+
+	public function set lineHeight(value:Object):void {
+		format.lineHeight = value;
+		invalidateDisplayList();
+	}
+
+	//---------------------------------------------
+	// trackingLeft
+	//---------------------------------------------
+	/** trackingLeft */
+	public function get trackingLeft():Object {
+		return format.trackingLeft;
+	}
+
+	public function set trackingLeft(value:Object):void {
+		format.trackingLeft = value;
+		invalidateDisplayList();
+	}
+
+	//---------------------------------------------
+	// trackingRight
+	//---------------------------------------------
+	/** trackingRight */
+	public function get trackingRight():Object {
+		return format.trackingRight;
+	}
+
+	public function set trackingRight(value:Object):void {
+		format.trackingRight = value;
 		invalidateDisplayList();
 	}
 
@@ -158,45 +276,27 @@ public class TextItemRenderer extends UIComponent implements IDisposable {
 		invalidateDisplayList();
 	}
 
-	override public function styleChanged(styleProp:String):void {
-		super.styleChanged(styleProp);
+	//---------------------------------------------
+	// textFormatFunction
+	//---------------------------------------------
+	private var _textFormatFunction:Function;
 
-		switch (styleProp) {
-			case "color":
-				format.color = getStyle(styleProp);
-				break;
-			case "fontFamily":
-				format.fontFamily = getStyle(styleProp);
-				break;
-			case "fontSize":
-				format.fontSize = getStyle(styleProp);
-				break;
-			case "fontWeight":
-				format.fontWeight = getStyle(styleProp);
-				break;
-			case "lineHeight":
-				format.lineHeight = getStyle(styleProp);
-				break;
-			case "textAlign":
-				format.textAlign = getStyle(styleProp);
-				break;
-			case "trackingLeft":
-				format.trackingLeft = getStyle(styleProp);
-				break;
-			case "trackingRight":
-				format.trackingRight = getStyle(styleProp);
-				break;
-			default:
-				format.color = NullUtils.nanTo(getStyle("color"), 0x000000);
-				format.fontFamily = NullUtils.nullTo(getStyle("fontFamily"), "_sans");
-				format.fontSize = NullUtils.nanTo(getStyle("fontSize"), 12);
-				format.fontWeight = NullUtils.nullTo(getStyle("fontWeight"), "normal");
-				//fontStyle.lineHeight = NullUtils.nanTo(getStyle("lineHeight"), 0.2);
-				//				format.textAlign = NullUtils.nullTo(getStyle("textAlign"), TextAlign.LEFT);
-				//				fontStyle.trackingLeft = NullUtils.nanTo(getStyle("trackingLeft"), 0.5);
-				//				fontStyle.trackingRight = NullUtils.nanTo(getStyle("trackingRight"), 0.5);
-				break;
-		}
+	/** textFormatFunction */
+	public function get textFormatFunction():Function {
+		return _textFormatFunction;
+	}
+
+	public function set textFormatFunction(value:Function):void {
+		_textFormatFunction = value;
+		invalidateDisplayList();
+	}
+
+	public function getFormat():ITextLayoutFormat {
+		return format;
+	}
+
+	public function setFormat(newFormat:ITextLayoutFormat):void {
+		format = new TextLayoutFormat(newFormat);
 	}
 
 	//==========================================================================================
@@ -208,14 +308,15 @@ public class TextItemRenderer extends UIComponent implements IDisposable {
 
 	protected function renderContent(bound:Rectangle):void {
 		label.text = getLabelText();
+		label.format = LabelComponentUtils.getTextLayoutFormat(this, this);
 		label.createTextLines();
 
 		switch (label.textAlign) {
 			case TextAlign.RIGHT:
-				label.x = bound.x + bound.width - label.width + _paddingRight;
+				label.x = bound.x + bound.width - label.width - _paddingRight;
 				break;
 			case TextAlign.CENTER:
-				label.x = (bound.x + bound.width + label.width - _paddingLeft - _paddingRight) / 2;
+				label.x = bound.x + _paddingLeft + (((bound.width - _paddingLeft - _paddingRight) - label.width) / 2 );
 				break;
 			default :
 				label.x = bound.x + _paddingLeft;
@@ -224,10 +325,10 @@ public class TextItemRenderer extends UIComponent implements IDisposable {
 
 		switch (_verticalAlign) {
 			case VerticalAlign.BOTTOM:
-				label.y = bound.y + bound.height - label.height + _paddingBottom;
+				label.y = bound.y + bound.height - label.height - _paddingBottom;
 				break;
 			case VerticalAlign.MIDDLE:
-				label.y = (bound.y + bound.height + label.height - _paddingTop - _paddingBottom) / 2;
+				label.y = bound.y + _paddingTop + (((bound.height - _paddingTop - _paddingBottom) - label.height) / 2);
 				break;
 			default:
 				label.y = bound.y + _paddingTop;
@@ -237,12 +338,14 @@ public class TextItemRenderer extends UIComponent implements IDisposable {
 		//---------------------------------------------
 		// test
 		//---------------------------------------------
-		const padding:int = 5;
+		if (isDebugMode) {
+			const padding:int = 5;
 
-		graphics.beginFill(0x000000, 0.1);
-		graphics.drawRect(bound.x, bound.y, bound.width, bound.height);
-		graphics.drawRect(bound.x + padding, bound.y + padding, bound.width - (padding * 2), bound.height - (padding * 2));
-		graphics.endFill();
+			graphics.beginFill(0x000000, 0.1);
+			graphics.drawRect(bound.x, bound.y, bound.width, bound.height);
+			graphics.drawRect(bound.x + padding, bound.y + padding, bound.width - (padding * 2), bound.height - (padding * 2));
+			graphics.endFill();
+		}
 	}
 
 	protected function clear():void {

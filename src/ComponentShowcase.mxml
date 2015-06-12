@@ -5,6 +5,12 @@
 			   xmlns:assets="ssen.assets.*"
 
 			   frameRate="60">
+	<fx:Style>
+		* {
+			fontFamily: "arial, _sans";
+		}
+	</fx:Style>
+
 	<fx:Declarations>
 		<assets:NotoSans/>
 	</fx:Declarations>
@@ -23,6 +29,7 @@
 		<devkit:Showcase type="ssen.components.dialogs.Showcase__Alert" description="Container : Alert" />
 		<devkit:Showcase type="ssen.components.tooltips.Showcase__ToolTip" description="Container : ToolTip" />
 		<!-- Text -->
+		<devkit:Showcase type="ssen.text.Showcase__TextLineFactory" description="Text : TextLineFactory" />
 		<devkit:Showcase type="ssen.text.Showcase__HtmlLines" description="Text : HtmlLines" />
 		<devkit:Showcase type="ssen.text.Showcase__HtmlLabel" description="Text : HtmlLabel" />
 		<devkit:Showcase type="ssen.text.Showcase__HtmlRichText" description="Text : HtmlRichText" />

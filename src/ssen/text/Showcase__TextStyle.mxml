@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx"
+
+		 initialize="init(event)">
+	<fx:Script>
+		<![CDATA[
+		import flash.text.engine.FontLookup;
+		import flash.text.engine.TextLine;
+
+		import flashx.textLayout.formats.TextAlign;
+		import flashx.textLayout.formats.TextDecoration;
+		import flashx.textLayout.formats.TextLayoutFormat;
+		import flashx.textLayout.formats.VerticalAlign;
+
+		import mx.events.FlexEvent;
+
+		private function init(event:FlexEvent):void {
+			var format:TextLayoutFormat = new TextLayoutFormat;
+			format.fontFamily = "notoSans";
+			format.fontLookup = FontLookup.EMBEDDED_CFF;
+			format.fontSize = 15;
+			format.textDecoration = TextDecoration.UNDERLINE;
+
+			var line:TextLine = TextLineFactory.createTextLine("HELLO WORLD", format, EmbededFontUtils.getSwfContext(this, format.fontFamily));
+			TextLinePrinter.printTextLineWithSpace(line, container, 100, 100, 0, 0, 0, 0, TextAlign.LEFT, VerticalAlign.TOP, false, false);
+		}
+		]]>
+	</fx:Script>
+
+	<mx:UIComponent id="container" x="100" y="100"/>
+</s:Group>

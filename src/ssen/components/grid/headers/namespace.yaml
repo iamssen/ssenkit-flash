@@ -4,3 +4,4 @@ components:
 - HeaderColumn
 - HeaderGroupedColumn
 - HeaderSubTopicColumn
+- HeaderColumnRenderer

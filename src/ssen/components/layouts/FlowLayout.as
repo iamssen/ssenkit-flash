@@ -233,15 +233,15 @@ public class FlowLayout extends LayoutBase {
 	}
 
 	override public function updateDisplayList(containerWidth:Number, containerHeight:Number):void {
-		if (oldContainerWidth !== containerWidth || oldContainerHeight !== containerHeight) {
-			oldContainerWidth = containerWidth;
-			oldContainerHeight = containerHeight;
-			changed = true;
-		}
-
-		if (!changed) {
-			return;
-		}
+		//		if (oldContainerWidth !== containerWidth || oldContainerHeight !== containerHeight) {
+		//			oldContainerWidth = containerWidth;
+		//			oldContainerHeight = containerHeight;
+		//			changed = true;
+		//		}
+		//
+		//		if (!changed) {
+		//			return;
+		//		}
 
 		var t:GroupBase = target;
 		var el:ILayoutElement, e:ILayoutElement;
@@ -290,6 +290,7 @@ public class FlowLayout extends LayoutBase {
 			}
 
 			el.setLayoutBoundsSize(NaN, NaN);
+			if (nel) nel.setLayoutBoundsSize(NaN, NaN);
 
 			w = el.getLayoutBoundsWidth();
 			h = el.getLayoutBoundsHeight();
@@ -302,7 +303,9 @@ public class FlowLayout extends LayoutBase {
 			}
 			els.push(el);
 
-			if (nel === null || line.width + nel.width + _horizontalGap > container.width) {
+			if (nel === null || line.width + nel.getLayoutBoundsWidth() + _horizontalGap > container.width) {
+				//				if (nel) trace(nel.getLayoutBoundsWidth(), nel);
+
 				// 정렬에 따른 line 의 x 설정
 				switch (_horizontalAlign) {
 					case "center":

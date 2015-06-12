@@ -1,19 +1,25 @@
 package ssen.components.mxChartSupportClasses.cartesianChartElements {
 import flash.geom.Rectangle;
+import flash.text.engine.FontWeight;
 import flash.text.engine.TextLine;
 
+import flashx.textLayout.formats.ITextLayoutFormat;
+import flashx.textLayout.formats.TextAlign;
 import flashx.textLayout.formats.TextLayoutFormat;
+import flashx.textLayout.formats.VerticalAlign;
 
-import mx.events.PropertyChangeEvent;
 import mx.graphics.IFill;
 
+import ssen.common.DisposableSet;
 import ssen.text.EmbededFontUtils;
-import ssen.text.TextLineCache;
+import ssen.text.PrintedTextLinesInfo;
 import ssen.text.TextLineFactory;
+import ssen.text.TextLinePrinter;
 
 [Style(name="overHeadLabelFontFamily", inherit="no", type="String")]
 [Style(name="overHeadLabelFontSize", inherit="no", type="int")]
 [Style(name="overHeadLabelFontColor", inherit="no", type="String")]
+[Style(name="overHeadLabelFontWeight", inherit="no", type="String")]
 
 public class StackedColumnOverHeadLabel extends StackedColumnSeriesRenderBaseElement {
 	//==========================================================================================
@@ -25,32 +31,43 @@ public class StackedColumnOverHeadLabel extends StackedColumnSeriesRenderBaseEle
 	private var _labelFunction:Function;
 
 	/** labelFunction */
-	[Bindable]
 	public function get labelFunction():Function {
 		return _labelFunction;
 	}
 
 	public function set labelFunction(value:Function):void {
-		var oldValue:Function = _labelFunction;
 		_labelFunction = value;
+		invalidateDisplayList();
+	}
 
-		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
-			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "labelFunction", oldValue, _labelFunction));
-		}
+	//---------------------------------------------
+	// formatFunction
+	//---------------------------------------------
+	private var _formatFunction:Function;
 
+	/** formatFunction */
+	public function get formatFunction():Function {
+		return _formatFunction;
+	}
+
+	public function set formatFunction(value:Function):void {
+		_formatFunction = value;
 		invalidateDisplayList();
 	}
 
 	//----------------------------------------------------------------
 	// caches
 	//----------------------------------------------------------------
-	private var textLines:TextLineCache = new TextLineCache;
+	//	private var textLines:TextLineCache = new TextLineCache;
+	private var cleaner:DisposableSet = new DisposableSet;
+	private var format:TextLayoutFormat;
 	//	private var labelFormat:TextFormatManager;
 
 	//==========================================================================================
 	// constructor
 	//==========================================================================================
 	public function StackedColumnOverHeadLabel() {
+		format = new TextLayoutFormat;
 		//		labelFormat = new TextFormatManager({
 		//			overHeadLabelFontFamily: "fontFamily", overHeadLabelFontColor: "color", overHeadLabelFontSize: "fontSize",
 		//			overHeadLabelFontLookup: "fontLookup"
@@ -62,9 +79,21 @@ public class StackedColumnOverHeadLabel extends StackedColumnSeriesRenderBaseEle
 
 		switch (styleProp) {
 			case "overHeadLabelFontFamily":
+				format.fontFamily = getStyle("fontFamily");
+				break;
 			case "overHeadLabelFontColor":
+				format.color = getStyle("color");
+				break;
 			case "overHeadLabelFontSize":
-				//				labelFormat.setStyle(styleProp, getStyle(styleProp));
+				format.fontSize = getStyle("fontSize");
+				break;
+			case "overHeadLabelFontWeight":
+				format.fontSize = getStyle("fontWeight");
+				break;
+			default:
+				format.fontFamily = getStyle("fontFamily");
+				format.color = getStyle("color");
+				format.fontSize = getStyle("fontSize");
 				break;
 		}
 	}
@@ -74,22 +103,25 @@ public class StackedColumnOverHeadLabel extends StackedColumnSeriesRenderBaseEle
 	//==========================================================================================
 	/** @private */
 	override protected function begin():void {
-		textLines.clear();
+		if (cleaner) cleaner.dispose();
 
 		var fontFamily:String;
 		var fontColor:uint;
 		var fontLookup:String;
 		var fontSize:int;
+		var fontWeight:String;
 
-		fontFamily = getStyle("overHeadLabelFontFamily") || "hyundaiLight";
+		fontFamily = getStyle("overHeadLabelFontFamily") || "nanum";
 		fontColor = getStyle("overHeadLabelFontColor") || 0x000000;
 		fontLookup = EmbededFontUtils.getFontLookup(fontFamily);
 		fontSize = getStyle("overHeadLabelFontSize") || 12;
+		fontWeight = getStyle("overHeadLabelFontWeight") || FontWeight.NORMAL;
 
-		//		labelFormat.setStyle("overHeadLabelFontFamily", fontFamily);
-		//		labelFormat.setStyle("overHeadLabelFontColor", fontColor);
-		//		labelFormat.setStyle("overHeadLabelFontLookup", fontLookup);
-		//		labelFormat.setStyle("overHeadLabelFontSize", fontSize);
+		format.fontFamily = fontFamily;
+		format.color = fontColor;
+		format.fontLookup = fontLookup;
+		format.fontSize = fontSize;
+		format.fontWeight = fontWeight;
 	}
 
 	/** @private */
@@ -99,33 +131,57 @@ public class StackedColumnOverHeadLabel extends StackedColumnSeriesRenderBaseEle
 
 	/** @private */
 	override protected function drawColumnOverHead(rect:Rectangle, data:Object):void {
-		if (_labelFunction == null) {
-			return;
-		}
+		if (_labelFunction == null) return;
+		var format:ITextLayoutFormat = this.format;
+		if (_formatFunction !== null) format = _formatFunction(data, format);
 
 		var str:String = _labelFunction(data);
-		var lines:Vector.<TextLine> = TextLineFactory.createTextLines(str, new TextLayoutFormat);
-		var line:TextLine;
+		var lines:Vector.<TextLine> = TextLineFactory.createTextLines(str, format);
 
-		var f:int = lines.length;
-		var ny:int = rect.y;
+		var printed:PrintedTextLinesInfo = TextLinePrinter.printTextLinesWithSpace(lines,
+				this,
+				rect.x + rect.width,
+				rect.y - 10,
+				rect.x,
+				0,
+				0,
+				0,
+				TextAlign.CENTER,
+				VerticalAlign.BOTTOM,
+				false,
+				false);
 
-		while (--f >= 0) {
-			line = lines[f];
+		cleaner.add(printed.disposer);
 
-			ny = ny - line.height;
-
-			line.x = rect.x - (line.width / 2) + (rect.width / 2);
-			line.y = ny;
-
-			addChild(line);
-			textLines.add(line);
-		}
+		//		var line:TextLine;
+		//
+		//		var f:int = lines.length;
+		//		var ny:int = rect.y;
+		//
+		//		while (--f >= 0) {
+		//			line = lines[f];
+		//
+		//			ny = ny - line.height;
+		//
+		//			line.x = rect.x - (line.width / 2) + (rect.width / 2);
+		//			line.y = ny;
+		//
+		//			addChild(line);
+		//			textLines.add(line);
+		//		}
 	}
 
 	/** @private */
-	override protected function drawWireOfColumnStacks(x:int, y:int, data1:Object, data2:Object, v1:Number, v2:Number, columnRect1:Rectangle, columnRect2:Rectangle,
-													   dataField:String, fill:IFill):void {
+	override protected function drawWireOfColumnStacks(x:int,
+													   y:int,
+													   data1:Object,
+													   data2:Object,
+													   v1:Number,
+													   v2:Number,
+													   columnRect1:Rectangle,
+													   columnRect2:Rectangle,
+													   dataField:String,
+													   fill:IFill):void {
 	}
 }
 }

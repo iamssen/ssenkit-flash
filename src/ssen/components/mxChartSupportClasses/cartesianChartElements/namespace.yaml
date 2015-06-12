@@ -1,0 +1,10 @@
+namespace: "http://ssen.name/ns/mxchart"
+components:
+- ChartHighlightController
+- ClusteredColumnSetOverHeadLabel
+- CuttedBoxRenderer
+- DashedLineSeriesItemRenderer
+- StackedColumnComparingWire
+- StackedColumnOverHeadLabel
+- StackedColumnSetLine
+- StackedBarOverHeadLabel

@@ -4,6 +4,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:grids="ssen.components.mxDatagridSupportClasses.chartWeaver.*"
 		 xmlns:chart="ssen.components.mxDatagridSupportClasses.chartWeaver.*"
+		 xmlns:axisrenderers="ssen.components.mxChartSupportClasses.axisRenderers.*"
 
 		 initialize="init(event)">
 	<fx:Script>
@@ -126,7 +127,7 @@
 			</mx:horizontalAxis>
 
 			<mx:horizontalAxisRenderers>
-				<chart:InvisibleHorizontalAxisRenderer axis="{haxis}"/>
+				<axisrenderers:InvisibleHorizontalAxisRenderer axis="{haxis}"/>
 			</mx:horizontalAxisRenderers>
 
 			<mx:series>

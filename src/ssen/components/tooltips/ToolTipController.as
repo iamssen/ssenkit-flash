@@ -62,6 +62,8 @@ public class ToolTipController extends EventDispatcher implements IDisposable {
 	}
 
 	private function initEvents():void {
+		trace("ToolTipController.initEvents()");
+
 		_host.addEventListener(MouseEvent.ROLL_OVER, rollOverHandler, false, 0, true);
 		_host.addEventListener(MouseEvent.ROLL_OUT, rollOutHandler, false, 0, true);
 		_host.addEventListener(Event.REMOVED_FROM_STAGE, removedFromStageHandler, false, 0, true);
@@ -70,6 +72,8 @@ public class ToolTipController extends EventDispatcher implements IDisposable {
 	}
 
 	private function removedFromStageHandler(event:Event):void {
+		trace("ToolTipController.removedFromStageHandler()");
+
 		_host.removeEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
 		_host.removeEventListener(MouseEvent.ROLL_OUT, rollOutHandler);
 		_host.removeEventListener(Event.REMOVED_FROM_STAGE, removedFromStageHandler);
@@ -78,6 +82,8 @@ public class ToolTipController extends EventDispatcher implements IDisposable {
 	}
 
 	private function rollOutHandler(event:MouseEvent):void {
+		trace("ToolTipController.rollOutHandler()");
+
 		clearRenderer();
 		state = INIT;
 	}
@@ -93,15 +99,18 @@ public class ToolTipController extends EventDispatcher implements IDisposable {
 	private function rollOverHandler(event:MouseEvent):void {
 		clearRenderer();
 
-		toolTip = toolTipRenderer.newInstance();
-		toolTip.render(_host);
+		trace("ToolTipController.rollOverHandler()", event);
 
+		toolTip = toolTipRenderer.newInstance();
 		PopUpManager.addPopUp(toolTip, FlexGlobals.topLevelApplication as DisplayObjectContainer);
+		toolTip.render(_host);
 
 		state = HOVER;
 	}
 
 	public function dispose():void {
+		trace("ToolTipController.dispose()", state);
+
 		switch (state) {
 			case UNSTAGE:
 				_host.removeEventListener(Event.ADDED_TO_STAGE, addedToStage);
