@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:cartesianChartElements="ssen.components.mxChartSupportClasses.cartesianChartElements.*"
+		 xmlns:charts="ssen.components.mxChartSupportClasses._showcase_.views.charts.*"
+
+		 initialize="init(event)">
+	<fx:Script>
+		<![CDATA[
+		import mx.collections.ArrayList;
+		import mx.collections.IList;
+		import mx.events.FlexEvent;
+
+		import ssen.common.MathUtils;
+
+		[Bindable]
+		private var data:IList;
+
+		private function init(event:FlexEvent):void {
+			var arr:Array = [];
+
+			var f:int = -1;
+			var fmax:int = MathUtils.rand(4, 8);
+
+			var d:Object;
+
+			while (++f < fmax) {
+				d = {label: "Item" + f, value: MathUtils.rand(10, 100)};
+				arr.push(d);
+			}
+
+			data = new ArrayList(arr);
+		}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+
+	</fx:Declarations>
+
+	<s:Rect height="100%" width="100%">
+		<s:fill>
+			<s:SolidColor color="#ffffff"/>
+		</s:fill>
+	</s:Rect>
+
+	<mx:LineChart dataProvider="{data}"
+				  bottom="10"
+				  left="10"
+				  right="10"
+				  top="10"
+				  gutterRight="150"
+				  showDataTips="true">
+
+		<mx:seriesFilters>
+			<fx:Array/>
+		</mx:seriesFilters>
+
+		<mx:horizontalAxis>
+			<mx:CategoryAxis categoryField="label"/>
+		</mx:horizontalAxis>
+
+		<mx:series>
+			<mx:LineSeries displayName="LINE" xField="label" yField="value">
+				<mx:lineSegmentRenderer>
+					<fx:Component>
+						<!--<renderers:LineDashedIndexItemRenderer dashStartIndex="2"/>-->
+						<cartesianChartElements:DashedLineSeriesItemRenderer dashedLineFunction="dashedLineFunction2"
+																			 strokeFunction="strokeFunction2">
+							<fx:Script>
+								<![CDATA[
+								import mx.graphics.IStroke;
+								import mx.graphics.SolidColorStroke;
+
+								import ssen.common.MathUtils;
+
+								private function dashedLineFunction2(data:Object):Boolean {
+									return Math.random() > 0.5;
+								}
+
+								private function strokeFunction2(data:Object):IStroke {
+									return new SolidColorStroke(MathUtils.rand(0x000000, 0xffffff), MathUtils.rand(2, 4));
+								}
+								]]>
+							</fx:Script>
+						</cartesianChartElements:DashedLineSeriesItemRenderer>
+					</fx:Component>
+				</mx:lineSegmentRenderer>
+			</mx:LineSeries>
+		</mx:series>
+
+		<mx:annotationElements>
+			<charts:MXChartPaddingElement/>
+		</mx:annotationElements>
+	</mx:LineChart>
+
+
+</s:Group>

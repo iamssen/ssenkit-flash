@@ -1,0 +1,10 @@
+--- src/ComponentShowcase.mxml
++++ src/ComponentShowcase.mxml
+@@ -53,6 +53,7 @@
+ 		<devkit:Showcase type="ssen.components.mxChartSupportClasses.cartesianChartElements.Showcase__DashedLineChart" description="Chart : Dashed Line Chart" />
+ 		<devkit:Showcase type="ssen.components.mxChartSupportClasses.cartesianChartElements.Showcase__CuttedBoxRenderer" description="Chart : Cutted Box Renderer" />
+ 		<devkit:Showcase type="ssen.components.mxChartSupportClasses.cartesianChartElements.Showcase__ChartHighlightController" description="Chart : Chart Highlight Controller" />
++		<devkit:Showcase type="ssen.components.mxChartSupportClasses.cartesianChartElements.Showcase__ColumnTrendChart" description="Chart : Column Trend Chart" />
+ 		<devkit:Showcase type="ssen.components.mxChartSupportClasses.axisLabelRenderers.Showcase__AxisLabelRenderer" description="Chart : Axis Label Renderer" />
+ 		<devkit:Showcase type="ssen.components.mxChartSupportClasses.legend.Showcase__CheckBoxLegend" description="Chart : Check Box Legend" />
+ 		<devkit:Showcase type="ssen.components.mxChartSupportClasses.pieChartElements.Showcase__PieWedgeHighlight" description="Chart : Pie Wedge Highlight" />

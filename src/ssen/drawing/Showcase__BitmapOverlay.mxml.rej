@@ -1,0 +1,11 @@
+--- src/ssen/drawing/Showcase__BitmapOverlay.mxml
++++ src/ssen/drawing/Showcase__BitmapOverlay.mxml
+@@ -4,7 +4,7 @@
+ 		<![CDATA[
+ 		import mx.events.FlexEvent;
+ 
+-		[Embed(source="assets/wave.png")]
++		[Embed(source="assets/img.png")]
+ 		private static const Image:Class;
+ 
+ 		[Bindable]

@@ -8,3 +8,6 @@ components:
 - StackedColumnOverHeadLabel
 - StackedColumnSetLine
 - StackedBarOverHeadLabel
+- ColumnTrendPolyLine
+- ColumnTrendSideLabel
+- ColumnTrendSingleLine
