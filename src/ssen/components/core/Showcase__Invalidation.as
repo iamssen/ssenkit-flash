@@ -124,15 +124,17 @@ class Test extends UIComponent {
 	override protected function measure():void {
 		trace("@ Test.measure() -->");
 		super.measure();
-		trace(StringUtil.substitute('    [width basic={0}/{1}/{2} explicit={3}/{4}/{5} measured={6}/{7}]',
+		trace(StringUtil.substitute('    [width basic={0}/{1}/{2} explicit={3}/{4}/{5} measured={6}/{7} percent={8}]',
 				width, minWidth, maxWidth,
 				explicitWidth, explicitMinWidth, explicitMaxWidth,
-				measuredWidth, measuredMinWidth
+				measuredWidth, measuredMinWidth,
+				percentWidth
 		));
-		trace(StringUtil.substitute('    [height basic={0}/{1}/{2} explicit={3}/{4}/{5} measured={6}/{7}]',
+		trace(StringUtil.substitute('    [height basic={0}/{1}/{2} explicit={3}/{4}/{5} measured={6}/{7} percent={8}]',
 				height, minHeight, maxHeight,
 				explicitHeight, explicitMinHeight, explicitMaxHeight,
-				measuredHeight, measuredMinHeight
+				measuredHeight, measuredMinHeight,
+				percentHeight
 		));
 		trace("@ Test.measure() <--");
 	}

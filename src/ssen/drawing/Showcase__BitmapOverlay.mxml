@@ -4,18 +4,18 @@
 		<![CDATA[
 		import mx.events.FlexEvent;
 
-//		[Embed(source="assets/img.png")]
+		[Embed(source="assets/img.png")]
 		private static const Image:Class;
 
 		[Bindable]
 		private var bitmap:BitmapData;
 
 		private function init(event:FlexEvent):void {
-//			var alpha:BitmapData = new Image().bitmapData;
-//			var color:BitmapData = new BitmapData(alpha.width, alpha.height, true, 0xffff0000);
-//			var img:BitmapData = new BitmapData(alpha.width, alpha.height, true, 0);
-//			img.copyPixels(color, new Rectangle(0, 0, alpha.width, alpha.height), new Point(0, 0), alpha);
-//			bitmap = img;
+			var alpha:BitmapData = new Image().bitmapData;
+			var color:BitmapData = new BitmapData(alpha.width, alpha.height, true, 0xffff0000);
+			var img:BitmapData = new BitmapData(alpha.width, alpha.height, true, 0);
+			img.copyPixels(color, new Rectangle(0, 0, alpha.width, alpha.height), new Point(0, 0), alpha);
+			bitmap = img;
 		}
 		]]>
 	</fx:Script>
