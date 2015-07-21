@@ -4,7 +4,7 @@ import mx.collections.IList;
 import mx.core.UIComponent;
 import mx.events.CollectionEvent;
 
-import ssen.components.base.renderHelpers.Animation;
+import ssen.animation.Animation;
 import ssen.components.chart.pola.IPolaElement2;
 
 /*

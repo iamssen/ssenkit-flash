@@ -1,18 +1,35 @@
-package ssen.components.base.renderHelpers {
-import com.greensock.TweenLite;
+package ssen.animation {
+import com.greensock.TweenNano;
 
 import ssen.common.IDisposable;
 
 public class Animation implements IDisposable {
-	private var tween:TweenLite;
+	//----------------------------------------------------------------
+	// states
+	//----------------------------------------------------------------
+	private var tween:TweenNano;
 
+	//----------------------------------------------------------------
+	// properties
+	//----------------------------------------------------------------
+	/** () => void */
 	public var ready:Function;
+
+	/** (current:second, total:second) => void */
 	public var animate:Function;
+
+	/** () => void */
 	public var render:Function;
 
+	/** second */
 	public var duration:Number = 3;
 
+	//----------------------------------------------------------------
+	// methods
+	//----------------------------------------------------------------
 	public function start():void {
+		stop();
+
 		if (render === null) {
 			throw new Error("undefined render() function");
 		}
@@ -25,7 +42,7 @@ public class Animation implements IDisposable {
 		}
 
 		_t = 0;
-		tween = TweenLite.to(this, duration, {t: 1, onComplete: stop});
+		tween = TweenNano.to(this, duration, {t: 1, onComplete: stop});
 	}
 
 	public function stop():void {
@@ -55,6 +72,9 @@ public class Animation implements IDisposable {
 		animate(_t);
 	}
 
+	//----------------------------------------------------------------
+	// dispose
+	//----------------------------------------------------------------
 	public function dispose():void {
 		stop();
 		ready = null;

@@ -3,7 +3,7 @@
 		xmlns:s="library://ns.adobe.com/flex/spark"
 		xmlns:core="ssen.components.core.*"
 		xmlns:graphics="ssen.components.graphics.*"
-		xmlns:fills="ssen.components.fills.*"
+		xmlns:fills="ssen.components.fills.*" xmlns:basic="ssen.components.basic.*"
 
 		minWidth="76"
 		minHeight="76">
@@ -48,7 +48,7 @@
 						textAlign="center"/>
 		</s:VGroup>
 
-		<core:TransparentElement id="moveArea" left="0" right="0" top="0" bottom="0"/>
+		<basic:TransparentElement id="moveArea" left="0" right="0" top="0" bottom="0"/>
 	</s:Group>
 
 	<s:Group width="100%" height="50">

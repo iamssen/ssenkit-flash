@@ -37,5 +37,9 @@ public class SamplePolaElement extends UIComponent implements IPolaElement2 {
 		g.drawCircle(centerX, centerY, contentRadius);
 		g.endFill();
 	}
+
+
+	public function dispose():void {
+	}
 }
 }

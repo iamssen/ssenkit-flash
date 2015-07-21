@@ -1,4 +1,5 @@
 package ssen.components.mxChartSupportClasses.cartesianChartElements {
+import flash.display.DisplayObject;
 import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.events.Event;
@@ -170,7 +171,7 @@ public class ColumnTrendSideLabel extends CartesianChartElement {
 
 	private static const defaultFill:SolidColor = new SolidColor(0xeeeeee);
 
-	private var box:Sprite;
+	private var box:Box;
 
 	public function ColumnTrendSideLabel() {
 		formatMixin = new TextLayoutFormatComponentMixin;
@@ -184,7 +185,8 @@ public class ColumnTrendSideLabel extends CartesianChartElement {
 		tabChildren = false;
 		tabFocusEnabled = false;
 
-		box = new Sprite;
+		box = new Box;
+		box.parentComponent = this;
 		addEventListener(Event.REMOVED_FROM_STAGE, removedFromStage);
 	}
 
@@ -253,11 +255,49 @@ public class ColumnTrendSideLabel extends CartesianChartElement {
 
 		if (parent.parent === chart) {
 			var gutters:Rectangle = chart.computedGutters;
+			var index:int = getIndex(chart);
 
 			box.x = unscaledWidth + gutters.x;
 			box.y = y + gutters.y - (h / 2);
-			chart.addChild(box);
+
+			if (index === int.MAX_VALUE) {
+				chart.addChild(box);
+			} else {
+				chart.addChildAt(box, index);
+			}
 		}
 	}
+
+	private function getIndex(chart:Sprite):int {
+		var labelIndex:int = parent.getChildIndex(this);
+		var toBoxIndex:int = int.MAX_VALUE;
+
+		var f:int = chart.numChildren;
+		var d:DisplayObject;
+
+		var targetBox:Box;
+		var targetIndex:int;
+
+		while (--f >= 0) {
+			d = chart.getChildAt(f);
+			if (d is Box) {
+				targetBox = d as Box;
+				targetIndex = parent.getChildIndex(targetBox.parentComponent);
+				if (labelIndex < targetIndex) {
+					toBoxIndex = chart.getChildIndex(targetBox) - 1;
+				}
+			}
+		}
+
+		return toBoxIndex;
+	}
 }
+}
+
+import flash.display.Sprite;
+
+import ssen.components.mxChartSupportClasses.cartesianChartElements.ColumnTrendSideLabel;
+
+class Box extends Sprite {
+	public var parentComponent:ColumnTrendSideLabel;
 }

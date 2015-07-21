@@ -29,6 +29,10 @@
 		private var firstData:Object;
 
 		private function init(event:FlexEvent):void {
+			refreshData();
+		}
+
+		private function refreshData():void {
 			var arr:Array = [];
 
 			var f:int = -1;
@@ -46,7 +50,7 @@
 					value3: trend
 				};
 				arr.push(d);
-				trend += MathUtils.rand(5, 30);
+				//				trend += MathUtils.rand(5, 30);
 			}
 
 			data = new ArrayList(arr);
@@ -247,4 +251,6 @@
 			</cartesianchartelements:ColumnTrendSideLabel>
 		</mx:annotationElements>
 	</mx:ColumnChart>
+
+	<s:Button label="refresh data" top="10" right="10" click="refreshData()"/>
 </s:Group>

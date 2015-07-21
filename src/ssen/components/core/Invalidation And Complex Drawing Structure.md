@@ -10,6 +10,19 @@
 1. from list 와 to list 를 비교해서 item 갯수 맞추기
 2. 시간 당 total 및 비율들 계산 (process 파워가 애매...)
 
+IDataTransition
+- from				: *
+- to				: *
+- property			: string
+- get(t:ratio)		: IDataTransitionSnapshot
+
+IDataTransitionSnapshot
+- t	: ratio
+- length : int
+- total : number
+- ratios : ratio[]
+- values : number[]
+
 이게 Tree가 되면?
 
 

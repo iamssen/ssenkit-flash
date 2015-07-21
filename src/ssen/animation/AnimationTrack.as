@@ -1,9 +1,13 @@
-package ssen.components.base.renderHelpers {
+package ssen.animation {
 import com.greensock.easing.Quad;
 
 public class AnimationTrack {
+	/** second */
 	public var start:Number;
+
+	/** second */
 	public var end:Number;
+
 	public var ease:Function;
 
 	public function AnimationTrack(start:Number = 0, end:Number = 1, ease:Function = null) {

@@ -47,6 +47,14 @@ public class ToolTipProvider {
 		} else {
 			toolTip.y = contentY - h;
 		}
+
+		if (toolTip.y < 0) {
+			toolTip.y = 0;
+		}
+
+		if (toolTip.x < 0) {
+			toolTip.x = 0;
+		}
 	}
 
 	public function hide():void {
