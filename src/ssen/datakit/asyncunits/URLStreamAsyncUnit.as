@@ -12,6 +12,7 @@ public class URLStreamAsyncUnit implements IAsyncUnit {
 	private var _stream:URLStream;
 	private var _result:Function;
 	private var _fault:Function;
+
 	
 	//----------------------------------------------------------------
 	// 
