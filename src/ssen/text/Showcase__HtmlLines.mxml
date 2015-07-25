@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+
+		 addedToStage="init(event)">
+
+	<fx:Declarations>
+		<s:TextLayoutFormat id="format"
+							fontFamily="notoSans"
+							fontLookup="embeddedCFF"
+							fontSize="15"/>
+	</fx:Declarations>
+
+	<fx:Script>
+		<![CDATA[
+		import flashx.textLayout.factory.TruncationOptions;
+		import flashx.textLayout.formats.TextAlign;
+
+		private function init(event:Event):void {
+			createText0();
+			createText1();
+			createText2();
+		}
+
+		private function createText0():void {
+			var label:SpriteHtmlLines;
+
+			label = new SpriteHtmlLines;
+			label.text = "<font size='20'><b><font color='#0000ff'>HELLO</font> WORLD</b></font><br/>test <font color='#ff0000'>label</font>";
+			label.createTextLines();
+			label.x = 10;
+			label.y = 30;
+
+			container.addChild(label);
+		}
+
+		private function createText1():void {
+			var label:SpriteHtmlLines;
+
+			label = new SpriteHtmlLines;
+			label.text = "<font size='20'><b><font color='#0000ff'>HELLO</font> WORLD</b></font><br/>test <font color='#ff0000'>label</font>";
+			label.format = format;
+			label.textAlign = TextAlign.CENTER;
+			label.createTextLines();
+			label.x = 210;
+			label.y = 30;
+
+			container.addChild(label);
+		}
+
+		private function createText2():void {
+			var label:SpriteHtmlLines;
+
+			label = new SpriteHtmlLines;
+			label.text = "<font size='20'><b><font color='#0000ff'>HELLO</font> WORLD</b></font><br/>test <font color='#ff0000'>label</font><br/>test <font color='#ff0000'>label</font><br/>test <font color='#ff0000'>label</font>";
+			label.format = format;
+			label.truncationOptions = new TruncationOptions("...", 3);
+			label.textAlign = TextAlign.LEFT;
+			label.createTextLines();
+			label.x = 410;
+			label.y = 30;
+
+			container.addChild(label);
+		}
+		]]>
+	</fx:Script>
+
+	<s:SpriteVisualElement id="container"/>
+</s:Group>

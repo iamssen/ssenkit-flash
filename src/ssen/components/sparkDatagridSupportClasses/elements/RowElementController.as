@@ -1,4 +1,5 @@
-package ssen.flexkit.components.grid.elements {
+package ssen.components.sparkDatagridSupportClasses.elements {
+
 import flash.events.Event;
 
 import mx.collections.IList;
@@ -29,7 +30,7 @@ public class RowElementController {
 
 	public function set dataGrid(value:DataGrid):void {
 		clearDataGrid();
-		_dataGrid=value;
+		_dataGrid = value;
 		addDataGrid();
 
 		rowElement.invalidateSize();
@@ -38,7 +39,7 @@ public class RowElementController {
 
 	private function clearDataGrid():void {
 		if (_dataGrid) {
-			var grid:Grid=_dataGrid.grid;
+			var grid:Grid = _dataGrid.grid;
 
 			grid.removeEventListener("dataProviderChanged", dataProviderChanged);
 			grid.removeEventListener(ResizeEvent.RESIZE, gridResize);
@@ -47,7 +48,7 @@ public class RowElementController {
 	}
 
 	private function addDataGrid():void {
-		var grid:Grid=_dataGrid.grid;
+		var grid:Grid = _dataGrid.grid;
 
 		grid.addEventListener("dataProviderChanged", dataProviderChanged);
 		grid.addEventListener(ResizeEvent.RESIZE, gridResize);
@@ -63,19 +64,19 @@ public class RowElementController {
 
 		draw(sizeChanged, scrollChanged, collectionChanged);
 
-		sizeChanged=false;
-		scrollChanged=false;
-		collectionChanged=false;
+		sizeChanged = false;
+		scrollChanged = false;
+		collectionChanged = false;
 	}
 
-	private function dataProviderChanged(event:Event=null):void {
+	private function dataProviderChanged(event:Event = null):void {
 		if (_dataProvider) {
 			_dataProvider.removeEventListener(CollectionEvent.COLLECTION_CHANGE, collectionChange);
-			_dataProvider=null;
+			_dataProvider = null;
 		}
 
 		if (_dataGrid.dataProvider) {
-			_dataProvider=_dataGrid.dataProvider;
+			_dataProvider = _dataGrid.dataProvider;
 			_dataProvider.addEventListener(CollectionEvent.COLLECTION_CHANGE, collectionChange);
 			rowElement.invalidateDisplayList();
 		}
@@ -83,18 +84,18 @@ public class RowElementController {
 
 	private function gridUpdateComplete(event:FlexEvent):void {
 		if (_dataGrid.grid.isInvalidateDisplayListReason("horizontalScrollPosition")) {
-			scrollChanged=true;
+			scrollChanged = true;
 			rowElement.invalidateDisplayList();
 		}
 	}
 
 	private function gridResize(event:ResizeEvent):void {
-		sizeChanged=true;
+		sizeChanged = true;
 		rowElement.invalidateSize();
 	}
 
 	private function collectionChange(event:CollectionEvent):void {
-		collectionChanged=true;
+		collectionChanged = true;
 		rowElement.invalidateProperties();
 	}
 }

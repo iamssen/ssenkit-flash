@@ -1,4 +1,5 @@
-package ssen.flexkit.components.grid.renderers {
+package ssen.components.sparkDatagridSupportClasses.renderers {
+
 import flash.events.IEventDispatcher;
 
 import mx.collections.IList;
@@ -10,7 +11,7 @@ public class HierarchicalSumRenderer extends GridRenderer {
 	override protected function draw(hasBeenRecycled:Boolean, dataChanged:Boolean, columnChanged:Boolean, sizeChanged:Boolean):void {
 		if (dataChanged || columnChanged) {
 			clearDataEvents();
-			var children:Array=sumDatas();
+			var children:Array = sumDatas();
 			addDataEvents(children);
 		}
 	}
@@ -23,20 +24,20 @@ public class HierarchicalSumRenderer extends GridRenderer {
 
 	private function sumDatas():Array {
 		if (isGroupData(data)) {
-			var sum:Number=0;
-			var children:Array=getItems(data);
+			var sum:Number = 0;
+			var children:Array = getItems(data);
 
-			var f:int=-1;
-			var fmax:int=children.length;
-			var dataField:String=column.dataField;
+			var f:int = -1;
+			var fmax:int = children.length;
+			var dataField:String = column.dataField;
 
 			while (++f < fmax) {
-				sum+=children[f][column.dataField];
+				sum += children[f][column.dataField];
 			}
 
-			data[column.dataField]=sum;
+			data[column.dataField] = sum;
 			column.itemToLabel(sum);
-			text=(column.formatter) ? column.formatter.format(sum) : sum.toString();
+			text = (column.formatter) ? column.formatter.format(sum) : sum.toString();
 
 			return children;
 		}
@@ -49,13 +50,13 @@ public class HierarchicalSumRenderer extends GridRenderer {
 			return;
 		}
 
-		prevDatas=new Vector.<IEventDispatcher>;
+		prevDatas = new Vector.<IEventDispatcher>;
 
-		var f:int=datas.length;
+		var f:int = datas.length;
 		var data:IEventDispatcher;
 		while (--f >= 0) {
 			if (datas[f] is IEventDispatcher) {
-				data=datas[f] as IEventDispatcher;
+				data = datas[f] as IEventDispatcher;
 				data.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, childrenPropertyChanged);
 			}
 		}
@@ -63,14 +64,14 @@ public class HierarchicalSumRenderer extends GridRenderer {
 
 	private function clearDataEvents():void {
 		if (prevDatas) {
-			var f:int=prevDatas.length;
+			var f:int = prevDatas.length;
 			var data:IEventDispatcher;
 			while (--f >= 0) {
-				data=prevDatas[f];
+				data = prevDatas[f];
 				data.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, childrenPropertyChanged);
 			}
 
-			prevDatas=null;
+			prevDatas = null;
 		}
 	}
 
@@ -85,23 +86,23 @@ public class HierarchicalSumRenderer extends GridRenderer {
 	}
 
 	private function getItems(data:Object):Array {
-		var result:Array=[];
+		var result:Array = [];
 
 		if (!data || !data.hasOwnProperty("children")) {
 			return result;
 		}
 
-		var children:IList=data["children"];
+		var children:IList = data["children"];
 
-		var f:int=-1;
-		var fmax:int=children.length;
+		var f:int = -1;
+		var fmax:int = children.length;
 		var child:Object;
 
 		while (++f < fmax) {
-			child=children.getItemAt(f);
+			child = children.getItemAt(f);
 
 			if (isGroupData(child)) {
-				result=result.concat(getItems(child));
+				result = result.concat(getItems(child));
 			} else {
 				result.push(child);
 			}

@@ -1,0 +1,8 @@
+namespace: "http://ssen.name/ns/ssen"
+components:
+- PieAxis
+- PieCenterLabel
+- PieLabels
+- PieSeries
+- PieSolidBackground
+- PieSeriesWedgeRenderer

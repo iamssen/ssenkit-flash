@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+
+		 initialize="init(event)">
+	<fx:Script>
+		<![CDATA[
+		import flash.text.engine.FontLookup;
+		import flash.text.engine.TextLine;
+
+		import flashx.textLayout.formats.TextAlign;
+		import flashx.textLayout.formats.TextLayoutFormat;
+		import flashx.textLayout.formats.VerticalAlign;
+
+		import mx.events.FlexEvent;
+		import mx.utils.StringUtil;
+
+		private var format:TextLayoutFormat;
+
+		private function init(event:FlexEvent):void {
+			format = new TextLayoutFormat;
+			format.fontFamily = "notoSans";
+			format.fontLookup = FontLookup.EMBEDDED_CFF;
+
+			noneScaleLine(new Rectangle(10, 10, 150, 60), 20);
+			noneScaleLine(new Rectangle(210, 10, 100, 60), 20);
+
+			scaleLine(new Rectangle(10, 100, 100, 60), 20);
+			scaleLine(new Rectangle(120, 100, 180, 60), 20);
+			scaleLine(new Rectangle(310, 100, 180, 100), 20);
+
+			noneScaleLines(new Rectangle(10, 210, 200, 150), 20);
+			noneScaleLines(new Rectangle(310, 210, 100, 150), 20);
+
+			scaleLines(new Rectangle(10, 370, 150, 150), 20);
+			scaleLines(new Rectangle(170, 370, 300, 300), 20);
+		}
+
+		private function noneScaleLine(space:Rectangle, fontSize:int):void {
+			const text:String = "HELLO WORLD";
+			const format:TextLayoutFormat = new TextLayoutFormat(format);
+			format.fontSize = fontSize;
+
+			var line:TextLine;
+
+			line = TextLineFactory.createTextLine(text, format, EmbededFontUtils.getSwfContext(this, format.fontFamily));
+			TextLinePrinter.printTextLineWithSpace(line, container, space.width + space.left, space.height + space.top, space.left, 0, space.top, 0, TextAlign.LEFT, VerticalAlign.TOP, false, false);
+
+			line = TextLineFactory.createTextLine(text, format, EmbededFontUtils.getSwfContext(this, format.fontFamily));
+			TextLinePrinter.printTextLineWithSpace(line, container, space.width + space.left, space.height + space.top, space.left, 0, space.top, 0, TextAlign.CENTER, VerticalAlign.MIDDLE, false, false);
+
+			line = TextLineFactory.createTextLine(text, format, EmbededFontUtils.getSwfContext(this, format.fontFamily));
+			TextLinePrinter.printTextLineWithSpace(line, container, space.width + space.left, space.height + space.top, space.left, 0, space.top, 0, TextAlign.RIGHT, VerticalAlign.BOTTOM, false, false);
+
+			printSpace(space);
+		}
+
+		private function scaleLine(space:Rectangle, fontSize:int):void {
+			const text:String = "HELLO WORLD";
+			const format:TextLayoutFormat = new TextLayoutFormat(format);
+			format.fontSize = fontSize;
+
+			var line:TextLine;
+
+			line = TextLineFactory.createTextLine(text, format, EmbededFontUtils.getSwfContext(this, format.fontFamily));
+			TextLinePrinter.printTextLineWithSpace(line, container, space.width + space.left, space.height + space.top, space.left, 0, space.top, 0, TextAlign.LEFT, VerticalAlign.TOP, true, true);
+
+			line = TextLineFactory.createTextLine(text, format, EmbededFontUtils.getSwfContext(this, format.fontFamily));
+			TextLinePrinter.printTextLineWithSpace(line, container, space.width + space.left, space.height + space.top, space.left, 0, space.top, 0, TextAlign.CENTER, VerticalAlign.MIDDLE, true, true);
+
+			line = TextLineFactory.createTextLine(text, format, EmbededFontUtils.getSwfContext(this, format.fontFamily));
+			TextLinePrinter.printTextLineWithSpace(line, container, space.width + space.left, space.height + space.top, space.left, 0, space.top, 0, TextAlign.RIGHT, VerticalAlign.BOTTOM, true, true);
+
+			printSpace(space);
+		}
+
+		private function noneScaleLines(space:Rectangle, fontSize:int):void {
+			const text:String = StringUtil.substitute('<font size="{0}" color="#0000ff">HELLO WORLD</font><br/>TEXT LINE FACTORY', fontSize + 3);
+			const format:TextLayoutFormat = new TextLayoutFormat(format);
+			format.fontSize = fontSize;
+
+			var lines:Vector.<TextLine>;
+
+			lines = TextLineFactory.createTextLines(text, format, null, EmbededFontUtils.getSwfContext(this, format.fontFamily));
+			TextLinePrinter.printTextLinesWithSpace(lines, container, space.width + space.left, space.height + space.top, space.left, 0, space.top, 0, TextAlign.LEFT, VerticalAlign.TOP, false, false);
+
+			lines = TextLineFactory.createTextLines(text, format, null, EmbededFontUtils.getSwfContext(this, format.fontFamily));
+			TextLinePrinter.printTextLinesWithSpace(lines, container, space.width + space.left, space.height + space.top, space.left, 0, space.top, 0, TextAlign.CENTER, VerticalAlign.MIDDLE, false, false);
+
+			lines = TextLineFactory.createTextLines(text, format, null, EmbededFontUtils.getSwfContext(this, format.fontFamily));
+			TextLinePrinter.printTextLinesWithSpace(lines, container, space.width + space.left, space.height + space.top, space.left, 0, space.top, 0, TextAlign.RIGHT, VerticalAlign.BOTTOM, false, false);
+
+			printSpace(space);
+		}
+
+		private function scaleLines(space:Rectangle, fontSize:int):void {
+			const text:String = StringUtil.substitute('<font size="{0}" color="#0000ff">HELLO WORLD</font><br/>TEXT LINE FACTORY', fontSize + 3);
+			const format:TextLayoutFormat = new TextLayoutFormat(format);
+			format.fontSize = fontSize;
+
+			var lines:Vector.<TextLine>;
+
+			lines = TextLineFactory.createTextLines(text, format, null, EmbededFontUtils.getSwfContext(this, format.fontFamily));
+			TextLinePrinter.printTextLinesWithSpace(lines, container, space.width + space.left, space.height + space.top, space.left, 0, space.top, 0, TextAlign.LEFT, VerticalAlign.TOP, true, true);
+
+			lines = TextLineFactory.createTextLines(text, format, null, EmbededFontUtils.getSwfContext(this, format.fontFamily));
+			TextLinePrinter.printTextLinesWithSpace(lines, container, space.width + space.left, space.height + space.top, space.left, 0, space.top, 0, TextAlign.CENTER, VerticalAlign.MIDDLE, true, true);
+
+			lines = TextLineFactory.createTextLines(text, format, null, EmbededFontUtils.getSwfContext(this, format.fontFamily));
+			TextLinePrinter.printTextLinesWithSpace(lines, container, space.width + space.left, space.height + space.top, space.left, 0, space.top, 0, TextAlign.RIGHT, VerticalAlign.BOTTOM, true, true);
+
+			printSpace(space);
+		}
+
+		private function printSpace(space:Rectangle):void {
+			var g:Graphics = container.graphics;
+			g.beginFill(0, 0.1);
+			g.drawRect(space.x, space.y, space.width, space.height);
+			g.endFill();
+		}
+		]]>
+	</fx:Script>
+
+	<mx:UIComponent id="container"/>
+</s:Group>

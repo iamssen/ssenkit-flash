@@ -1,4 +1,4 @@
-package ssen.flexkit.controls {
+package ssen.tabController {
 import mx.collections.ArrayList;
 import mx.collections.IList;
 import mx.core.IMXMLObject;
@@ -29,7 +29,7 @@ public class TabElementGroup implements IMXMLObject {
 	// elements
 	//----------------------------------------------------------------
 	/** @private */
-	[Inspectable(arrayType="ssen.flexkit.controls.TabElement")]
+	[Inspectable(arrayType="ssen.tabController.TabElement")]
 	public function set initializeElements(value:Array):void {
 		elements=new ArrayList(value);
 	}

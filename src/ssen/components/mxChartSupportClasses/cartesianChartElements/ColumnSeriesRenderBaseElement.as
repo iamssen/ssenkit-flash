@@ -1,4 +1,4 @@
-package ssen.flexkit.components.chart {
+package ssen.components.mxChartSupportClasses.cartesianChartElements {
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
@@ -22,8 +22,8 @@ public class ColumnSeriesRenderBaseElement extends CartesianChartElement {
 	}
 
 	public function set targetColumnSeries(value:ColumnSeries):void {
-		var oldValue:ColumnSeries=_targetColumnSeries;
-		_targetColumnSeries=value;
+		var oldValue:ColumnSeries = _targetColumnSeries;
+		_targetColumnSeries = value;
 
 		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
 			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "targetColumnSeries", oldValue, _targetColumnSeries));
@@ -42,27 +42,27 @@ public class ColumnSeriesRenderBaseElement extends CartesianChartElement {
 			return;
 		}
 
-		var haxis:IAxis=chart["horizontalAxis"] as IAxis;
+		var haxis:IAxis = chart["horizontalAxis"] as IAxis;
 
-		var labelSet:AxisLabelSet=haxis.getLabelEstimate();
-		var ticks:Array=labelSet.ticks;
-		var columnSeries:ColumnSeries=targetColumnSeries;
-		var dataProvider:IList=chart.dataProvider as IList;
+		var labelSet:AxisLabelSet = haxis.getLabelEstimate();
+		var ticks:Array = labelSet.ticks;
+		var columnSeries:ColumnSeries = targetColumnSeries;
+		var dataProvider:IList = chart.dataProvider as IList;
 
-		var p:Point=new Point;
+		var p:Point = new Point;
 
 		var columnData:Object;
 		var columnData1:Object;
 		var columnData2:Object;
 
 		var v:Number;
-		var v1:Number=0;
-		var v2:Number=0;
+		var v1:Number = 0;
+		var v2:Number = 0;
 
 		var fill:IFill;
 		var tick:Number;
 
-		var columnRects:Vector.<Rectangle>=getColumnRects(dataProvider, columnSeries, unscaledWidth, unscaledHeight);
+		var columnRects:Vector.<Rectangle> = getColumnRects(dataProvider, columnSeries, unscaledWidth, unscaledHeight);
 		var columnRect:Rectangle;
 		var columnRect1:Rectangle;
 		var columnRect2:Rectangle;
@@ -70,39 +70,39 @@ public class ColumnSeriesRenderBaseElement extends CartesianChartElement {
 		//		var dottedLine:DottedLine;
 
 		// loop ticks
-		var f:int=0;
-		var fmax:int=ticks.length - 1;
+		var f:int = 0;
+		var fmax:int = ticks.length - 1;
 
 		begin();
 
 		while (++f < fmax) {
-			tick=ticks[f];
+			tick = ticks[f];
 
-			columnData1=dataProvider.getItemAt(f - 1);
-			columnData2=dataProvider.getItemAt(f);
-			v1=0;
-			v2=0;
+			columnData1 = dataProvider.getItemAt(f - 1);
+			columnData2 = dataProvider.getItemAt(f);
+			v1 = 0;
+			v2 = 0;
 
 			// draw wire x position
-			p.x=tick * unscaledWidth;
-			p.y=getVerticalPosition((v1 + (columnData1[columnSeries.yField] / 2) + v2 + (columnData2[columnSeries.yField] / 2)) / 2);
+			p.x = tick * unscaledWidth;
+			p.y = getVerticalPosition((v1 + (columnData1[columnSeries.yField] / 2) + v2 + (columnData2[columnSeries.yField] / 2)) / 2);
 
 			drawCenterOfColumns(p.x, columnData1, columnData2);
 
-			fill=columnSeries.getStyle("fill");
+			fill = columnSeries.getStyle("fill");
 
 			drawWireOfColumns(p.x, p.y, columnData1, columnData2, columnSeries.yField, fill);
 		}
 
-		f=-1;
-		fmax=dataProvider.length;
+		f = -1;
+		fmax = dataProvider.length;
 
 		while (++f < fmax) {
-			columnRect=columnRects[f].clone();
-			columnData=dataProvider.getItemAt(f);
+			columnRect = columnRects[f].clone();
+			columnData = dataProvider.getItemAt(f);
 
-			columnRect.y=getVerticalPosition(columnData[columnSeries.yField]);
-			columnRect.height=unscaledHeight - columnRect.y;
+			columnRect.y = getVerticalPosition(columnData[columnSeries.yField]);
+			columnRect.height = unscaledHeight - columnRect.y;
 
 
 			drawColumnOverHead(columnRect, columnData);
@@ -114,30 +114,30 @@ public class ColumnSeriesRenderBaseElement extends CartesianChartElement {
 	private function getColumnRects(dataProvider:IList, columnSeries:ColumnSeries, w:Number, h:Number):Vector.<Rectangle> {
 
 		// var columnMaxWidth:Number=columnSet.maxColumnWidth;   maxColumnWidth의 2배로 보인다... 왜지?
-		var columnMaxWidth:Number=columnSeries.maxColumnWidth * 2;
-		var columnWidthRatio:Number=columnSeries.columnWidthRatio;
+		var columnMaxWidth:Number = columnSeries.maxColumnWidth * 2;
+		var columnWidthRatio:Number = columnSeries.columnWidthRatio;
 
-		var columnSpaceWidth:Number=w / dataProvider.length;
-		var columnWidth:Number=columnSpaceWidth * columnWidthRatio;
+		var columnSpaceWidth:Number = w / dataProvider.length;
+		var columnWidth:Number = columnSpaceWidth * columnWidthRatio;
 
 		if (!isNaN(columnMaxWidth) && columnWidth > columnMaxWidth) {
-			columnWidth=columnMaxWidth;
+			columnWidth = columnMaxWidth;
 		}
 
-		var columnLeft:Number=(columnSpaceWidth - columnWidth) / 2;
+		var columnLeft:Number = (columnSpaceWidth - columnWidth) / 2;
 
-		var f:int=-1;
-		var fmax:int=dataProvider.length;
+		var f:int = -1;
+		var fmax:int = dataProvider.length;
 		var rect:Rectangle;
 
-		var rects:Vector.<Rectangle>=new Vector.<Rectangle>;
+		var rects:Vector.<Rectangle> = new Vector.<Rectangle>;
 
 		while (++f < fmax) {
-			rect=new Rectangle;
-			rect.x=(columnSpaceWidth * f) + columnLeft;
-			rect.y=0;
-			rect.width=columnWidth;
-			rect.height=h;
+			rect = new Rectangle;
+			rect.x = (columnSpaceWidth * f) + columnLeft;
+			rect.y = 0;
+			rect.width = columnWidth;
+			rect.height = h;
 
 			rects.push(rect);
 		}

@@ -1,5 +1,5 @@
 package ssen.devkit {
-import flash.display.Sprite;
+
 import flash.utils.getTimer;
 
 import mx.formatters.NumberFormatter;
@@ -23,7 +23,7 @@ public class Audition {
 		plots.push(new Plot(actor));
 	}
 
-	public function start(theater:Sprite):void {
+	public function start():void {
 		trace("---------------------------------------------");
 		trace("Audition start");
 		trace("---------------------------------------------");
@@ -84,8 +84,8 @@ public class Audition {
 				}
 			}
 
-			trace(StringUtils.formatToString('{0}) {1} "Runtime Error ID : {3}"', errors, result.method, result.error.name, result.error.errorID, result.error.message));
-			trace(nlines.join("\n"));
+			var message:String = StringUtils.formatToString('{0}) {1} "Runtime Error ID : {3}\n{4}"', errors, result.method, result.error.name, result.error.errorID, result.error.message, nlines.join("\n"));
+			trace(message);
 		}
 	}
 }

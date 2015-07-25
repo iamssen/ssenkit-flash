@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Legend xmlns:fx="http://ns.adobe.com/mxml/2009"
+		   xmlns:mx="library://ns.adobe.com/flex/mx"
+
+		   legendItemClass="ssen.components.mxChartSupportClasses.legend.CheckBoxLegendItem"
+		   childAdd="legendItemAdded(event)"
+		   childRemove="legendItemRemoved(event)">
+
+	<fx:Metadata>
+		[Event(name="change", type="ssen.components.mxChartSupportClasses.legend.CheckBoxLegendItemChangeEvent")]
+	</fx:Metadata>
+
+	<fx:Script>
+        <![CDATA[
+		import mx.charts.chartClasses.ChartBase;
+		import mx.charts.chartClasses.IChartElement;
+		import mx.charts.chartClasses.Series;
+		import mx.events.ChildExistenceChangedEvent;
+
+		[Inspectable(category="Common", defaultValue="true")]
+		public var toggleChartSeries:Boolean = true;
+
+		override protected function commitProperties():void {
+			super.commitProperties();
+
+			var chart:ChartBase = (dataProvider as ChartBase);
+			if (chart && chart.series) {
+				var series:Array = chart.series;
+				for each (var s:Series in series) {
+					if (s) {
+						setSeriesShown(s, s.visible);
+					}
+				}
+			}
+		}
+
+		private function legendItemAdded(event:ChildExistenceChangedEvent):void {
+			// add our change event listener
+			if (event.relatedObject is CheckBoxLegendItem) {
+				var item:CheckBoxLegendItem = (event.relatedObject as CheckBoxLegendItem);
+				item.addEventListener(Event.CHANGE, legendItemChanged);
+			}
+		}
+
+		private function legendItemRemoved(event:ChildExistenceChangedEvent):void {
+			// remove our change event listener
+			if (event.relatedObject is CheckBoxLegendItem) {
+				var item:CheckBoxLegendItem = (event.relatedObject as CheckBoxLegendItem);
+				item.removeEventListener(Event.CHANGE, legendItemChanged);
+			}
+		}
+
+		private function legendItemChanged(event:Event):void {
+			var legendItem:CheckBoxLegendItem = (event.currentTarget as CheckBoxLegendItem);
+
+			// toggle the visibility of the series?
+			var element:IChartElement = legendItem.element;
+			if (toggleChartSeries && (element is Series)) {
+				var series:Series = (element as Series);
+				// If you remove the series from chart then the series is hidden,
+				// but all the other series are re-colored and the legend is updated
+				// and we lose our unchecked item, so instead we simply toggle
+				// the visibility value of the series to hide it
+				series.visible = legendItem.selected;
+
+				// if you wanted to remove the series AND the CheckBoxLegendItem
+				//                    var chart:ChartBase = (dataProvider as ChartBase);
+				//                    var seriesArray:Array = chart.series;
+				//                    var index:int = seriesArray.indexOf(series);
+				//                    seriesArray.splice(index, 1);
+				//                    chart.series = seriesArray;
+			}
+			dispatchEvent(new CheckBoxLegendItemChangeEvent(CheckBoxLegendItemChangeEvent.CHANGE, legendItem));
+		}
+
+		public function setSeriesShown(series:Series, show:Boolean):void {
+			if (series) {
+				var changed:Boolean = false;
+				// update the checkbox
+				var legendItem:CheckBoxLegendItem = getLegendItem(series);
+				if (legendItem && (legendItem.selected != show)) {
+					legendItem.selected = show;
+					changed = true;
+				}
+				if (changed) {
+					series.visible = show;
+
+					// dispatch the change event
+					dispatchEvent(new CheckBoxLegendItemChangeEvent(CheckBoxLegendItemChangeEvent.CHANGE, legendItem));
+				}
+			}
+		}
+
+		private function getLegendItem(series:Series):CheckBoxLegendItem {
+			var found:CheckBoxLegendItem = null;
+			for (var i:int = 0; i < numChildren; i++) {
+				var item:CheckBoxLegendItem = (getChildAt(i) as CheckBoxLegendItem);
+				if (item && (item.element == series)) {
+					found = item;
+					break;
+				}
+			}
+			return found;
+		}
+
+		private function showAllSeries():void {
+			var chart:ChartBase = (dataProvider as ChartBase);
+			if (chart && chart.series) {
+				var series:Array = chart.series;
+				for each (var s:Series in series) {
+					if (s && !s.visible) {
+						s.visible = true;
+					}
+				}
+			}
+		}
+
+		public function selectAll():void {
+			selectAllOrNone(true);
+		}
+
+		public function selectNone():void {
+			selectAllOrNone(false);
+		}
+
+		public function selectAllOrNone(select:Boolean, fireEvent:Boolean = true):void {
+			for (var i:int = 0; i < numChildren; i++) {
+				var child:DisplayObject = getChildAt(i);
+				if (child is CheckBoxLegendItem) {
+					(child as CheckBoxLegendItem).setSelected(select, fireEvent);
+				}
+			}
+		}
+		]]>
+    </fx:Script>
+
+</mx:Legend>

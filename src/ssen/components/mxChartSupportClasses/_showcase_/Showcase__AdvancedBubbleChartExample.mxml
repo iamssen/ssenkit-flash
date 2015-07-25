@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application
+		xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		xmlns:s="library://ns.adobe.com/flex/spark" xmlns:showcase="ssen.components.mxChartSupportClasses._showcase_.*"
+		xmlns:views="ssen.components.mxChartSupportClasses._showcase_.views.*">
+
+	<fx:Declarations>
+		<!--<assets:ProjectDashboardAssetLoader/>-->
+		<showcase:AdvancedBubbleChartExampleContext/>
+	</fx:Declarations>
+
+	<s:layout>
+		<s:VerticalLayout horizontalAlign="left"
+						  paddingBottom="10"
+						  paddingLeft="10"
+						  paddingRight="10"
+						  paddingTop="10"
+						  verticalAlign="top"
+						  gap="10"/>
+	</s:layout>
+
+	<s:HGroup height="100%" maxHeight="400" width="100%">
+		<views:LeftChart height="100%" width="100%"/>
+		<views:LeftChart height="100%" width="100%"/>
+	</s:HGroup>
+
+	<s:DataGrid height="100%" width="100%"/>
+</s:Application>

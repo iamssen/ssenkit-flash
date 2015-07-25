@@ -1,4 +1,5 @@
-package ssen.flexkit.components.grid.elements {
+package ssen.components.sparkDatagridSupportClasses.elements {
+
 import spark.components.DataGrid;
 import spark.components.Group;
 
@@ -11,11 +12,11 @@ public class GroupRowElement extends Group implements IDataGridRowElement {
 	protected var helper:RowElementController;
 
 	public function GroupRowElement() {
-		helper=new RowElementController;
-		helper.rowElement=this;
-		helper.draw=draw;
+		helper = new RowElementController;
+		helper.rowElement = this;
+		helper.draw = draw;
 
-		clipAndEnableScrolling=true;
+		clipAndEnableScrolling = true;
 	}
 
 	public function get dataGrid():DataGrid {
@@ -23,7 +24,7 @@ public class GroupRowElement extends Group implements IDataGridRowElement {
 	}
 
 	public function set dataGrid(value:DataGrid):void {
-		helper.dataGrid=value;
+		helper.dataGrid = value;
 		layout.clearVirtualLayoutCache();
 	}
 

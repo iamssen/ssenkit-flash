@@ -2,81 +2,83 @@
 <s:GridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark">
 	<fx:Script>
 		<![CDATA[
-			import spark.components.gridClasses.GridColumn;
+		import spark.components.gridClasses.GridColumn;
 
-			import ssen.common.MathUtils;
-			import ssen.flexkit.components.grid.columns.ButtonGridColumn;
+		import ssen.common.MathUtils;
+		import ssen.components.sparkDatagridSupportClasses.columns.ButtonGridColumn;
 
-			override public function setFocus():void {
-				button.setFocus();
+		override public function setFocus():void {
+			button.setFocus();
+		}
+
+		override public function set column(value:GridColumn):void {
+			super.column = value;
+
+			var column:ButtonGridColumn = value as ButtonGridColumn;
+
+			//---------------------------------------------
+			// ButtonGridColumn properties
+			//---------------------------------------------
+			if (column.label) {
+				button.label = column.label;
 			}
 
-			override public function set column(value:GridColumn):void {
-				super.column=value;
+			//---------------------------------------------
+			// BasicGridColumn properties
+			//---------------------------------------------
+			button.setStyle("textAlign", column.textAlign);
+		}
 
-				var column:ButtonGridColumn=value as ButtonGridColumn;
+		//==========================================================================================
+		// interaction
+		//==========================================================================================
+		private function buttonClick(event:MouseEvent):void {
+			var callback:Function = ButtonGridColumn(column).callback;
+			if (callback !== null) {
+				callback(data, column, rowIndex);
+			} else {
+				trace("!!! Undefined TriggeredGridColumn.callback property : ", data, column, rowIndex);
+			}
+		}
 
-				//---------------------------------------------
-				// ButtonGridColumn properties
-				//---------------------------------------------
-				if (column.label) {
-					button.label=column.label;
+		//==========================================================================================
+		// key move
+		//==========================================================================================
+		private function buttonFocusIn(event:FocusEvent):void {
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDown, true);
+		}
+
+		private function buttonFocusOut(event:FocusEvent):void {
+			stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDown, true);
+		}
+
+		private function keyDown(event:KeyboardEvent):void {
+			if (event.ctrlKey && event.altKey && MathUtils.rangeOf(event.keyCode, Keyboard.LEFT, Keyboard.DOWN)) {
+				var moved:Boolean;
+
+				// 방향키 이동
+				if (event.keyCode === Keyboard.LEFT) {
+					moved = GridEditorHelper.moveToPrevColumnCell(column, rowIndex);
+				} else if (event.keyCode === Keyboard.RIGHT) {
+					moved = GridEditorHelper.moveToNextColumnCell(column, rowIndex);
+				} else if (event.keyCode === Keyboard.UP) {
+					moved = GridEditorHelper.moveToPrevRowCell(column, rowIndex);
+				} else if (event.keyCode === Keyboard.DOWN) {
+					moved = GridEditorHelper.moveToNextRowCell(column, rowIndex);
 				}
 
-				//---------------------------------------------
-				// BasicGridColumn properties
-				//---------------------------------------------
-				button.setStyle("textAlign", column.textAlign);
-			}
-
-			//==========================================================================================
-			// interaction
-			//==========================================================================================
-			private function buttonClick(event:MouseEvent):void {
-				var callback:Function=ButtonGridColumn(column).callback;
-				if (callback !== null) {
-					callback(data, column, rowIndex);
-				} else {
-					trace("!!! Undefined TriggeredGridColumn.callback property : ", data, column, rowIndex);
+				if (moved) {
+					event.preventDefault();
+					event.stopPropagation();
+					event.stopImmediatePropagation();
 				}
 			}
-
-			//==========================================================================================
-			// key move
-			//==========================================================================================
-			private function buttonFocusIn(event:FocusEvent):void {
-				stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDown, true);
-			}
-
-			private function buttonFocusOut(event:FocusEvent):void {
-				stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDown, true);
-			}
-
-			private function keyDown(event:KeyboardEvent):void {
-				if (event.ctrlKey && event.altKey && MathUtils.rangeOf(event.keyCode, Keyboard.LEFT, Keyboard.DOWN)) {
-					var moved:Boolean;
-
-					// 방향키 이동
-					if (event.keyCode === Keyboard.LEFT) {
-						moved=GridEditorHelper.moveToPrevColumnCell(column, rowIndex);
-					} else if (event.keyCode === Keyboard.RIGHT) {
-						moved=GridEditorHelper.moveToNextColumnCell(column, rowIndex);
-					} else if (event.keyCode === Keyboard.UP) {
-						moved=GridEditorHelper.moveToPrevRowCell(column, rowIndex);
-					} else if (event.keyCode === Keyboard.DOWN) {
-						moved=GridEditorHelper.moveToNextRowCell(column, rowIndex);
-					}
-
-					if (moved) {
-						event.preventDefault();
-						event.stopPropagation();
-						event.stopImmediatePropagation();
-					}
-				}
-			}
+		}
 		]]>
 	</fx:Script>
 
-	<s:Button id="button" label="BUTTON" left="5" right="5" top="4" bottom="4" click="buttonClick(event)" focusIn="buttonFocusIn(event)" focusOut="buttonFocusOut(event)"
-			  skinClass="ssen.flexkit.components.grid.skins.lined.LabelButtonSkin" focusSkin="ssen.flexkit.components.grid.skins.lined.LabelButtonFocusSkin"/>
+	<s:Button id="button" label="BUTTON" left="5" right="5" top="4" bottom="4" click="buttonClick(event)"
+			  focusIn="buttonFocusIn(event)" focusOut="buttonFocusOut(event)"
+			  skinClass="ssen.components.sparkDatagridSupportClasses.skins.lined.LabelButtonSkin"
+			  focusSkin="ssen.components.sparkDatagridSupportClasses.skins.lined.LabelButtonFocusSkin" />
 </s:GridItemRenderer>

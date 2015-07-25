@@ -1,40 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<editors:GridEditor xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:editors="ssen.flexkit.components.grid.editors.*">
+<editors:GridEditor xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+					xmlns:editors="ssen.components.sparkDatagridSupportClasses.editors.*">
 	<fx:Script>
 		<![CDATA[
-			import ssen.flexkit.components.grid.columns.NumberGridColumn;
+		import ssen.components.sparkDatagridSupportClasses.columns.NumberGridColumn;
 
-			override public function set value(newValue:Object):void {
-				numericStepper.value=newValue as Number;
-			}
+		override public function set value(newValue:Object):void {
+			numericStepper.value = newValue as Number;
+		}
 
-			override public function get value():Object {
-				return numericStepper.value;
-			}
+		override public function get value():Object {
+			return numericStepper.value;
+		}
 
-			override public function setFocus():void {
-				numericStepper.setFocus();
-			}
+		override public function setFocus():void {
+			numericStepper.setFocus();
+		}
 
-			override public function prepare():void {
-				super.prepare();
+		override public function prepare():void {
+			super.prepare();
 
-				var numberColumn:NumberGridColumn=column as NumberGridColumn;
+			var numberColumn:NumberGridColumn = column as NumberGridColumn;
 
-				//---------------------------------------------
-				// BasicGridColumn properties
-				//---------------------------------------------
-				numericStepper.setStyle("textAlign", numberColumn.textAlign);
+			//---------------------------------------------
+			// BasicGridColumn properties
+			//---------------------------------------------
+			numericStepper.setStyle("textAlign", numberColumn.textAlign);
 
-				//---------------------------------------------
-				// NumberGridColumn properties
-				//---------------------------------------------
-				numericStepper.minimum=(numberColumn.minimumField) ? data[numberColumn.minimumField] : int.MIN_VALUE;
-				numericStepper.maximum=(numberColumn.maximumField) ? data[numberColumn.maximumField] : int.MAX_VALUE;
-				numericStepper.value=data[numberColumn.dataField];
-			}
+			//---------------------------------------------
+			// NumberGridColumn properties
+			//---------------------------------------------
+			numericStepper.minimum = (numberColumn.minimumField) ? data[numberColumn.minimumField] : int.MIN_VALUE;
+			numericStepper.maximum = (numberColumn.maximumField) ? data[numberColumn.maximumField] : int.MAX_VALUE;
+			numericStepper.value = data[numberColumn.dataField];
+		}
 		]]>
 	</fx:Script>
-	<s:NumericStepper id="numericStepper" top="1" right="1" bottom="1" left="1" skinClass="ssen.flexkit.components.grid.skins.lined.NumericStepperSkin"
-					  focusSkin="ssen.flexkit.components.focus.skins.TransparentFocusSkin"/>
+	<s:NumericStepper id="numericStepper" top="1" right="1" bottom="1" left="1"
+					  skinClass="ssen.components.sparkDatagridSupportClasses.skins.lined.NumericStepperSkin"
+					  focusSkin="ssen.components.focusSkins.TransparentFocusSkin" />
 </editors:GridEditor>

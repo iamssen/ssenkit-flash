@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---
+
+사업부 기준선 표시 버튼 Skin
+
+@see ChartUtilButtons
+-->
+<s:SparkButtonSkin xmlns:fb="http://ns.adobe.com/flashbuilder/2009" xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" minWidth="30" minHeight="37" alpha.disabledStates="0.5">
+	<fx:Metadata>
+		<![CDATA[ 
+        [HostComponent("spark.components.ToggleButton")]
+    ]]>
+	</fx:Metadata>
+
+	<s:states>
+		<s:State name="up"/>
+		<s:State name="over" stateGroups="overStates"/>
+		<s:State name="down" stateGroups="downStates"/>
+		<s:State name="disabled" stateGroups="disabledStates"/>
+		<s:State name="upAndSelected" stateGroups="selectedStates, selectedUpStates"/>
+		<s:State name="overAndSelected" stateGroups="overStates, selectedStates"/>
+		<s:State name="downAndSelected" stateGroups="downStates, selectedStates"/>
+		<s:State name="disabledAndSelected" stateGroups="selectedUpStates, disabledStates, selectedStates"/>
+	</s:states>
+
+	<s:BitmapImage source="@Embed(source='assets/btn_chart_xy_up.png')" source.down="@Embed(source='assets/btn_chart_xy_down.png')" source.over="@Embed(source='assets/btn_chart_xy_over.png')" source.selectedStates="@Embed(source='assets/btn_chart_xy_selected.png')" width="30" height="37"/>
+
+</s:SparkButtonSkin>

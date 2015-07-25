@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:chart="ssen.components.mxChartSupportClasses.cartesianChartElements.*"
+
+		 initialize="init(event)">
+	<fx:Script>
+		<![CDATA[
+		import mx.collections.ArrayList;
+		import mx.collections.IList;
+		import mx.events.FlexEvent;
+
+		import ssen.common.MathUtils;
+
+		[Bindable]
+		private var data:IList;
+
+		private function init(event:FlexEvent):void {
+			var arr:Array = [];
+			var f:int = -1;
+			var fmax:int = MathUtils.rand(3, 10);
+			while (++f < fmax) {
+				arr.push({label: "Label" + f, value: MathUtils.rand(50, 100), cutted: Math.random() > 0.5});
+			}
+
+			data = new ArrayList(arr);
+		}
+		]]>
+	</fx:Script>
+
+	<mx:ColumnChart dataProvider="{data}"
+					top="10" bottom="10" left="10" right="10"
+					showDataTips="true">
+		<mx:seriesFilters>
+			<fx:Array/>
+		</mx:seriesFilters>
+
+		<mx:backgroundElements>
+		</mx:backgroundElements>
+
+		<mx:horizontalAxis>
+			<mx:CategoryAxis id="columnChartHorizontalAxis" categoryField="label"/>
+		</mx:horizontalAxis>
+
+		<mx:verticalAxis>
+			<mx:LinearAxis id="columnChartVerticalAxis"/>
+		</mx:verticalAxis>
+
+		<mx:verticalAxisRenderers>
+			<mx:AxisRenderer axis="{columnChartVerticalAxis}" showLabels="false" showLine="false"
+							 tickPlacement="none"/>
+		</mx:verticalAxisRenderers>
+
+		<mx:horizontalAxisRenderers>
+			<mx:AxisRenderer axis="{columnChartHorizontalAxis}" tickPlacement="none">
+				<mx:axisStroke>
+					<s:SolidColorStroke color="#999999" weight="1"/>
+				</mx:axisStroke>
+			</mx:AxisRenderer>
+		</mx:horizontalAxisRenderers>
+
+		<mx:series>
+			<mx:ColumnSeries xField="label" yField="value">
+				<mx:stroke>
+					<s:SolidColorStroke color="#5E80FF"/>
+				</mx:stroke>
+				<mx:fill>
+					<s:SolidColor color="#5E80FF" alpha="0.5"/>
+				</mx:fill>
+				<mx:itemRenderer>
+					<fx:Component>
+						<chart:CuttedBoxRenderer cuttedColor="#393939" cuttedField="cutted"/>
+					</fx:Component>
+				</mx:itemRenderer>
+			</mx:ColumnSeries>
+		</mx:series>
+	</mx:ColumnChart>
+</s:Group>

@@ -1,79 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<editors:GridEditor xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:editors="ssen.flexkit.components.grid.editors.*">
+<editors:GridEditor xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+					xmlns:editors="ssen.components.sparkDatagridSupportClasses.editors.*">
 	<fx:Script>
 		<![CDATA[
-			import spark.events.DropDownEvent;
-			import spark.events.IndexChangeEvent;
+		import spark.events.DropDownEvent;
+		import spark.events.IndexChangeEvent;
 
-			import ssen.flexkit.components.grid.columns.SelectionalGridColumn;
+		import ssen.components.sparkDatagridSupportClasses.columns.SelectionalGridColumn;
 
-			override public function prepare():void {
-				super.prepare();
+		override public function prepare():void {
+			super.prepare();
 
-				var selectionalColumn:SelectionalGridColumn=column as SelectionalGridColumn;
+			var selectionalColumn:SelectionalGridColumn = column as SelectionalGridColumn;
 
-				//---------------------------------------------
-				// SelectionalGridColumn properties
-				//---------------------------------------------
-				dropDownList.dataProvider=data[selectionalColumn.dataProviderField];
-				if (selectionalColumn.labelField) {
-					dropDownList.labelField=selectionalColumn.labelField;
-				}
-
-				//---------------------------------------------
-				// BasicGridColumn properties
-				//---------------------------------------------
-				dropDownList.setStyle("textAlign", selectionalColumn.textAlign);
-
-				//---------------------------------------------
-				// DropDownList Initialize
-				//---------------------------------------------
-				dropDownList.selectedItem=value;
-				dropDownList.addEventListener(DropDownEvent.OPEN, dropDownOpen, false, 0, true);
-				dropDownList.addEventListener(DropDownEvent.CLOSE, dropDownClose, false, 0, true);
-				dropDownList.openDropDown();
+			//---------------------------------------------
+			// SelectionalGridColumn properties
+			//---------------------------------------------
+			dropDownList.dataProvider = data[selectionalColumn.dataProviderField];
+			if (selectionalColumn.labelField) {
+				dropDownList.labelField = selectionalColumn.labelField;
 			}
 
-			override public function discard():void {
-				super.discard();
+			//---------------------------------------------
+			// BasicGridColumn properties
+			//---------------------------------------------
+			dropDownList.setStyle("textAlign", selectionalColumn.textAlign);
 
-				dropDownList.dataProvider=null;
-				dropDownList.removeEventListener(DropDownEvent.OPEN, dropDownOpen);
-				dropDownList.removeEventListener(DropDownEvent.CLOSE, dropDownClose);
-				if (dropDownList.dataGroup && dropDownList.dataGroup.hasEventListener(MouseEvent.MOUSE_DOWN)) {
-					dropDownList.dataGroup.removeEventListener(MouseEvent.MOUSE_DOWN, dataGroupItemSelected);
-				}
-			}
+			//---------------------------------------------
+			// DropDownList Initialize
+			//---------------------------------------------
+			dropDownList.selectedItem = value;
+			dropDownList.addEventListener(DropDownEvent.OPEN, dropDownOpen, false, 0, true);
+			dropDownList.addEventListener(DropDownEvent.CLOSE, dropDownClose, false, 0, true);
+			dropDownList.openDropDown();
+		}
 
-			override public function setFocus():void {
-				dropDownList.setFocus();
-			}
+		override public function discard():void {
+			super.discard();
 
-			//==========================================================================================
-			// event listeners
-			//==========================================================================================
-			private function dropDownOpen(event:DropDownEvent):void {
-				if (dropDownList.dataGroup) {
-					dropDownList.dataGroup.addEventListener(MouseEvent.MOUSE_DOWN, dataGroupItemSelected, false, 0, true);
-				}
+			dropDownList.dataProvider = null;
+			dropDownList.removeEventListener(DropDownEvent.OPEN, dropDownOpen);
+			dropDownList.removeEventListener(DropDownEvent.CLOSE, dropDownClose);
+			if (dropDownList.dataGroup && dropDownList.dataGroup.hasEventListener(MouseEvent.MOUSE_DOWN)) {
+				dropDownList.dataGroup.removeEventListener(MouseEvent.MOUSE_DOWN, dataGroupItemSelected);
 			}
+		}
 
-			private function dropDownClose(event:DropDownEvent):void {
-				if (dropDownList.dataGroup && dropDownList.dataGroup.hasEventListener(MouseEvent.MOUSE_DOWN)) {
-					dropDownList.dataGroup.removeEventListener(MouseEvent.MOUSE_DOWN, dataGroupItemSelected);
-				}
-			}
+		override public function setFocus():void {
+			dropDownList.setFocus();
+		}
 
-			private function dataGroupItemSelected(event:MouseEvent):void {
-				callLater(dataGrid.endItemEditorSession);
+		//==========================================================================================
+		// event listeners
+		//==========================================================================================
+		private function dropDownOpen(event:DropDownEvent):void {
+			if (dropDownList.dataGroup) {
+				dropDownList.dataGroup.addEventListener(MouseEvent.MOUSE_DOWN, dataGroupItemSelected, false, 0, true);
 			}
+		}
 
-			private function dropDownChanged(event:IndexChangeEvent):void {
-				var index:int=(event.newIndex === -1) ? event.oldIndex : event.newIndex;
-				value=dropDownList.dataProvider.getItemAt(index);
+		private function dropDownClose(event:DropDownEvent):void {
+			if (dropDownList.dataGroup && dropDownList.dataGroup.hasEventListener(MouseEvent.MOUSE_DOWN)) {
+				dropDownList.dataGroup.removeEventListener(MouseEvent.MOUSE_DOWN, dataGroupItemSelected);
 			}
+		}
+
+		private function dataGroupItemSelected(event:MouseEvent):void {
+			callLater(dataGrid.endItemEditorSession);
+		}
+
+		private function dropDownChanged(event:IndexChangeEvent):void {
+			var index:int = (event.newIndex === -1) ? event.oldIndex : event.newIndex;
+			value = dropDownList.dataProvider.getItemAt(index);
+		}
 		]]>
 	</fx:Script>
-	<s:DropDownList id="dropDownList" top="1" right="1" bottom="1" left="1" requireSelection="true" change="dropDownChanged(event)"
-					skinClass="ssen.flexkit.components.grid.skins.lined.DropDownListSkin" focusSkin="ssen.flexkit.components.focus.skins.TransparentFocusSkin"/>
+	<s:DropDownList id="dropDownList" top="1" right="1" bottom="1" left="1" requireSelection="true"
+					change="dropDownChanged(event)"
+					skinClass="ssen.components.sparkDatagridSupportClasses.skins.lined.DropDownListSkin"
+					focusSkin="ssen.components.focusSkins.TransparentFocusSkin" />
 </editors:GridEditor>

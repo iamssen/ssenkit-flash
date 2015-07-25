@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:grid="ssen.components.sparkDatagridSupportClasses.*"
+		 xmlns:columns="ssen.components.sparkDatagridSupportClasses.columns.*"
+		 xmlns:components="ssen.components.sparkDatagridSupportClasses._showcase_.views.components.*"
+
+		 initialize="init()">
+	<fx:Script>
+		<![CDATA[
+		import mx.collections.IList;
+
+		import ssen.common.MathUtils;
+		import ssen.components.sparkDatagridSupportClasses._showcase_.models.HierarchicalDataAdapter;
+		import ssen.components.sparkDatagridSupportClasses._showcase_.models.HierarchicalDataGridRow;
+
+		private var adapter:HierarchicalDataAdapter;
+
+		[Bindable]
+		public var data:IList;
+
+		private function init():void {
+			data = HierarchicalDataGridRow.createTestData();
+			gc.source = data;
+			gc.refresh();
+			hcv.source = gc;
+			adapter = new HierarchicalDataAdapter(hcv);
+			testDG.dataProvider = adapter;
+		}
+
+		private function changeDataCell(event:MouseEvent):void {
+			with (data.getItemAt(0)) {
+				q1 = MathUtils.rand(10, 20);
+				q2 = MathUtils.rand(10, 20);
+				q3 = MathUtils.rand(10, 20);
+				q4 = MathUtils.rand(10, 20);
+			}
+		}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<mx:GroupingCollection2 id="gc">
+			<mx:grouping>
+				<mx:Grouping>
+					<mx:GroupingField name="company"/>
+					<mx:GroupingField name="category"/>
+				</mx:Grouping>
+			</mx:grouping>
+		</mx:GroupingCollection2>
+		<mx:HierarchicalCollectionView id="hcv"/>
+	</fx:Declarations>
+
+	<s:layout>
+		<s:VerticalLayout paddingTop="2" paddingBottom="2" paddingLeft="2" paddingRight="2" gap="10"
+						  horizontalAlign="center" verticalAlign="top"/>
+	</s:layout>
+
+	<grid:LinedDataGrid id="testDG" width="100%" height="100%" rowHeight="26">
+		<grid:typicalItem>
+			<fx:Object product="XXXXXXXXXXXXXXXXXXXXXX" q1="XXXXXXXXXXXXX" q2="XXXXXXXXXXXXX" q3="XXXXXXXXXXXXX"
+					   q4="XXXXXXXXXXXXX"/>
+		</grid:typicalItem>
+		<grid:columns>
+			<s:ArrayList>
+				<columns:BasicGridColumn dataField="product" headerText="Product"
+										 itemRenderer="ssen.components.sparkDatagridSupportClasses.editors.HierarchicalDisclosureGridRenderer"/>
+				<columns:NumberGridColumn dataField="q1" headerText="2012 Q3"
+										  itemRenderer="ssen.components.sparkDatagridSupportClasses.renderers.HierarchicalSumRenderer"/>
+				<columns:NumberGridColumn dataField="q2" headerText="2012 Q3"
+										  itemRenderer="ssen.components.sparkDatagridSupportClasses.renderers.HierarchicalSumRenderer"/>
+				<columns:NumberGridColumn dataField="q3" headerText="2013 Q1"
+										  itemRenderer="ssen.components.sparkDatagridSupportClasses.renderers.HierarchicalSumRenderer"/>
+				<columns:NumberGridColumn dataField="q4" headerText="2013 Q2"
+										  itemRenderer="ssen.components.sparkDatagridSupportClasses.renderers.HierarchicalSumRenderer"/>
+			</s:ArrayList>
+		</grid:columns>
+	</grid:LinedDataGrid>
+
+	<s:HGroup width="100%" gap="5" verticalAlign="middle">
+		<components:LinedButton label="Change Data" click="changeDataCell(event)"/>
+	</s:HGroup>
+</s:Group>

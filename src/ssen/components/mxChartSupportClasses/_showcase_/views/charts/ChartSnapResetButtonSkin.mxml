@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---
+
+초기화 버튼 Skin
+
+@see ChartUtilButtons
+-->
+<s:SparkButtonSkin xmlns:fb="http://ns.adobe.com/flashbuilder/2009" xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" minHeight="36" minWidth="30">
+	<fx:Metadata>
+		<![CDATA[ 
+        	[HostComponent("spark.components.Button")]
+    	]]>
+	</fx:Metadata>
+
+	<s:states>
+		<s:State name="up"/>
+		<s:State name="over"/>
+		<s:State name="down"/>
+		<s:State name="disabled"/>
+	</s:states>
+
+	<s:BitmapImage source="@Embed(source='assets/btn_chart_reset_up.png')" source.disabled="@Embed(source='assets/btn_chart_reset_selected.png')" source.down="@Embed(source='assets/btn_chart_reset_down.png')" source.over="@Embed(source='assets/btn_chart_reset_over.png')" width="30" height="36"/>
+</s:SparkButtonSkin>

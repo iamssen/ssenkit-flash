@@ -5,7 +5,7 @@ import flash.geom.Rectangle;
 
 public class DrawingUtils {
 	/** display object 들의 rectangle bounds 를 합쳐서 새로운 bounds 를 만들어준다 */
-	public function unionDisplayObjectBounds(displayObjects:Vector.<DisplayObject>):Rectangle {
+	public static function unionDisplayObjectBounds(displayObjects:Vector.<DisplayObject>):Rectangle {
 		var f:int = 0;
 		var fmax:int = displayObjects.length;
 		var display:DisplayObject = displayObjects[0];
@@ -24,12 +24,11 @@ public class DrawingUtils {
 	 * @param targetCoordinateSpace scaling 시킬 공간의 bound
 	 * @return scaling 시키기 위해서 곱해줄 비율
 	 */
-	public function getScalingMinimizeRatio(bounds:Rectangle, targetCoordinateSpace:Rectangle):Number {
+	public static function getScalingMinimizeRatio(bounds:Rectangle, targetCoordinateSpace:Rectangle):Number {
 		var hratio:Number = (bounds.width > targetCoordinateSpace.width) ? targetCoordinateSpace.width / bounds.width : 1;
 		var vratio:Number = (bounds.height > targetCoordinateSpace.height) ? targetCoordinateSpace.height / bounds.height : 1;
 
 		return (hratio > vratio) ? vratio : hratio;
-
 	}
 }
 }

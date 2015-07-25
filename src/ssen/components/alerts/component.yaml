@@ -1,7 +1,0 @@
-namespace: "http://ssen.name/ns/ssen"
-components:
-- Alert
-- Confirm
-skins:
-- AlertSkin
-- ConfirmSkin

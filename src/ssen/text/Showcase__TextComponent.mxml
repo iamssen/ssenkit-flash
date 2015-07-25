@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark" xmlns:text="ssen.text.*">
+
+	<fx:Script>
+		<![CDATA[
+		private static const text1:String = "HELLO WORLD";
+		private static const text2:String = "HELLO<br/>WORLD";
+		private static const text3:String = '<font size="40" color="#0000ff">HELLO</font><br/>WORLD';
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<s:TextLayoutFormat id="format1" fontFamily="notoSans" fontLookup="embeddedCFF" fontSize="20"/>
+		<s:TextLayoutFormat id="format2" fontFamily="notoSans" fontLookup="embeddedCFF" fontSize="30"
+							textAlign="center"/>
+	</fx:Declarations>
+
+	<s:layout>
+		<s:VerticalLayout padding="10"/>
+	</s:layout>
+
+	<s:HGroup gap="10">
+		<text:UITextComponent format="{format1}" text="{text1}"/>
+		<text:UITextComponent format="{format1}" text="{text1}"
+							  paddingLeft="10"
+							  paddingRight="20"
+							  paddingTop="10"
+							  paddingBottom="20"/>
+		<text:UITextComponent format="{format1}" text="{text2}"/>
+		<text:UITextComponent format="{format1}" text="{text2}"
+							  paddingLeft="10"
+							  paddingRight="20"
+							  paddingTop="10"
+							  paddingBottom="20"/>
+		<s:Spacer width="50"/>
+		<text:UITextComponent format="{format2}" text="{text1}" width="100"/>
+		<s:Spacer width="50"/>
+		<text:UITextComponent format="{format2}" text="{text2}" width="70"/>
+	</s:HGroup>
+
+	<s:HGroup gap="10">
+		<text:UITextComponent format="{format2}" text="{text3}" width="100"
+							  useMinimizeScaling="true"
+							  useMaximizeScaling="true"/>
+		<text:UITextComponent format="{format2}" text="{text3}"
+							  width="100"
+							  height="30"
+							  useMinimizeScaling="true"
+							  useMaximizeScaling="true"/>
+	</s:HGroup>
+</s:Group>

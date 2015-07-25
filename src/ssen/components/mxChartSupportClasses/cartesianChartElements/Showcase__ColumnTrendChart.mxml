@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:axislabelrenderers="ssen.components.mxChartSupportClasses.axisLabelRenderers.*"
+		 xmlns:fills="ssen.components.fills.*"
+		 xmlns:cartesianchartelements="ssen.components.mxChartSupportClasses.cartesianChartElements.*"
+
+		 initialize="init(event)">
+
+	<fx:Script>
+		<![CDATA[
+		import mx.charts.series.items.ColumnSeriesItem;
+		import mx.collections.ArrayList;
+		import mx.collections.IList;
+		import mx.events.FlexEvent;
+		import mx.utils.StringUtil;
+
+		import ssen.common.MathUtils;
+		import ssen.common.NumberFormatterUtils;
+
+		[Bindable]
+		private var data:IList;
+
+		[Bindable]
+		private var lastData:Object;
+
+		[Bindable]
+		private var firstData:Object;
+
+		private function init(event:FlexEvent):void {
+			refreshData();
+		}
+
+		private function refreshData():void {
+			var arr:Array = [];
+
+			var f:int = -1;
+			var fmax:int = MathUtils.rand(4, 8);
+			var trend:Number = 10;
+
+			var d:Object;
+
+			while (++f < fmax) {
+				d = {
+					label : 2015 + f,
+					value1: MathUtils.rand(10, 30),
+					value2: MathUtils.rand(10, 100),
+					value4: MathUtils.rand(10, 30),
+					value3: trend
+				};
+				arr.push(d);
+				//				trend += MathUtils.rand(5, 30);
+			}
+
+			data = new ArrayList(arr);
+			firstData = arr[0];
+			lastData = arr[arr.length - 1];
+		}
+
+		private static function columnLabelFunction(element:ColumnSeriesItem, series:ColumnSeries):String {
+			return element.item[series.yField];
+		}
+
+		private static function trendLabelFunction(params:Object):String {
+			var data:Object = params["data"];
+			var dataField:String = params["dataField"];
+
+			return NumberFormatterUtils.num(data[dataField]);
+		}
+
+		private static function trendSideLabelFunction(params:Object):String {
+			var data:Object = params["data"];
+			var dataField:String = params["dataField"];
+
+			return StringUtil.substitute('<font size="11">{0}</font><br/><b>{1}</b>',
+					data["label"],
+					NumberFormatterUtils.num(data[dataField])
+			);
+		}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+
+	</fx:Declarations>
+
+	<s:Rect height="100%" width="100%">
+		<s:fill>
+			<s:SolidColor color="#ffffff"/>
+		</s:fill>
+	</s:Rect>
+
+	<mx:ColumnChart id="chart"
+					dataProvider="{data}"
+					bottom="10"
+					left="10"
+					right="10"
+					top="10"
+					gutterRight="150"
+					showDataTips="true">
+
+		<mx:seriesFilters>
+			<fx:Array/>
+		</mx:seriesFilters>
+
+		<mx:backgroundElements>
+			<fx:Array/>
+		</mx:backgroundElements>
+
+		<mx:horizontalAxis>
+			<mx:CategoryAxis id="haxis" categoryField="label"/>
+		</mx:horizontalAxis>
+
+		<mx:verticalAxis>
+			<mx:LinearAxis id="vaxis"/>
+		</mx:verticalAxis>
+
+		<mx:verticalAxisRenderers>
+			<!--<mxcartesianchartelements:InvisibleVerticalAxisRenderer axis="{vaxis}"/>-->
+			<mx:AxisRenderer axis="{vaxis}" tickLength="6" minorTickPlacement="none" tickPlacement="outside">
+				<mx:labelRenderer>
+					<fx:Component>
+						<axislabelrenderers:AxisLabelRenderer fontFamily="notoSans"
+															  textAlign="center"
+															  fontLookup="embeddedCFF"
+															  fontSize="12"
+															  color="#2f393e"/>
+					</fx:Component>
+				</mx:labelRenderer>
+				<mx:tickStroke>
+					<s:SolidColorStroke color="#878787" weight="1"/>
+				</mx:tickStroke>
+				<mx:axisStroke>
+					<s:SolidColorStroke color="#878787" weight="1"/>
+				</mx:axisStroke>
+			</mx:AxisRenderer>
+		</mx:verticalAxisRenderers>
+
+		<mx:horizontalAxisRenderers>
+			<mx:AxisRenderer axis="{haxis}" tickLength="6" minorTickPlacement="none" tickPlacement="outside">
+				<mx:labelRenderer>
+					<fx:Component>
+						<axislabelrenderers:AxisLabelRenderer fontFamily="notoSans"
+															  textAlign="center"
+															  fontLookup="embeddedCFF"
+															  fontSize="12"
+															  color="#2f393e"/>
+					</fx:Component>
+				</mx:labelRenderer>
+				<mx:tickStroke>
+					<s:SolidColorStroke color="#878787" weight="1"/>
+				</mx:tickStroke>
+				<mx:axisStroke>
+					<s:SolidColorStroke color="#878787" weight="1"/>
+				</mx:axisStroke>
+			</mx:AxisRenderer>
+		</mx:horizontalAxisRenderers>
+
+		<mx:series>
+			<mx:ColumnSet type="stacked" maxColumnWidth="16">
+				<mx:ColumnSeries displayName="Value2"
+								 xField="label"
+								 yField="value2"
+								 labelFunction="columnLabelFunction">
+					<mx:fill>
+						<s:SolidColor color="#8391D8"/>
+					</mx:fill>
+				</mx:ColumnSeries>
+
+				<mx:ColumnSeries displayName="Value1"
+								 xField="label"
+								 yField="value1"
+								 labelFunction="columnLabelFunction">
+					<mx:fill>
+						<s:SolidColor color="#F6C40D"/>
+					</mx:fill>
+				</mx:ColumnSeries>
+
+				<mx:ColumnSeries displayName="Value4"
+								 xField="label"
+								 yField="value4"
+								 labelFunction="columnLabelFunction">
+					<mx:fill>
+						<fills:Stripe angle="135">
+							<fills:StripeEntry color="#EDECF1" size="3"/>
+							<fills:StripeEntry color="#F5F5F5" size="3"/>
+						</fills:Stripe>
+					</mx:fill>
+				</mx:ColumnSeries>
+			</mx:ColumnSet>
+		</mx:series>
+
+		<mx:annotationElements>
+			<cartesianchartelements:ColumnTrendSingleLine data="{firstData}" dataField="value3">
+				<cartesianchartelements:stroke>
+					<s:SolidColorStroke color="#2D41A0" weight="3"/>
+				</cartesianchartelements:stroke>
+			</cartesianchartelements:ColumnTrendSingleLine>
+
+			<cartesianchartelements:ColumnTrendPolyLine dataField="value3"
+														useDashedLine="true"
+														labelFunction="trendLabelFunction">
+				<cartesianchartelements:stroke>
+					<s:SolidColorStroke color="#F85921" weight="3"/>
+				</cartesianchartelements:stroke>
+				<cartesianchartelements:format>
+					<s:TextLayoutFormat color="#DD4D1A"
+										fontFamily="notoSans"
+										fontLookup="embeddedCFF"
+										fontSize="13"
+										textAlign="center"
+										verticalAlign="middle"/>
+				</cartesianchartelements:format>
+			</cartesianchartelements:ColumnTrendPolyLine>
+
+			<cartesianchartelements:ColumnTrendSideLabel data="{firstData}"
+														 dataField="value3"
+														 boxWidth="38"
+														 boxHeight="36"
+														 labelFunction="trendSideLabelFunction">
+				<cartesianchartelements:fill>
+					<s:SolidColor color="#2D41A0"/>
+				</cartesianchartelements:fill>
+				<cartesianchartelements:format>
+					<s:TextLayoutFormat color="#ffffff"
+										fontFamily="notoSans"
+										fontLookup="embeddedCFF"
+										fontSize="13"
+										textAlign="center"
+										verticalAlign="middle"/>
+				</cartesianchartelements:format>
+			</cartesianchartelements:ColumnTrendSideLabel>
+
+			<cartesianchartelements:ColumnTrendSideLabel data="{lastData}"
+														 dataField="value3"
+														 boxWidth="38"
+														 boxHeight="36"
+														 labelFunction="trendSideLabelFunction">
+				<cartesianchartelements:fill>
+					<s:SolidColor color="#F85921"/>
+				</cartesianchartelements:fill>
+				<cartesianchartelements:format>
+					<s:TextLayoutFormat color="#ffffff"
+										fontFamily="notoSans"
+										fontLookup="embeddedCFF"
+										fontSize="13"
+										textAlign="center"
+										verticalAlign="middle"/>
+				</cartesianchartelements:format>
+			</cartesianchartelements:ColumnTrendSideLabel>
+		</mx:annotationElements>
+	</mx:ColumnChart>
+
+	<s:Button label="refresh data" top="10" right="10" click="refreshData()"/>
+</s:Group>

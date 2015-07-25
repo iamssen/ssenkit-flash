@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:pola="ssen.components.chart.pola.*"
+		 xmlns:radarAxis="ssen.components.chart.pola.radarAxis.*"
+		 xmlns:renderers="ssen.components.chart.pola.renderers.*"
+		 xmlns:animate="ssen.components.animate.*"
+
+		 preinitialize="init()">
+
+	<fx:Script>
+		<![CDATA[
+		import com.greensock.easing.Back;
+		import com.greensock.easing.Elastic;
+
+		import mx.collections.ArrayList;
+		import mx.collections.IList;
+
+		import ssen.common.MathUtils;
+
+		[Bindable]
+		private var data:IList;
+
+		private function init():void {
+			refresh();
+		}
+
+		private function refresh():void {
+			var arr:Array = [];
+
+			var f:int = -1;
+			var fmax:int = MathUtils.rand(3, 12);
+
+			while (++f < fmax) {
+				arr.push({
+					label: "Label" + f,
+					value: MathUtils.rand(20, 100),
+					value2: MathUtils.rand(20, 100)
+				});
+			}
+
+			data = new ArrayList(arr);
+		}
+
+		private static function categoryLabelClick(event:PolaChartEvent):void {
+			trace("test.categoryLabelClick()", event);
+		}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<fx:Component id="RadarCategoryPointRenderer">
+			<renderers:LabelPolaPointRenderer labelField="label">
+				<renderers:format>
+					<s:TextLayoutFormat fontFamily="notoSans"
+										fontLookup="embeddedCFF"
+										color="#999999"
+										fontSize="17"
+										textAlign="center"/>
+				</renderers:format>
+			</renderers:LabelPolaPointRenderer>
+		</fx:Component>
+
+		<fx:Component id="RadarSeriesPointRenderer">
+			<renderers:LabelPolaPointRenderer labelField="value" labelFunction="pointLabelFunction">
+				<renderers:format>
+					<s:TextLayoutFormat fontFamily="notoSans"
+										fontLookup="embeddedCFF"
+										color="#000000"
+										fontSize="14"
+										textAlign="center"/>
+				</renderers:format>
+
+				<fx:Script>
+					<![CDATA[
+					import mx.utils.StringUtil;
+
+					private static function pointLabelFunction(data:Object, labelField:String):String {
+						return StringUtil.substitute("{0}<br/>{1}", data["label"], data["value"]);
+					}
+					]]>
+				</fx:Script>
+			</renderers:LabelPolaPointRenderer>
+		</fx:Component>
+	</fx:Declarations>
+
+	<pola:PolaChart left="10" right="10" top="10" bottom="10"
+					gutterLeft="40" gutterRight="40" gutterTop="40" gutterBottom="40">
+		<radarAxis:RadarAxis dataProvider="{data}">
+			<radarAxis:animation>
+				<animate:Animation duration="3"/>
+			</radarAxis:animation>
+
+			<radarAxis:backgroundElements>
+				<!--
+				========================================
+				RadarChart
+				배경에 다각형 라인들을 설정
+				========================================
+				-->
+				<radarAxis:RadarLines>
+					<!-- 기본 stroke style을 지정 -->
+					<radarAxis:stroke>
+						<s:SolidColorStroke color="#000000" alpha="0.2"/>
+					</radarAxis:stroke>
+
+					<!--
+					그려줄 line들을 설정.
+					line들의 위치는 radiusRatio(그림상에서의 위치로 지정할 때)나
+					radiusValue(실제 값과 매칭되는 위치를 지정할 때) 중 하나를 입력한다
+					-->
+					<radarAxis:lines>
+						<radarAxis:RadarLine radiusRatio="1">
+							<!-- 경우에 따라 특정 line 의 stroke style을 지정할 수 있다 (없으면 기본 stroke style을 사용) -->
+							<radarAxis:stroke>
+								<s:SolidColorStroke color="#000000" alpha="0.4"/>
+							</radarAxis:stroke>
+						</radarAxis:RadarLine>
+						<radarAxis:RadarLine radiusRatio="0.8"/>
+						<radarAxis:RadarLine radiusRatio="0.6"/>
+						<radarAxis:RadarLine radiusRatio="0.4"/>
+						<radarAxis:RadarLine radiusRatio="0.2"/>
+					</radarAxis:lines>
+				</radarAxis:RadarLines>
+
+				<!--
+				========================================
+				RadarChart
+				배경에 방사형 라인들을 설정
+				========================================
+				-->
+				<radarAxis:RadarCrossLines>
+					<radarAxis:stroke>
+						<s:SolidColorStroke color="#999999"/>
+					</radarAxis:stroke>
+				</radarAxis:RadarCrossLines>
+
+				<!--
+				========================================
+				RadarCategoryLabel
+				Radar 외곽에 표시되는 Label
+				========================================
+				-->
+				<radarAxis:RadarCategoryPoints itemClick="categoryLabelClick(event)"
+											   pointRenderer="{RadarCategoryPointRenderer}"/>
+
+			</radarAxis:backgroundElements>
+
+			<radarAxis:series>
+				<!--
+				========================================
+				RadarSeries
+				Radar의 값을 보여주는 다각형을 그림
+				========================================
+				-->
+				<radarAxis:RadarSeries dataField="value" pointRenderer="{RadarSeriesPointRenderer}">
+					<radarAxis:stroke>
+						<s:SolidColorStroke color="#329abd"/>
+					</radarAxis:stroke>
+					<radarAxis:fill>
+						<s:SolidColor color="#329abd" alpha="0.4"/>
+					</radarAxis:fill>
+					<radarAxis:animationTrack>
+						<animate:AnimationTrack start="0.4" end="0.8" ease="Back.easeOut"/>
+					</radarAxis:animationTrack>
+				</radarAxis:RadarSeries>
+
+				<!-- 여러개를 설정할 수 있다 -->
+				<radarAxis:RadarSeries dataField="value2">
+					<radarAxis:stroke>
+						<s:SolidColorStroke color="#B0E24F"/>
+					</radarAxis:stroke>
+					<radarAxis:fill>
+						<s:SolidColor color="#B0E24F" alpha="0.2"/>
+					</radarAxis:fill>
+					<radarAxis:animationTrack>
+						<animate:AnimationTrack start="0.6" end="1" ease="Back.easeOut"/>
+					</radarAxis:animationTrack>
+				</radarAxis:RadarSeries>
+
+			</radarAxis:series>
+		</radarAxis:RadarAxis>
+	</pola:PolaChart>
+
+	<s:Button left="20" top="20" label="Refresh" click="refresh()"/>
+</s:Group>

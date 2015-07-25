@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:chart="ssen.components.mxChartSupportClasses.cartesianChartElements.*"
+
+		 initialize="init(event)">
+
+	<fx:Script>
+		<![CDATA[
+		import mx.collections.ArrayList;
+		import mx.collections.IList;
+		import mx.events.FlexEvent;
+
+		import ssen.common.MathUtils;
+
+		[Bindable]
+		private var data:IList;
+
+		private function init(event:FlexEvent):void {
+			var arr:Array = [];
+
+			var f:int = -1;
+			var fmax:int = MathUtils.rand(4, 8);
+
+			var d:Object;
+
+			while (++f < fmax) {
+				d = {
+					label : "Item" + f,
+					value1: MathUtils.rand(10, 100),
+					value2: MathUtils.rand(10, 100),
+					value3: MathUtils.rand(10, 100)
+				};
+				arr.push(d);
+			}
+
+			data = new ArrayList(arr);
+		}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<mx:SolidColorStroke id="LineDarkRed" color="#8a4141" weight="2"/>
+		<mx:SolidColorStroke id="LineDarkYellow" color="#ac8151" weight="2"/>
+		<mx:SolidColorStroke id="LineDarkGreen" color="#556730" weight="2"/>
+		<mx:SolidColorStroke id="LineDarkViolet" color="#88639a" weight="2"/>
+		<mx:SolidColorStroke id="LineDarkBlue" color="#41778a" weight="2"/>
+		<mx:SolidColorStroke id="LineRed" color="#c77070" weight="2"/>
+		<mx:SolidColorStroke id="LineYellow" color="#e2b076" weight="2"/>
+		<mx:SolidColorStroke id="LineGreen" color="#95ab6a" weight="2"/>
+		<mx:SolidColorStroke id="LineViolet" color="#b68bcc" weight="2"/>
+		<mx:SolidColorStroke id="LineBlue" color="#70b1c7" weight="2"/>
+
+		<!--
+		// 필수적으로 넣어줘야 하는 것들
+		chart : Item Click을 감지할 대상 Chart Element (필수)
+		lengend : Item Click을 감지할 대상 Legend Element (옵션)
+
+		// 필요한 경우 넣어주면 되는 것들
+		targetSeriesTypes : Highlight 대상이 될 Series Class Type (기본값 : [LineSereis])
+		highlightAlpha : 하일라이팅 되었을 때 Series에 적용될 Alpha값 (기본값 : 1)
+		unhighlightAlpha : 하일라이팅 되지 않은 Series에 적용될 Alpha값 (기본값 : 0.3)
+		highlightFilters : 하일라이팅 상태에 Filter 적용이 필요한 경우 (기본값 : []) Series에 적용된 모든 Filter를 날릴수 있으니 주의
+		unhighlightFilters : 하일라이팅 되지 않은 상태에 Filter 적용이 필요한 경우 (기본값 : []) Series에 적용된 모든 Filter를 날릴수 있으니 주의
+
+		// 함수들
+		ChartHighlightController.clear() : 하일라이팅 상태를 모두 취소한다 (전부 Alpha 1로 변경)
+
+		// 작동시 주의점들
+		Chart.series가 변경되면 모든 하일라이팅은 취소됨
+		targetSeriesTypes, highlightAlpha, unhighlightAlpha 등이 변경되면 모든 하일라이팅은 취소됨
+		-->
+		<chart:ChartHighlightController chart="{chart}"
+										legend="{legend}"
+										targetSereisTypes="{[LineSeries]}"
+										highlightAlpha="1"
+										unhighlightAlpha="0.3">
+			<chart:highlightFilters>
+				<mx:GlowFilter blurX="8" blurY="8"/>
+			</chart:highlightFilters>
+		</chart:ChartHighlightController>
+	</fx:Declarations>
+
+	<mx:Legend right="10" top="10" dataProvider="{chart}" id="legend" direction="horizontal"/>
+
+	<mx:ColumnChart dataProvider="{data}" id="chart"
+					bottom="10"
+					left="10"
+					right="10"
+					top="60"
+					showDataTips="true">
+
+		<mx:seriesFilters>
+			<fx:Array/>
+		</mx:seriesFilters>
+
+		<mx:backgroundElements>
+			<mx:GridLines horizontalChangeCount="1">
+				<mx:horizontalStroke>
+					<mx:SolidColorStroke color="#494949" weight="1"/>
+				</mx:horizontalStroke>
+			</mx:GridLines>
+		</mx:backgroundElements>
+
+		<mx:horizontalAxis>
+			<mx:CategoryAxis id="lineChartHorizontalAxis" categoryField="label"/>
+		</mx:horizontalAxis>
+
+		<mx:verticalAxis>
+			<mx:LinearAxis id="lineChartVerticalAxis" baseAtZero="false"/>
+		</mx:verticalAxis>
+
+		<mx:verticalAxisRenderers>
+			<mx:AxisRenderer axis="{lineChartVerticalAxis}" showLabels="false" showLine="false" tickPlacement="none"/>
+		</mx:verticalAxisRenderers>
+
+		<mx:horizontalAxisRenderers>
+			<mx:AxisRenderer axis="{lineChartHorizontalAxis}" tickPlacement="none">
+				<mx:axisStroke>
+					<s:SolidColorStroke color="#999999" weight="1"/>
+				</mx:axisStroke>
+			</mx:AxisRenderer>
+		</mx:horizontalAxisRenderers>
+
+		<mx:series>
+			<mx:LineSeries displayName="LINE1" xField="label" yField="value1" lineStroke="{LineBlue}"
+						   itemRenderer="ssen.components.mxChartSupportClasses.seriesItemRenderers.LineSeriesItemRenderer"/>
+			<mx:LineSeries displayName="LINE2" xField="label" yField="value2" lineStroke="{LineGreen}"
+						   itemRenderer="ssen.components.mxChartSupportClasses.seriesItemRenderers.LineSeriesItemRenderer"/>
+			<mx:LineSeries displayName="LINE3" xField="label" yField="value3" lineStroke="{LineYellow}"
+						   itemRenderer="ssen.components.mxChartSupportClasses.seriesItemRenderers.LineSeriesItemRenderer"/>
+		</mx:series>
+	</mx:ColumnChart>
+</s:Group>

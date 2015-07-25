@@ -12,7 +12,7 @@ public class NumberFormatterUtils {
 	public static function percentage(n:Number, precision:int = 0):String {
 		if (precision > 0) {
 			n = Math.round(n * Math.pow(10, precision)) / Math.pow(10, precision);
-			return wrap(n.toFixed(2));
+			return wrap(n.toFixed(precision));
 		}
 
 		return getFormatter().format(Math.round(n));

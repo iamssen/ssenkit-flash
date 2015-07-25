@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:components="ssen.components.sparkDatagridSupportClasses._showcase_.views.components.*"
+		 xmlns:grid="ssen.components.sparkDatagridSupportClasses.*"
+		 xmlns:columns="ssen.components.sparkDatagridSupportClasses.columns.*"
+
+		 initialize="init(event)">
+	<fx:Script>
+		<![CDATA[
+		import mx.collections.IList;
+		import mx.events.FlexEvent;
+
+		import org.apache.flex.collections.VectorCollection;
+
+		import ssen.common.MathUtils;
+		import ssen.components.sparkDatagridSupportClasses._showcase_.models.FooterDataGridRow;
+
+		[Bindable]
+		public var data:IList;
+
+		private function init(event:FlexEvent):void {
+			var f:int = MathUtils.rand(5, 20);
+			var vec:Vector.<FooterDataGridRow> = new Vector.<FooterDataGridRow>(f);
+			while (--f >= 0) {
+				vec[f] = new FooterDataGridRow;
+			}
+			data = new VectorCollection(vec);
+		}
+
+		private function deleteCheckedRows(event:MouseEvent):void {
+			var f:int = data.length;
+			var row:FooterDataGridRow;
+			while (--f >= 0) {
+				row = data.getItemAt(f) as FooterDataGridRow;
+				if (row.check) {
+					data.removeItemAt(f);
+				}
+			}
+		}
+
+		private function addRow(event:MouseEvent):void {
+			data.addItem(new FooterDataGridRow);
+		}
+		]]>
+	</fx:Script>
+
+	<s:layout>
+		<s:VerticalLayout paddingTop="2" paddingBottom="2" paddingLeft="2" paddingRight="2" gap="10"
+						  horizontalAlign="center" verticalAlign="top"/>
+	</s:layout>
+
+	<grid:LinedDataGrid id="grid" width="100%" height="100%" dataProvider="{data}" editable="true"
+						skinClass="ssen.components.sparkDatagridSupportClasses._showcase_.views.SampleFooterElementDataGridSkin">
+		<grid:typicalItem>
+			<fx:Object check="XX" company="XXXXXXXXXXXX" mobile="XXXXXXXXX" tablet="XXXXXXXXX" labtop="XXXXXXXXX"
+					   desktop="XXXXXXXXX"/>
+		</grid:typicalItem>
+		<grid:columns>
+			<s:ArrayList>
+				<columns:ToggleGridColumn dataField="check" headerText=""/>
+				<columns:BasicGridColumn dataField="company" headerText="Company"/>
+				<columns:NumberGridColumn dataField="mobile" headerText="Mobile"
+										  itemRenderer="ssen.components.sparkDatagridSupportClasses.renderers.SpinnerGridRenderer"
+										  itemEditor="ssen.components.sparkDatagridSupportClasses.editors.NumericStepperGridEditor"/>
+				<columns:NumberGridColumn dataField="tablet" headerText="Tablet"
+										  itemRenderer="ssen.components.sparkDatagridSupportClasses.renderers.SpinnerGridRenderer"
+										  itemEditor="ssen.components.sparkDatagridSupportClasses.editors.NumericStepperGridEditor"/>
+				<columns:NumberGridColumn dataField="labtop" headerText="Labtop"
+										  itemRenderer="ssen.components.sparkDatagridSupportClasses.renderers.SpinnerGridRenderer"
+										  itemEditor="ssen.components.sparkDatagridSupportClasses.editors.NumericStepperGridEditor"/>
+				<columns:NumberGridColumn dataField="desktop" headerText="Desktop"
+										  itemRenderer="ssen.components.sparkDatagridSupportClasses.renderers.SpinnerGridRenderer"
+										  itemEditor="ssen.components.sparkDatagridSupportClasses.editors.NumericStepperGridEditor"/>
+			</s:ArrayList>
+		</grid:columns>
+	</grid:LinedDataGrid>
+
+	<s:HGroup width="100%" gap="5" verticalAlign="middle">
+		<components:LinedButton label="Delete Checked Rows" click="deleteCheckedRows(event)"/>
+		<components:LinedButton label="Add Row" click="addRow(event)"/>
+		<s:Spacer width="100%"/>
+		<s:Label text="Focus Move : Ctrl + Alt + Arrow Keys"/>
+	</s:HGroup>
+</s:Group>

@@ -2,6 +2,8 @@ package ssen.common {
 import flashx.textLayout.conversion.TextConverter;
 import flashx.textLayout.elements.TextFlow;
 
+import mx.utils.StringUtil;
+
 /** 문자열 관련 util */
 public class StringUtils {
 
@@ -44,12 +46,14 @@ public class StringUtils {
 	}
 
 	/** 값들을 정해진 형식에 맞게 출력한다 */
+	[Deprecated(message="StringUtil.substitue 사용")]
 	public static function formatToString(format:String, ...args):String {
-		var f:int = args.length;
-		while (--f >= 0) {
-			format = format.replace(new RegExp("\\{" + f + "\\}", "g"), args[f]);
-		}
-		return format;
+		return StringUtil.substitute.apply(null, [format].concat(args));
+		//		var f:int = args.length;
+		//		while (--f >= 0) {
+		//			format = format.replace(new RegExp("\\{" + f + "\\}", "g"), args[f]);
+		//		}
+		//		return format;
 	}
 
 	/** 문자열이 Rich Text Format 인지 확인한다 */
@@ -68,6 +72,16 @@ public class StringUtils {
 		}
 
 		return textFlow;
+	}
+
+	/** 특정 문자를 반복해서 곱한다 */
+	public static function multiply(char:String, count:int, delimiter:String = ""):String {
+		var str:Vector.<String> = new Vector.<String>(count, true);
+		var f:int = count;
+		while (--f >= 0) {
+			str[f] = char;
+		}
+		return str.join(delimiter);
 	}
 }
 }

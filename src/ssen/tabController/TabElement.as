@@ -1,4 +1,4 @@
-package ssen.flexkit.controls {
+package ssen.tabController {
 import flash.events.FocusEvent;
 import flash.events.IEventDispatcher;
 

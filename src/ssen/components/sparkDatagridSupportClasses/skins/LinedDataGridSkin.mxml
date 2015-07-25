@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx"
-			 xmlns:fb="http://ns.adobe.com/flashbuilder/2009" alpha.disabled="0.5" minWidth="89" minHeight="84" xmlns:indicators="ssen.flexkit.components.grid.skins.indicators.*"
-			 xmlns:primitives="ssen.flexkit.primitives.*" xmlns:lined="ssen.flexkit.components.grid.skins.lined.*">
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009"
+			 xmlns:mx="library://ns.adobe.com/flex/mx"
+			 xmlns:s="library://ns.adobe.com/flex/spark"
+			 xmlns:graphics="ssen.components.graphics.*"
+			 xmlns:lined="ssen.components.sparkDatagridSupportClasses.skins.lined.*"
+
+			 alpha.disabled="0.5"
+			 minWidth="89"
+			 minHeight="84">
 
 	<fx:Metadata>
 		<![CDATA[
-            [HostComponent("spark.components.DataGrid")]
-        ]]>
+		[HostComponent("spark.components.DataGrid")]
+		]]>
 	</fx:Metadata>
 
 	<s:states>
-		<s:State name="normal"/>
-		<s:State name="disabled"/>
+		<s:State name="normal" />
+		<s:State name="disabled" />
 	</s:states>
 
 	<fx:Declarations>
@@ -24,7 +30,7 @@
 		<fx:Component id="alternatingRowColorsBackground">
 			<s:Rect>
 				<s:fill>
-					<s:SolidColor color="0xfffffff"/>
+					<s:SolidColor color="0xfffffff" />
 				</s:fill>
 			</s:Rect>
 		</fx:Component>
@@ -35,17 +41,17 @@
 		=================================================================
 		-->
 		<fx:Component id="caretIndicator">
-			<primitives:LineBox lineWeightLeft="5" lineWeightRight="5" lineWeightTop="5" lineWeightBottom="5">
-				<primitives:fill>
-					<s:SolidColor color="0x000000" alpha="0.06"/>
-				</primitives:fill>
-			</primitives:LineBox>
+			<graphics:LineBox lineWeightLeft="5" lineWeightRight="5" lineWeightTop="5" lineWeightBottom="5">
+				<graphics:fill>
+					<s:SolidColor color="0x000000" alpha="0.06" />
+				</graphics:fill>
+			</graphics:LineBox>
 		</fx:Component>
 
 		<fx:Component id="selectionIndicator">
 			<s:Rect>
 				<s:fill>
-					<s:SolidColor color="0xf0f0f0"/>
+					<s:SolidColor color="0xf0f0f0" />
 				</s:fill>
 			</s:Rect>
 		</fx:Component>
@@ -53,17 +59,17 @@
 		<fx:Component id="hoverIndicator">
 			<s:Rect>
 				<s:fill>
-					<s:SolidColor color="0xf7f7f7"/>
+					<s:SolidColor color="0xf7f7f7" />
 				</s:fill>
 			</s:Rect>
 		</fx:Component>
 
 		<fx:Component id="dropIndicator">
-			<s:GraphicElement/>
+			<s:GraphicElement />
 		</fx:Component>
 
 		<fx:Component id="editorIndicator">
-			<s:GraphicElement/>
+			<s:GraphicElement />
 		</fx:Component>
 
 		<!--
@@ -74,7 +80,7 @@
 		<fx:Component id="columnSeparator">
 			<s:Line>
 				<s:stroke>
-					<s:SolidColorStroke color="0xE6E6E6" weight="0" caps="square"/>
+					<s:SolidColorStroke color="0xE6E6E6" weight="0" caps="square" />
 				</s:stroke>
 			</s:Line>
 		</fx:Component>
@@ -82,18 +88,17 @@
 		<fx:Component id="rowSeparator">
 			<s:Line>
 				<s:stroke>
-					<s:SolidColorStroke color="0xE6E6E6" weight="0" caps="square"/>
+					<s:SolidColorStroke color="0xE6E6E6" weight="0" caps="square" />
 				</s:stroke>
 			</s:Line>
 		</fx:Component>
-
 
 
 		<fx:Component id="lockedColumnsSeparator">
 			<s:Group>
 				<s:Line left="0" right="0" top="0" bottom="0">
 					<s:stroke>
-						<s:SolidColorStroke color="0x969696" weight="2" caps="square"/>
+						<s:SolidColorStroke color="0x969696" weight="2" caps="square" />
 					</s:stroke>
 				</s:Line>
 			</s:Group>
@@ -103,12 +108,11 @@
 			<s:Group>
 				<s:Line left="0" right="0" top="0" bottom="0">
 					<s:stroke>
-						<s:SolidColorStroke color="0x969696" weight="2" caps="square"/>
+						<s:SolidColorStroke color="0x969696" weight="2" caps="square" />
 					</s:stroke>
 				</s:Line>
 			</s:Group>
 		</fx:Component>
-
 
 
 		<!--
@@ -117,13 +121,13 @@
 		=================================================================
 		-->
 		<fx:Component id="headerRenderer">
-			<lined:GridHeaderRenderer/>
+			<lined:GridHeaderRenderer />
 		</fx:Component>
 
 		<fx:Component id="headerColumnSeparator">
 			<s:Line>
 				<s:stroke>
-					<s:SolidColorStroke color="0x969696" weight="1" caps="square"/>
+					<s:SolidColorStroke color="0x969696" weight="1" caps="square" />
 				</s:stroke>
 			</s:Line>
 		</fx:Component>
@@ -139,8 +143,9 @@
 	<s:VGroup horizontalAlign="justify" gap="0" left="0" right="0" top="0" bottom="0">
 
 		<!-- header -->
-		<s:GridColumnHeaderGroup id="columnHeaderGroup" minHeight="30" paddingLeft="1" paddingRight="1" paddingTop="1" columnSeparator="{headerColumnSeparator}"
-								 headerRenderer="{headerRenderer}"/>
+		<s:GridColumnHeaderGroup id="columnHeaderGroup" minHeight="30" paddingLeft="1" paddingRight="1" paddingTop="1"
+								 columnSeparator="{headerColumnSeparator}"
+								 headerRenderer="{headerRenderer}" />
 
 		<!-- content -->
 		<s:Group height="100%">
@@ -148,7 +153,7 @@
 			<!-- background color -->
 			<s:Rect id="background" left="1" right="1" top="1" bottom="1">
 				<s:fill>
-					<s:SolidColor id="bgFill" color="0xFFFFFF"/>
+					<s:SolidColor id="bgFill" color="0xFFFFFF" />
 				</s:fill>
 			</s:Rect>
 
@@ -156,7 +161,7 @@
 			<s:VGroup horizontalAlign="justify" height="100%" width="100%" gap="-1">
 				<s:Line id="headerSeparator">
 					<s:stroke>
-						<s:SolidColorStroke color="0x969696" weight="1" caps="square"/>
+						<s:SolidColorStroke color="0x969696" weight="1" caps="square" />
 					</s:stroke>
 				</s:Line>
 
@@ -165,11 +170,11 @@
 						<s:gridView>
 							<fx:Component>
 								<s:GridView>
-									<s:GridLayer name="backgroundLayer"/>
-									<s:GridLayer name="selectionLayer"/>
-									<s:GridLayer name="overlayLayer"/>
-									<s:GridLayer name="editorIndicatorLayer"/>
-									<s:GridLayer name="rendererLayer"/>
+									<s:GridLayer name="backgroundLayer" />
+									<s:GridLayer name="selectionLayer" />
+									<s:GridLayer name="overlayLayer" />
+									<s:GridLayer name="editorIndicatorLayer" />
+									<s:GridLayer name="rendererLayer" />
 								</s:GridView>
 							</fx:Component>
 						</s:gridView>
@@ -184,7 +189,7 @@
 	<!-- border -->
 	<s:Rect left="0" right="0" top="0" bottom="0" id="border">
 		<s:stroke>
-			<s:SolidColorStroke id="borderStroke" weight="1"/>
+			<s:SolidColorStroke id="borderStroke" weight="1" />
 		</s:stroke>
 	</s:Rect>
 

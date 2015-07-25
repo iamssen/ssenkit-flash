@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:grid="ssen.components.sparkDatagridSupportClasses.*"
+		 xmlns:columns="ssen.components.sparkDatagridSupportClasses.columns.*"
+
+		 initialize="init(event)">
+	<fx:Script>
+		<![CDATA[
+		import mx.collections.IList;
+		import mx.events.FlexEvent;
+
+		import ssen.components.sparkDatagridSupportClasses._showcase_.models.FooterGraphDataGridRow;
+
+		[Bindable]
+		public var data:IList;
+
+		private function init(event:FlexEvent):void {
+			data = FooterGraphDataGridRow.createDatas();
+		}
+		]]>
+	</fx:Script>
+
+	<s:layout>
+		<s:VerticalLayout paddingTop="2" paddingBottom="2" paddingLeft="2" paddingRight="2" gap="10"
+						  horizontalAlign="center" verticalAlign="top"/>
+	</s:layout>
+
+	<grid:LinedDataGrid id="grid" width="100%" height="100%" dataProvider="{data}" editable="true"
+						skinClass="ssen.components.sparkDatagridSupportClasses._showcase_.views.SampleFooterGraphDataGridSkin">
+		<grid:typicalItem>
+			<fx:Object color="0" product="XXXXXXXXXXXXXX" q1="AAAAAAAAAAAAA" q2="AAAAAAAAAAAAA" q3="AAAAAAAAAAAAA"
+					   q4="AAAAAAAAAAAAA" q5="AAAAAAAAAAAAA" q6="AAAAAAAAAAAAA"
+					   q7="AAAAAAAAAAAAA" q8="AAAAAAAAAAAAA"/>
+		</grid:typicalItem>
+		<grid:columns>
+			<s:ArrayList>
+				<columns:BasicGridColumn dataField="product" headerText="Product"
+										 itemRenderer="ssen.components.sparkDatagridSupportClasses._showcase_.views.SampleFooterGraphProductRenderer"/>
+				<columns:NumberGridColumn dataField="q1" headerText="2011 Q4"/>
+				<columns:NumberGridColumn dataField="q2" headerText="2012 Q1"/>
+				<columns:NumberGridColumn dataField="q3" headerText="2012 Q2"/>
+				<columns:NumberGridColumn dataField="q4" headerText="2012 Q3"/>
+				<columns:NumberGridColumn dataField="q5" headerText="2012 Q4"/>
+				<columns:NumberGridColumn dataField="q6" headerText="2013 Q1"/>
+				<columns:NumberGridColumn dataField="q7" headerText="2013 Q2"/>
+				<columns:NumberGridColumn dataField="q8" headerText="2013 Q3"/>
+			</s:ArrayList>
+		</grid:columns>
+	</grid:LinedDataGrid>
+
+	<!--<s:HGroup width="100%" gap="5" verticalAlign="middle">
+		<components:LinedButton label="Delete Checked Rows" click="deleteCheckedRows(event)"/>
+		<components:LinedButton label="Add Row" click="addRow(event)"/>
+		<s:Spacer width="100%"/>
+		<s:Label text="Focus Move : Ctrl + Alt + Arrow Keys"/>
+	</s:HGroup>-->
+</s:Group>

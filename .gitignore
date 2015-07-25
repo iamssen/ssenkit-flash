@@ -1,14 +1,18 @@
+# Generated Files
 bin/
 bin-debug/
 bin-release/
 
-.settings/
-
+# Eclipse
+.settings
 .actionScriptProperties
 .flexLibProperties
 .project
 
+# IntelliJ
 .idea
-ssenkit.iml
+*.iml
 
+# Node.js And Build Script
 node_modules
+.flbuild-cache

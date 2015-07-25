@@ -1,4 +1,5 @@
-package ssen.flexkit.components.grid.renderers {
+package ssen.components.sparkDatagridSupportClasses.renderers {
+
 import flash.events.Event;
 
 import mx.events.FlexEvent;
@@ -10,9 +11,9 @@ public class GraphicsGroupGridRenderer extends GridItemRenderer {
 	private var helper:GraphicsGridRendererHelper;
 
 	public function GraphicsGroupGridRenderer() {
-		helper=new GraphicsGridRendererHelper;
-		helper.draw=draw;
-		helper.clear=clear;
+		helper = new GraphicsGridRendererHelper;
+		helper.draw = draw;
+		helper.clear = clear;
 	}
 
 	/** @inheritDoc */
@@ -53,7 +54,7 @@ public class GraphicsGroupGridRenderer extends GridItemRenderer {
 	//  data
 	//----------------------------------
 
-	private var _data:Object=null;
+	private var _data:Object = null;
 
 	[Bindable("dataChange")]  // compatible with FlexEvent.DATA_CHANGE
 
@@ -84,11 +85,11 @@ public class GraphicsGroupGridRenderer extends GridItemRenderer {
 		if (_data == value)
 			return;
 
-		_data=value;
+		_data = value;
 
-		helper.dataChanged=true;
+		helper.dataChanged = true;
 
-		const eventType:String="dataChange";
+		const eventType:String = "dataChange";
 		if (hasEventListener(eventType))
 			dispatchEvent(new FlexEvent(eventType));
 	}
@@ -100,7 +101,7 @@ public class GraphicsGroupGridRenderer extends GridItemRenderer {
 	//  column
 	//----------------------------------
 
-	private var _column:GridColumn=null;
+	private var _column:GridColumn = null;
 
 	[Bindable("columnChanged")]
 
@@ -128,9 +129,9 @@ public class GraphicsGroupGridRenderer extends GridItemRenderer {
 		if (_column == value)
 			return;
 
-		_column=value;
+		_column = value;
 
-		helper.columnChanged=true;
+		helper.columnChanged = true;
 
 		dispatchChangeEvent("columnChanged");
 	}

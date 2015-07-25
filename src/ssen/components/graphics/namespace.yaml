@@ -1,4 +1,4 @@
 namespace: "http://ssen.name/ns/ssen"
 components:
-- "SVGImage"
-- "LineBox"
+- SVGImage
+- LineBox

@@ -1,0 +1,6 @@
+namespace: "http://ssen.name/ns/ssen"
+components:
+- Table
+- TableFlagColumn
+- TableColumn
+- TableCellRenderer

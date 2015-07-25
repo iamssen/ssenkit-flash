@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:pola="ssen.components.chart.pola.*"
+		 xmlns:pieaxis="ssen.components.chart.pola.pieAxis.*"
+		 xmlns:animate="ssen.components.animate.*" xmlns:tooltips="ssen.components.tooltips.*"
+
+		 preinitialize="init()">
+
+	<fx:Script>
+		<![CDATA[
+		import com.greensock.easing.Back;
+
+		import mx.collections.ArrayList;
+		import mx.collections.IList;
+		import mx.utils.StringUtil;
+
+		import ssen.common.MathUtils;
+		import ssen.components.chart.pola.pieAxis.PieSeriesWedge;
+		import ssen.components.tooltips.TestToolTip;
+
+		private const label:String = '<font color="#00ff00">총 금액</font><br/>305,300억';
+
+		[Bindable]
+		private var data1:IList;
+
+		[Bindable]
+		private var data2:IList;
+
+		private function init():void {
+			refresh();
+		}
+
+		private function refresh():void {
+			refreshData1();
+			refreshData2();
+		}
+
+		private function refreshData1():void {
+			var arr:Array = [];
+
+			var f:int = -1;
+			var fmax:int = MathUtils.rand(3, 12);
+
+			while (++f < fmax) {
+				arr.push({
+					label: "Label" + f,
+					value: MathUtils.rand(20, 100)
+				});
+			}
+
+			data1 = new ArrayList(arr);
+		}
+
+		private function refreshData2():void {
+			var arr:Array = [];
+
+			var f:int = -1;
+			var fmax:int = MathUtils.rand(2, 6);
+
+			while (++f < fmax) {
+				arr.push({
+					label: "Label" + f,
+					value: MathUtils.rand(20, 100)
+				});
+			}
+
+			data2 = new ArrayList(arr);
+		}
+
+		private static function categoryLabelClick(event:PolaChartEvent):void {
+			trace("test.categoryLabelClick()", event);
+		}
+
+		private static function labelFunction(data:Object, dataField:String, pie:PieSeriesWedge):String {
+			return StringUtil.substitute('<font color="#00ff00">투자비율</font><br/>{0}', pie.row[dataField] + "%");
+		}
+
+		internal static function toolTipFunction(toolTip:TestToolTip, params:Object):void {
+			toolTip.width = MathUtils.rand(50, 100);
+			toolTip.height = MathUtils.rand(50, 100);
+			toolTip.validateNow();
+			trace("EXC10140PieChart.toolTipFunction()", params);
+		}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<fx:Component id="CurrentWedgeRenderer">
+			<pieaxis:PieSeriesWedgeRenderer lineWeight="1"/>
+		</fx:Component>
+	</fx:Declarations>
+
+	<pola:PolaChart left="10" right="10" top="10" bottom="10"
+					gutterLeft="40" gutterRight="40" gutterTop="40" gutterBottom="40">
+		<pieaxis:PieAxis dataProvider="{data1}">
+			<pieaxis:animation>
+				<animate:Animation duration="3"/>
+			</pieaxis:animation>
+			<pieaxis:series>
+				<pieaxis:PieSeries dataField="value" innerRadiusRatio="0.7" outerRadiusRatio="1"
+								   wedgeRenderer="{CurrentWedgeRenderer}">
+					<pieaxis:toolTipProvider>
+						<tooltips:ToolTipProvider toolTipFunction="toolTipFunction"
+												  renderer="ssen.components.tooltips.TestToolTip"/>
+					</pieaxis:toolTipProvider>
+					<pieaxis:animationTrack>
+						<animate:AnimationTrack start="0" end="1" ease="Back.easeOut"/>
+					</pieaxis:animationTrack>
+				</pieaxis:PieSeries>
+			</pieaxis:series>
+		</pieaxis:PieAxis>
+
+		<pieaxis:PieAxis dataProvider="{data2}">
+			<pieaxis:animation>
+				<animate:Animation duration="3"/>
+			</pieaxis:animation>
+			<pieaxis:series>
+				<pieaxis:PieSeries dataField="value" innerRadiusRatio="0.4" outerRadiusRatio="0.7"
+								   wedgeRenderer="{CurrentWedgeRenderer}">
+					<pieaxis:toolTipProvider>
+						<tooltips:ToolTipProvider toolTipFunction="toolTipFunction"
+												  renderer="ssen.components.tooltips.TestToolTip"/>
+					</pieaxis:toolTipProvider>
+					<pieaxis:animationTrack>
+						<animate:AnimationTrack start="0.4" end="1" ease="Back.easeOut"/>
+					</pieaxis:animationTrack>
+				</pieaxis:PieSeries>
+				<pieaxis:PieLabels dataField="value"
+								   labelFunction="labelFunction"
+								   radiusRatio="0.55"
+								   textAlign="center"
+								   fontFamily="notoSans"
+								   fontLookup="embeddedCFF"
+								   fontSize="30">
+					<pieaxis:animationTrack>
+						<animate:AnimationTrack start="0.6" end="1" ease="Back.easeOut"/>
+					</pieaxis:animationTrack>
+				</pieaxis:PieLabels>
+				<pieaxis:PieCenterLabel radiusRatio="0.4"
+										text="{label}"
+										fontFamily="notoSans"
+										fontLookup="embeddedCFF"
+										fontSize="90">
+					<pieaxis:animationTrack>
+						<animate:AnimationTrack start="0.4" end="1" ease="Back.easeOut"/>
+					</pieaxis:animationTrack>
+				</pieaxis:PieCenterLabel>
+			</pieaxis:series>
+		</pieaxis:PieAxis>
+	</pola:PolaChart>
+
+	<s:Button left="20" top="20" label="Refresh" click="refresh()"/>
+</s:Group>

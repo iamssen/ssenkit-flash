@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--- 
+현재 좀 둥그렇게 나오는 ToolTip 표시
+
+@includeExample HtmlToolTip.txt
+-->
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:s="library://ns.adobe.com/flex/spark" implements="mx.core.IToolTip">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.ToolTipEvent;
+
+			import flashx.textLayout.conversion.TextConverter;
+			import flashx.textLayout.elements.TextFlow;
+
+			[Bindable]
+			private var tlf:TextFlow;
+
+			[Bindable]
+			private var borderColor:uint=0x12478d;
+
+			private var _text:String;
+
+			/** 표시할 문자 */
+			public function get text():String {
+				return _text;
+			}
+
+			public function set text(value:String):void {
+				_text=value;
+
+				var format:String=(value.indexOf("<") > -1) ? TextConverter.TEXT_FIELD_HTML_FORMAT : TextConverter.PLAIN_TEXT_FORMAT;
+				tlf=TextConverter.importToFlow(value, format);
+			}
+
+			/**
+			 * Color를 Custom하게 적용하고 싶을 때 사용
+			 */
+			public static function create(borderColor:uint, target:Object, event:ToolTipEvent):void {
+				if (!target || !target["toolTip"]) {
+					return;
+				}
+
+				var tip:HtmlToolTip=new HtmlToolTip;
+				tip.borderColor=borderColor;
+				tip.text=target["toolTip"];
+
+				event.toolTip=tip;
+			}
+		]]>
+	</fx:Script>
+	<s:Rect height="{txt.height + 20}" width="{txt.width + 20}" x="{txt.x - 10}" y="{txt.y - 10}" radiusX="8" radiusY="8">
+		<s:stroke>
+			<s:SolidColorStroke color="{borderColor}" weight="2" pixelHinting="true"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="#ffffff" alpha="0.9"/>
+		</s:fill>
+	</s:Rect>
+	<s:RichText id="txt"
+				x="15"
+				color="0x000000"
+				fontFamily="Dotum,Verdana,Arial,_sans"
+				fontSize="12"
+				textFlow="{tlf}"
+				lineHeight="150%"/>
+</s:Group>

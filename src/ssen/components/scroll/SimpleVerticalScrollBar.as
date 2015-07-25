@@ -1,7 +1,8 @@
-package ssen.flexkit.components.scroll {
+package ssen.components.scroll {
+
 import spark.components.VScrollBar;
 
-import ssen.flexkit.components.scroll.skins.SimpleVerticalScrollBarSkin;
+import ssen.components.scroll.snippets.SimpleVerticalScrollBarSkin;
 
 [Style(name="thumbColor", inherit="yes", type="uint", format="Color")]
 [Style(name="thumbAlpha", inherit="yes", type="Number", format="Number")]

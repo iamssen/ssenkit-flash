@@ -65,18 +65,21 @@ public class ShowcaseContainer extends SkinnableComponent {
 	//==========================================================================================
 	private function getLastIndex():int {
 		if (getSharedData()["lastIndex"] !== undefined) {
-			return getSharedData()["lastIndex"];
+			var index:int = getSharedData()["lastIndex"];
+			if (_showcase && index < _showcase.length) {
+				return index;
+			}
 		}
 
 		setLastIndex(0);
 		return 0;
 	}
 
-	private function setLastIndex(index:int):void {
+	private static function setLastIndex(index:int):void {
 		getSharedData()["lastIndex"] = index;
 	}
 
-	private function getSharedData():Object {
+	private static function getSharedData():Object {
 		return SharedObject.getLocal("showcase").data;
 	}
 
@@ -88,8 +91,6 @@ public class ShowcaseContainer extends SkinnableComponent {
 
 		if (instance === dropdownList) {
 			dropdownList.addEventListener(IndexChangeEvent.CHANGE, indexChangedHandler);
-
-			trace("ShowcaseContainer.partAdded()", _showcase);
 
 			if (_showcase) {
 				dropdownList.dataProvider = new VectorCollection(_showcase);

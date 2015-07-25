@@ -1,0 +1,29 @@
+<s:Skin alpha.disabled="0.5" xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark">
+	<fx:Metadata>
+		<![CDATA[
+		[HostComponent("spark.components.SkinnablePopUpContainer")]
+		]]>
+	</fx:Metadata>
+
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="disabled" />
+		<s:State name="closed" stateGroups="closedGroup" />
+		<s:State name="disabledAndClosed" stateGroups="closedGroup" />
+	</s:states>
+
+	<s:BorderContainer id="popupAnchorContainer"
+					   borderColor="0x000000"
+					   bottom="0"
+					   left="0"
+					   right="0"
+					   top="0"
+					   borderWeight="1"
+					   visible.closedGroup="false">
+		<s:Group id="contentGroup" bottom="10" left="10" right="10" top="10">
+			<s:layout>
+				<s:BasicLayout />
+			</s:layout>
+		</s:Group>
+	</s:BorderContainer>
+</s:Skin>

@@ -1,24 +1,25 @@
-package ssen.flexkit.components.grid {
+package ssen.components.sparkDatagridSupportClasses {
+
 import mx.core.ClassFactory;
 
 import spark.components.DataGrid;
 
-import ssen.flexkit.components.grid.editors.TextGridEditor;
-import ssen.flexkit.components.grid.elements.IDataGridRowElement;
-import ssen.flexkit.components.grid.renderers.GridRenderer;
-import ssen.flexkit.components.grid.skins.LinedDataGridSkin;
+import ssen.components.sparkDatagridSupportClasses.editors.TextGridEditor;
+import ssen.components.sparkDatagridSupportClasses.elements.IDataGridRowElement;
+import ssen.components.sparkDatagridSupportClasses.renderers.GridRenderer;
+import ssen.components.sparkDatagridSupportClasses.skins.LinedDataGridSkin;
 
 public class LinedDataGrid extends DataGrid {
 	[SkinPart(required="false")]
 	public var columnFooterElement:IDataGridRowElement;
 
 	public function LinedDataGrid() {
-		itemRenderer=new ClassFactory(GridRenderer);
-		itemEditor=new ClassFactory(TextGridEditor);
+		itemRenderer = new ClassFactory(GridRenderer);
+		itemEditor = new ClassFactory(TextGridEditor);
 
 		setStyle("skinClass", LinedDataGridSkin);
 
-		rowHeight=34;
+		rowHeight = 34;
 	}
 
 	override protected function partAdded(partName:String, instance:Object):void {
@@ -26,7 +27,7 @@ public class LinedDataGrid extends DataGrid {
 
 		if (instance === columnFooterElement || instance === grid) {
 			if (columnFooterElement && grid) {
-				columnFooterElement.dataGrid=this;
+				columnFooterElement.dataGrid = this;
 			}
 		}
 	}

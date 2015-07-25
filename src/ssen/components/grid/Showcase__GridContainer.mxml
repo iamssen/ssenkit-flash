@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:grid="ssen.components.grid.*"
+		 xmlns:headers="ssen.components.grid.headers.*"
+		 xmlns:contents="ssen.components.grid.contents.*"
+
+		 initialize="init(event)">
+
+	<fx:Script>
+		<![CDATA[
+		import mx.events.FlexEvent;
+
+		private function init(event:FlexEvent):void {
+
+		}
+		]]>
+	</fx:Script>
+
+	<grid:GridContainer left="10" right="10" top="10" bottom="10">
+		<headers:Header columnLayoutMode="fixed" frontLockedColumnCount="2" backLockedColumnCount="1">
+			<headers:HeaderColumn columnWidth="130" headerContent="HEADER A" />
+			<headers:HeaderColumn columnWidth="130" headerContent="HEADER B" />
+			<headers:HeaderColumn columnWidth="130" headerContent="HEADER C" />
+			<headers:HeaderColumn columnWidth="130" headerContent="HEADER D" />
+			<headers:HeaderGroupedColumn headerContent="HEADER GROUP">
+				<headers:HeaderColumn columnWidth="130" headerContent="HEADER E" />
+				<headers:HeaderColumn columnWidth="130" headerContent="HEADER F" />
+				<headers:HeaderColumn columnWidth="130" headerContent="HEADER G" />
+			</headers:HeaderGroupedColumn>
+			<headers:HeaderSubTopicColumn headerContent="HEADER SUBTOPIC" columnWidth="130">
+				<headers:HeaderColumn columnWidth="130" headerContent="HEADER H" />
+				<headers:HeaderColumn columnWidth="130" headerContent="HEADER I" />
+			</headers:HeaderSubTopicColumn>
+		</headers:Header>
+		<contents:Showcase__GridContents height="100%" />
+		<s:HScrollBar />
+	</grid:GridContainer>
+</s:Group>

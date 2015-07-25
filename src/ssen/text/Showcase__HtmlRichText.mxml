@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:text="ssen.text.*">
+
+	<fx:Declarations>
+		<s:TextLayoutFormat id="format"
+							fontFamily="notoSans"
+							fontLookup="embeddedCFF"
+							fontSize="15"/>
+	</fx:Declarations>
+
+	<fx:Script>
+		<![CDATA[
+		private const string:String = "<font size='20'><b><font color='#0000ff'>HELLO</font> WORLD</b></font><br/>test <font color='#ff0000'>label</font>";
+		private const string2:String = "<font size='20'><b><font color='#0000ff'>HELLO</font> WORLD</b></font><br/>test <font color='#ff0000'>label</font><br/>test <font color='#ff0000'>label</font><br/>test <font color='#ff0000'>label</font>";
+		]]>
+	</fx:Script>
+
+	<text:HtmlRichText x="10" y="30"
+					   text="{string}"/>
+
+	<text:HtmlRichText x="210" y="30"
+					   fontFamily="notoSans"
+					   fontSize="15"
+					   textAlign="center"
+					   text="{string}"/>
+
+	<text:HtmlRichText x="410" y="30"
+					   fontFamily="notoSans"
+					   fontSize="15"
+					   textAlign="left"
+					   text="{string2}"
+					   maxDisplayedLines="3"/>
+</s:Group>

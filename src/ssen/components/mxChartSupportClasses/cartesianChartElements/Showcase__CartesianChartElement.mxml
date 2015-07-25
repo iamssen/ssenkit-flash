@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:cartesianchartelements="ssen.components.mxChartSupportClasses.cartesianChartElements.*"
+
+		 initialize="init(event)">
+
+	<fx:Script>
+		<![CDATA[
+		import mx.collections.ArrayList;
+		import mx.collections.IList;
+		import mx.events.FlexEvent;
+
+		import ssen.common.MathUtils;
+
+		[Bindable]
+		private var data:IList;
+
+		private function init(event:FlexEvent):void {
+			var arr:Array = [];
+
+			var f:int = -1;
+			var fmax:int = MathUtils.rand(4, 9);
+
+			while (++f < fmax) {
+				arr.push({cate: "Category" + f, v1: MathUtils.rand(10, 20), v2: MathUtils.rand(10, 20), v3: MathUtils.rand(10, 20), v4: MathUtils.rand(10, 20)});
+			}
+
+			data = new ArrayList(arr);
+		}
+		]]>
+	</fx:Script>
+
+	<mx:ColumnChart dataProvider="{data}"
+					bottom="10"
+					left="10"
+					right="10"
+					top="10"
+					showDataTips="true">
+
+		<mx:seriesFilters>
+			<fx:Array />
+		</mx:seriesFilters>
+
+		<mx:backgroundElements>
+			<cartesianchartelements:Showcase__CartesianChartElement_TestElement />
+		</mx:backgroundElements>
+
+		<mx:horizontalAxis>
+			<mx:CategoryAxis id="haxis" categoryField="cate" />
+		</mx:horizontalAxis>
+
+		<mx:verticalAxis>
+			<mx:LogAxis id="vaxis"/>
+			<!--<mx:LinearAxis id="vaxis" />-->
+		</mx:verticalAxis>
+
+		<mx:verticalAxisRenderers>
+			<mx:AxisRenderer fontSize="12" axis="{vaxis}" />
+		</mx:verticalAxisRenderers>
+
+		<mx:horizontalAxisRenderers>
+			<mx:AxisRenderer fontSize="12" axis="{haxis}" />
+		</mx:horizontalAxisRenderers>
+
+		<mx:series>
+			<mx:ColumnSeries displayName="Value 1" xField="cate" yField="v1" />
+			<!--<mx:ColumnSet maxColumnWidth="50" type="stacked">-->
+				<!--<mx:ColumnSeries displayName="Value 2" xField="cate" yField="v2" />-->
+				<!--<mx:ColumnSeries displayName="Value 3" xField="cate" yField="v3" />-->
+				<!--<mx:ColumnSeries displayName="Value 4" xField="cate" yField="v4" />-->
+			<!--</mx:ColumnSet>-->
+		</mx:series>
+	</mx:ColumnChart>
+</s:Group>

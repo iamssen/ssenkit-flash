@@ -1,4 +1,4 @@
-namespace: "http://ns.ssen.name/ssen"
+namespace: "http://ssen.name/ns/ssen"
 components:
 - Dotted
 - Stripe

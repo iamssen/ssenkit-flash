@@ -21,7 +21,7 @@ import spark.components.supportClasses.SkinnableComponent;
 
 import ssen.common.IDisposable;
 import ssen.common.NullUtils;
-import ssen.components.dropdownAnchor.skins.DropDownAnchorSkin;
+import ssen.components.dropdownAnchor.snippets.DropDownAnchorSkin;
 
 [Event(name="open", type="flash.events.Event")]
 [Event(name="close", type="flash.events.Event")]
@@ -68,8 +68,8 @@ public class DropDownAnchor extends SkinnableComponent implements IDisposable {
 	}
 
 	public function set content(value:UIComponent):void {
-		var oldValue:UIComponent=_content;
-		_content=value;
+		var oldValue:UIComponent = _content;
+		_content = value;
 		if (hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE)) {
 			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "content", oldValue, _content));
 		}
@@ -86,7 +86,7 @@ public class DropDownAnchor extends SkinnableComponent implements IDisposable {
 	//==========================================================================================
 	// public api
 	//==========================================================================================
-	private var closed:Boolean=true;
+	private var closed:Boolean = true;
 	private var popupContainer:SkinnablePopUpContainer;
 
 	public function dispose():void {
@@ -100,39 +100,39 @@ public class DropDownAnchor extends SkinnableComponent implements IDisposable {
 		if (!closed)
 			return;
 
-		var popupOpenDuration:int=NullUtils.nullTo(getStyle("popupOpenDuration"), 300);
-		var openDuration:Number=popupOpenDuration / 1000;
-		var hasTween:Boolean=popupOpenDuration > 0;
+		var popupOpenDuration:int = NullUtils.nullTo(getStyle("popupOpenDuration"), 300);
+		var openDuration:Number = popupOpenDuration / 1000;
+		var hasTween:Boolean = popupOpenDuration > 0;
 
 		if (openWithPopupAnchor()) {
 			popupAnchorContainer.addElement(content);
-			popupAnchor.displayPopUp=true;
+			popupAnchor.displayPopUp = true;
 
 			if (hasTween) {
-				popupAnchorContainer.alpha=0;
+				popupAnchorContainer.alpha = 0;
 				TweenLite.to(popupAnchorContainer, openDuration, {alpha: 1, onComplete: popupAnchorContainerCompleteOpenTween});
 			} else {
-				popupAnchorContainer.alpha=1;
+				popupAnchorContainer.alpha = 1;
 				callLater(popupAnchorContainerCompleteOpenTween);
 			}
 		} else {
-			var app:Application=FlexGlobals.topLevelApplication as Application;
+			var app:Application = FlexGlobals.topLevelApplication as Application;
 
-			popupContainer=new SkinnablePopUpContainer;
+			popupContainer = new SkinnablePopUpContainer;
 			popupContainer.addElement(content);
 			popupContainer.open(app, true);
 			popupContainer.setStyle("skinFactory", popupContainerSkin);
 			PopUpManager.centerPopUp(popupContainer);
 
 			if (hasTween) {
-				popupContainer.alpha=0;
+				popupContainer.alpha = 0;
 				TweenLite.to(popupContainer, openDuration, {alpha: 1});
 			} else {
-				popupContainer.alpha=1;
+				popupContainer.alpha = 1;
 			}
 		}
 
-		closed=false;
+		closed = false;
 		dispatchEvent(new FlexEvent(Event.OPEN));
 	}
 
@@ -149,12 +149,12 @@ public class DropDownAnchor extends SkinnableComponent implements IDisposable {
 	}
 
 	private function clickStage(event:MouseEvent):void {
-		var cx:Number=event.stageX;
-		var cy:Number=event.stageY;
-		var px:Number=popupAnchor.popUp.x;
-		var py:Number=popupAnchor.popUp.y;
-		var pw:Number=popupAnchor.popUp.width;
-		var ph:Number=popupAnchor.popUp.height;
+		var cx:Number = event.stageX;
+		var cy:Number = event.stageY;
+		var px:Number = popupAnchor.popUp.x;
+		var py:Number = popupAnchor.popUp.y;
+		var pw:Number = popupAnchor.popUp.width;
+		var ph:Number = popupAnchor.popUp.height;
 
 		if (cx < px || cx > px + pw || cy < py || cy > py + ph) {
 			close();
@@ -168,9 +168,9 @@ public class DropDownAnchor extends SkinnableComponent implements IDisposable {
 		if (closed)
 			return;
 
-		var popupCloseDuration:int=NullUtils.nullTo(getStyle("popupCloseDuration"), 200);
-		var closeDuration:Number=popupCloseDuration / 1000;
-		var hasTween:Boolean=popupCloseDuration > 0;
+		var popupCloseDuration:int = NullUtils.nullTo(getStyle("popupCloseDuration"), 200);
+		var closeDuration:Number = popupCloseDuration / 1000;
+		var hasTween:Boolean = popupCloseDuration > 0;
 
 		if (popupContainer) {
 			if (hasTween) {
@@ -189,18 +189,18 @@ public class DropDownAnchor extends SkinnableComponent implements IDisposable {
 			stage.removeEventListener(MouseEvent.CLICK, clickStage);
 		}
 
-		closed=true;
+		closed = true;
 		dispatchEvent(new FlexEvent(Event.CLOSE));
 	}
 
 	private function popupContainerCompleteCloseTween():void {
 		popupContainer.close();
 		popupContainer.removeElement(content);
-		popupContainer=null;
+		popupContainer = null;
 	}
 
 	private function popupAnchorContainerCompleteCloseTween():void {
-		popupAnchor.displayPopUp=false;
+		popupAnchor.displayPopUp = false;
 		popupAnchorContainer.removeAllElements();
 	}
 
@@ -208,14 +208,14 @@ public class DropDownAnchor extends SkinnableComponent implements IDisposable {
 	// utils
 	//==========================================================================================
 	protected function openWithPopupAnchor():Boolean {
-		var pos:Point=parent.localToGlobal(new Point(x, y));
-		var w:int=width;
-		var h:int=height;
-		var sw:int=stage.stageWidth;
-		var sh:int=stage.stageHeight;
+		var pos:Point = parent.localToGlobal(new Point(x, y));
+		var w:int = width;
+		var h:int = height;
+		var sw:int = stage.stageWidth;
+		var sh:int = stage.stageHeight;
 
-		var verticalSpaceClear:Boolean=pos.y > content.height || sh - pos.y + h > content.height;
-		var horizontalSpaceClear:Boolean=sw - pos.x > content.width || pos.x + w > content.width;
+		var verticalSpaceClear:Boolean = pos.y > content.height || sh - pos.y + h > content.height;
+		var horizontalSpaceClear:Boolean = sw - pos.x > content.width || pos.x + w > content.width;
 
 		return verticalSpaceClear && horizontalSpaceClear;
 	}
