@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+
+		 initialize="init(event)">
+	<fx:Script>
+		<![CDATA[
+		import mx.events.FlexEvent;
+
+		[Embed(source="sample.dlogger", mimeType="application/octet-stream")]
+		private static const SampleData:Class;
+
+		private function init(event:FlexEvent):void {
+			registerClassAlias("ssen.devkit.DataLoggerVO", DataLoggerVO);
+
+			var bytes:ByteArray = new SampleData;
+			var store:Array = bytes.readObject();
+
+			var f:int = -1;
+			var fmax:int = store.length;
+			var vo:DataLoggerVO;
+			while (++f < fmax) {
+				vo = store[f];
+				trace("Showcase__DataLogger.init()", vo);
+			}
+		}
+		]]>
+	</fx:Script>
+</s:Group>
