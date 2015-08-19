@@ -6,6 +6,8 @@ import flash.display.Graphics;
 import mx.core.UIComponent;
 import mx.utils.StringUtil;
 
+// proxy test
+
 public class Showcase__DataTransition extends UIComponent {
 	public function Showcase__DataTransition() {
 		var from:Array = [
