@@ -6,6 +6,8 @@ import flash.display.Graphics;
 import flash.events.EventDispatcher;
 import flash.events.MouseEvent;
 import flash.geom.Point;
+import flash.ui.Mouse;
+import flash.ui.MouseCursor;
 
 import mx.collections.IList;
 import mx.core.IFactory;
@@ -43,6 +45,7 @@ public class PieSeries extends EventDispatcher implements IPieElement {
 	public var fillFunction:Function;
 	//	public var fillField:String;
 	//	public var showDataTip:Boolean;
+	public var buttonMode:Boolean;
 
 	public var toolTipProvider:ToolTipProvider;
 
@@ -200,12 +203,16 @@ public class PieSeries extends EventDispatcher implements IPieElement {
 				wedge: wedge
 			});
 		}
+
+		if (buttonMode) Mouse.cursor = MouseCursor.BUTTON;
 	}
 
 	private function toolTipRemove(event:MouseEvent):void {
 		if (toolTipProvider) {
 			toolTipProvider.hide();
 		}
+
+		if (buttonMode) Mouse.cursor = MouseCursor.AUTO;
 	}
 
 	private function compute(axis:PieAxis, chart:PolaChart):Pies {

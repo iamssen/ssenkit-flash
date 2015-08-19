@@ -124,6 +124,21 @@ public class ColumnTrendPolyLine extends CartesianChartElement implements ITextL
 	}
 
 	//---------------------------------------------
+	// skipSameLabelContent
+	//---------------------------------------------
+	private var _skipSameLabelContent:Boolean;
+
+	/** skipSameLabelContent */
+	public function get skipSameLabelContent():Boolean {
+		return _skipSameLabelContent;
+	}
+
+	public function set skipSameLabelContent(value:Boolean):void {
+		_skipSameLabelContent = value;
+		invalidateDisplayList();
+	}
+
+	//---------------------------------------------
 	// labelFunction
 	//---------------------------------------------
 	private var _labelFunction:Function;
@@ -186,6 +201,7 @@ public class ColumnTrendPolyLine extends CartesianChartElement implements ITextL
 
 		var format:ITextLayoutFormat;
 		var label:String;
+		var lastLabel:String;
 
 		while (++f < fmax) {
 			tick1 = ticks[f];
@@ -250,28 +266,33 @@ public class ColumnTrendPolyLine extends CartesianChartElement implements ITextL
 			}
 
 			if (_labelFunction !== null) {
-				format = formatMixin.getFormat({data: source1, nextData: source2, dataField: _dataField});
 				label = _labelFunction({data: source1, nextData: source2, dataField: _dataField});
 
-				labelBound.x = x1;
-				labelBound.y = y1 - 100;
-				labelBound.width = x2 - x1;
-				labelBound.height = 94;
+				if (!_skipSameLabelContent || label !== lastLabel) {
+					format = formatMixin.getFormat({data: source1, nextData: source2, dataField: _dataField});
 
-				var lines:Vector.<TextLine> = TextLineFactory.createTextLines(label, format, formatMixin.truncationOptions, EmbededFontUtils.getSwfContext(this, format.fontFamily, format.fontWeight === FontWeight.BOLD));
-				TextLinePrinter.printTextLinesWithSpace(lines,
-						this,
-						labelBound.right,
-						labelBound.bottom,
-						labelBound.left,
-						0,
-						labelBound.top,
-						0,
-						TextAlign.CENTER,
-						VerticalAlign.BOTTOM,
-						false,
-						false
-				);
+					labelBound.x = x1;
+					labelBound.y = y1 - 100;
+					labelBound.width = x2 - x1;
+					labelBound.height = 94;
+
+					var lines:Vector.<TextLine> = TextLineFactory.createTextLines(label, format, formatMixin.truncationOptions, EmbededFontUtils.getSwfContext(this, format.fontFamily, format.fontWeight === FontWeight.BOLD));
+					TextLinePrinter.printTextLinesWithSpace(lines,
+							this,
+							labelBound.right,
+							labelBound.bottom,
+							labelBound.left,
+							0,
+							labelBound.top,
+							0,
+							TextAlign.CENTER,
+							VerticalAlign.BOTTOM,
+							false,
+							false
+					);
+				}
+
+				lastLabel = label;
 
 				//				g.beginFill(0, 0.3);
 				//				g.drawRect(labelBound.x, labelBound.y, labelBound.width, labelBound.height);

@@ -200,6 +200,7 @@
 
 			<cartesianchartelements:ColumnTrendPolyLine dataField="value3"
 														useDashedLine="true"
+														skipSameLabelContent="true"
 														labelFunction="trendLabelFunction">
 				<cartesianchartelements:stroke>
 					<s:SolidColorStroke color="#F85921" weight="3"/>
