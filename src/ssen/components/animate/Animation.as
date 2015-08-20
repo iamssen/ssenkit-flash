@@ -1,6 +1,9 @@
 package ssen.components.animate {
 import com.greensock.TweenLite;
 
+import ssen.animation.Animation;
+
+[Deprecated(replacement=ssen.animation.Animation)]
 public class Animation {
 
 	private var tween:TweenLite;

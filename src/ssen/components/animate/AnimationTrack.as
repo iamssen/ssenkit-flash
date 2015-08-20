@@ -1,6 +1,9 @@
 package ssen.components.animate {
 import com.greensock.easing.Quad;
 
+import ssen.animation.AnimationTrack;
+
+[Deprecated(replacement=ssen.animation.AnimationTrack)]
 public class AnimationTrack {
 	public var start:Number;
 	public var end:Number;

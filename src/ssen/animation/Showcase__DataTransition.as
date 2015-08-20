@@ -26,17 +26,17 @@ public class Showcase__DataTransition extends UIComponent {
 			{primary: "C", value: 200}
 		];
 
-		var transition:ArrayedDataTransition = new ArrayedDataTransition;
+		var transition:StackedDataTransition = new StackedDataTransition;
 		transition.from = from;
 		transition.to = to;
-		transition.primaryProperty = "primary";
-		transition.property = "value";
+		transition.primaryKeyProperty = "primary";
+		transition.valueProperty = "value";
 
 		//		print(transition);
 		draw(transition);
 	}
 
-	private function draw(transition:IDataTransition):void {
+	private function draw(transition:StackedDataTransition):void {
 		var colors:Object = {
 			A: 0x000000,
 			B: 0xff0000,
@@ -44,8 +44,8 @@ public class Showcase__DataTransition extends UIComponent {
 			D: 0x0000ff,
 			E: 0xcccccc
 		}
-		var snap:IDataTransitionSnapshot;
-		var snaps:Vector.<IDataTransitionSnapshot> = new <IDataTransitionSnapshot>[];
+		var snap:StackedDataTransitionSnapshot;
+		var snaps:Vector.<StackedDataTransitionSnapshot> = new <StackedDataTransitionSnapshot>[];
 
 		var ease:Function = Quad.easeOut;
 
@@ -65,14 +65,14 @@ public class Showcase__DataTransition extends UIComponent {
 
 		var g:Graphics = graphics;
 		var color:uint;
-		var primaryValues:Vector.<String> = snaps[0].primaryValues;
+		var primaryKeys:Vector.<String> = snaps[0].primaryKeys;
 
 		f = -1;
-		fmax = primaryValues.length;
+		fmax = primaryKeys.length;
 		var s:int;
 		var smax:int;
 		while (++f < fmax) {
-			color = colors[primaryValues[f]];
+			color = colors[primaryKeys[f]];
 			g.beginFill(color);
 
 			s = -1;
@@ -112,8 +112,8 @@ public class Showcase__DataTransition extends UIComponent {
 		}
 	}
 
-	private static function print(transition:IDataTransition):void {
-		var snap:IDataTransitionSnapshot;
+	private static function print(transition:StackedDataTransition):void {
+		var snap:StackedDataTransitionSnapshot;
 
 		var f:int = -1;
 		var fmax:int = 10;
@@ -122,13 +122,13 @@ public class Showcase__DataTransition extends UIComponent {
 		while (++f <= fmax) {
 			snap = transition.getSnapshot(f / fmax);
 			trace("--------------------", snap.t);
-			trace(snap.sum);
+			trace(snap.valueSum);
 
 			s = -1;
-			smax = snap.primaryValues.length;
+			smax = snap.primaryKeys.length;
 			while (++s < smax) {
 				trace(StringUtil.substitute('{0} => {1} ({2}%)'
-						, snap.primaryValues[s]
+						, snap.primaryKeys[s]
 						, snap.values[s]
 						, int(snap.ratios[s] * 100)
 				));
