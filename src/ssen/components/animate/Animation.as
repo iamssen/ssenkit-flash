@@ -3,6 +3,7 @@ import com.greensock.TweenLite;
 
 import ssen.animation.Animation;
 
+// TODO remove this class when end of mobis project
 [Deprecated(replacement=ssen.animation.Animation)]
 public class Animation {
 

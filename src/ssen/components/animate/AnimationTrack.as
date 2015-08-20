@@ -3,6 +3,7 @@ import com.greensock.easing.Quad;
 
 import ssen.animation.AnimationTrack;
 
+// TODO remove this class when end of mobis project
 [Deprecated(replacement=ssen.animation.AnimationTrack)]
 public class AnimationTrack {
 	public var start:Number;

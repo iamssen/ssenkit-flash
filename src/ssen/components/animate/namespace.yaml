@@ -1,3 +1,4 @@
+# TODO remove this class when end of mobis project
 namespace: "http://ssen.name/ns/ssen"
 components:
 - Animation
