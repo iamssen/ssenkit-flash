@@ -18,7 +18,7 @@ import ssen.drawing.DrawingUtils;
 import ssen.text.IFormattedTextComponent;
 import ssen.text.LabelComponentUtils;
 import ssen.text.SpriteHtmlLines;
-
+[Deprecated(message="Remove when end of project")]
 public class PieCenterLabel extends EventDispatcher implements IPieElement, IFormattedTextComponent {
 	//==========================================================================================
 	// properties

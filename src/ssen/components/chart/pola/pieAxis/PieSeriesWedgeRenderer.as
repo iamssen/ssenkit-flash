@@ -9,6 +9,7 @@ import mx.graphics.IFill;
 
 import ssen.drawing.PathMaker;
 
+[Deprecated(message="Remove when end of project")]
 public class PieSeriesWedgeRenderer extends UIComponent implements IPieSeriesWedgeRenderer {
 	internal static var factory:IFactory = new ClassFactory(PieSeriesWedgeRenderer);
 

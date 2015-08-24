@@ -2,7 +2,7 @@ package ssen.components.chart.pola.pieAxis {
 import flash.events.Event;
 
 import mx.utils.StringUtil;
-
+[Deprecated(message="Remove when end of project")]
 public class PieSeriesEvent extends Event {
 	public static const WEDGE_CLICK:String = "wedgeClick";
 

@@ -1,7 +1,7 @@
 package ssen.components.chart.pola.pieAxis {
 import mx.core.IUIComponent;
 import mx.graphics.IFill;
-
+[Deprecated(message="Remove when end of project")]
 public interface IPieSeriesWedgeRenderer extends IUIComponent {
 	//---------------------------------------------
 	// outerRadius

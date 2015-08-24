@@ -26,7 +26,7 @@ import ssen.components.tooltips.ToolTipProvider;
 [DefaultProperty("wedgeRenderer")]
 
 [Event(type="ssen.components.chart.pola.pieAxis.PieSeriesEvent", name="wedgeClick")]
-
+[Deprecated(message="Remove when end of project")]
 public class PieSeries extends EventDispatcher implements IPieElement {
 	//==========================================================================================
 	// properties

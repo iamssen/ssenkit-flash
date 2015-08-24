@@ -150,6 +150,12 @@ public class EmbededFontUtils {
 
 		return null;
 	}
+
+	/*
+	TODO getSwfContext() 를 여러가지 방식으로 구현하자
+	- component를 아는 경우 | display의 parent를 통해 component를 유추할 경우 | 이도저도 아니어서 최상위에서 끌어올 경우
+	- bold, italic 상황을 아는 경우 | ITextLayoutFormat 을 보유하고 있어서 bold, italic을 유추하려 할 경우
+	*/
 }
 }
 

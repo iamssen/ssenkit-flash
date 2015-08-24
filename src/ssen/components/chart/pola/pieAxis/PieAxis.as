@@ -11,7 +11,7 @@ import ssen.components.chart.pola.PolaChart;
 import ssen.ssen_internal;
 
 use namespace ssen_internal;
-
+[Deprecated(message="Remove when end of project")]
 public class PieAxis extends EventDispatcher implements IPolaAxis {
 	//==========================================================================================
 	// properties

@@ -13,6 +13,8 @@ use namespace mx_internal;
 
 [SkinState("noContent")]
 
+[Deprecated(message="Remove when end of project")]
+
 public class PolaChart extends SkinnableComponent {
 	//==========================================================================================
 	// skin parts

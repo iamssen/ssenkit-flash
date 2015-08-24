@@ -20,7 +20,7 @@ import ssen.components.chart.pola.PolaChart;
 import ssen.text.IFormattedTextComponent;
 import ssen.text.LabelComponentUtils;
 import ssen.text.SpriteHtmlLines;
-
+[Deprecated(message="Remove when end of project")]
 public class PieLabels extends EventDispatcher implements IPieElement, IFormattedTextComponent {
 	//==========================================================================================
 	// properties

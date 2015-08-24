@@ -10,6 +10,13 @@ import flashx.textLayout.formats.VerticalAlign;
 import ssen.drawing.DrawingUtils;
 
 public class TextLinePrinter {
+	/*
+	TODO print text를 여러 방식으로 구현하자
+	 - 공간지정 --> x, y, width=NaN, height=NaN, padding
+	 - 정렬 --> horizontal, vertical align
+	 - 비율 별 리사이즈 --> minimize, maximize
+	*/
+
 	public static function printTextLineWithSpace(line:TextLine,
 												  container:DisplayObjectContainer,
 												  width:Number,

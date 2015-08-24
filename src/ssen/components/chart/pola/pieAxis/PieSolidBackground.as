@@ -17,6 +17,7 @@ import ssen.common.NullUtils;
 import ssen.components.animate.AnimationTrack;
 import ssen.components.chart.pola.PolaChart;
 
+[Deprecated(message="Remove when end of project")]
 public class PieSolidBackground extends EventDispatcher implements IPieElement {
 	//==========================================================================================
 	// properties

@@ -2,6 +2,8 @@ package ssen.components.chart.pola {
 
 import flash.events.Event;
 
+[Deprecated(message="Remove when end of project")]
+
 public class PolaChartEvent extends Event {
 	public static const ITEM_CLICK:String = "itemClick";
 

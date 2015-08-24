@@ -18,11 +18,11 @@
 	<devkit:ShowcaseContainer>
 		<!-- @formatter:off -->
 		<!--<devkit:Showcase type="ssen.datakit.serviceWorkers.Showcase__ServiceWorker" description="Service Worker"/>-->
-		<devkit:Showcase type="ssen.animation.Showcase__DataTransition" description="Data Transition"/>
+		<!--<devkit:Showcase type="ssen.animation.Showcase__DataTransition" description="Data Transition"/>-->
 		<!--<devkit:Showcase type="ssen.drawing.Showcase__Radian" description="Radian"/>-->
 		<!--<devkit:Showcase type="ssen.components.chart.pola.Showcase__PolaContainer" description="Pola Container"/>-->
 		<!--<devkit:Showcase type="ssen.components.mxChartSupportClasses._showcase_.Showcase__MXChartPadding" description="MX Chart Padding"/>-->
-		<!--<devkit:Showcase type="ssen.components.core.Showcase__Invalidation" description="Invalidation"/>-->
+		<devkit:Showcase type="ssen.components.core.Showcase__Invalidation" description="Invalidation"/>
 		<!--<devkit:Showcase type="ssen.components.grid.contents.tables.Showcase__Table" description="Table"/>-->
 		<!--<devkit:Showcase type="ssen.text.Showcase__TextStyle" description="Text Style"/>-->
 		<!-- MX Chart -->

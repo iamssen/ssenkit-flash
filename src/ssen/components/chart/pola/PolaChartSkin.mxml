@@ -8,6 +8,7 @@
 	<fx:Metadata>
     	<![CDATA[
 		[HostComponent("ssen.components.chart.pola.PolaChart")]
+		[Deprecated(message="Remove when end of project")]
 		]]>
     </fx:Metadata>
 

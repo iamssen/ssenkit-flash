@@ -1,4 +1,7 @@
 package ssen.components.chart.pola.pieAxis {
+
+[Deprecated(message="Remove when end of project")]
+
 public class PieSeriesWedge {
 	//	public var label:String = 'Hello<br/>World';
 	public var row:Object;
