@@ -1,3 +1,4 @@
 namespace: "http://ssen.name/ns/ssen"
 components:
 - FlowLayout
+- FlexibleTileLayout

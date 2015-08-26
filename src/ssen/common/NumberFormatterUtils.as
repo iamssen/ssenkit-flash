@@ -3,6 +3,41 @@ import mx.formatters.NumberFormatter;
 
 /** 각 종, 숫자들을 Formatting 시켜주는 Util */
 public class NumberFormatterUtils {
+	/*
+	TODO 포맷팅 개선
+	- n : Number
+	- precision : int = -1 (fluid) | 0 ~ (fixed)
+	- min : Number, max : Number, interval : Number, maxPrecision : int
+
+	억 : 100000000 = 10 ^ 8
+	 */
+
+	public static function __num(n:Number, precision:int = 0, minPrecision:uint = -1, maxPrecision:uint = -1):String {
+		var formatted:String;
+
+		if (precision > 0) {
+			n = Math.round(n * Math.pow(10, precision)) / Math.pow(10, precision);
+			formatted = n.toFixed(precision);
+		} else {
+			formatted = getFormatter().format(Math.round(n));
+		}
+
+		return wrap(formatted);
+	}
+
+	public static function __fluidNum(n:Number, min:Number, max:Number, interval:Number, minPrecision:int = -1, maxPrecision:int = -1):String {
+		var dynamicPrecision:Number;
+		var decimalPoint:Number = Math.abs(interval) - Math.floor(Math.abs(interval));
+		dynamicPrecision = decimalPoint == 0 ? 1 : -Math.floor(Math.log(decimalPoint) / Math.LN10);
+		decimalPoint = Math.abs(min) - Math.floor(Math.abs(min));
+		dynamicPrecision = Math.max(dynamicPrecision, decimalPoint == 0 ? 1 : -Math.floor(Math.log(decimalPoint) / Math.LN10));
+
+		var roundBase:Number = Math.pow(10, dynamicPrecision);
+		n = Math.round(n * roundBase) / roundBase;
+
+		return "";
+	}
+
 	/**
 	 * 퍼센트 값을 포맷팅한다
 	 *
@@ -86,7 +121,7 @@ public class NumberFormatterUtils {
 	public static function fluidNum(n:Number, min:Number, max:Number, interval:Number):String {
 		// TODO 관련된 공식들의 이론을 파악해야 한다.
 		// [ ] Math.LN10
-		var precision:Number = 0;
+		var precision:Number;
 		var decimal:Number = Math.abs(interval) - Math.floor(Math.abs(interval));
 		precision = decimal == 0 ? 1 : -Math.floor(Math.log(decimal) / Math.LN10);
 		decimal = Math.abs(min) - Math.floor(Math.abs(min));

@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:layouts="ssen.components.layouts.*">
+
+	<fx:Script>
+		<![CDATA[
+		import ssen.datakit.binders.SelectionDataBinder;
+
+		[Bindable]
+		private var itemCounts:SelectionDataBinder;
+
+		[Bindable]
+		private var horizontalAligns:SelectionDataBinder = new SelectionDataBinder(["left", "center", "right"]);
+
+		[Bindable]
+		private var itemVerticalAligns:SelectionDataBinder = new SelectionDataBinder(["top", "middle", "bottom"]);
+		]]>
+	</fx:Script>
+
+	<s:HGroup left="10" top="10" verticalAlign="middle">
+		<s:Label text="horizontal align"/>
+		<s:DropDownList dataProvider="{horizontalAligns.list}"
+						selectedIndex="@{horizontalAligns.selectedIndex}"/>
+
+		<s:Label text="vertical align"/>
+		<s:DropDownList dataProvider="{itemVerticalAligns.list}"
+						selectedIndex="@{itemVerticalAligns.selectedIndex}"/>
+	</s:HGroup>
+
+	<s:HGroup left="10" top="40" verticalAlign="middle">
+		<s:Label text="horizontal gap"/>
+		<s:NumericStepper id="hgap" minimum="0" maximum="20" value="10"/>
+
+		<s:Label text="vertical gap"/>
+		<s:NumericStepper id="vgap" minimum="0" maximum="20" value="10"/>
+
+		<s:Label text="padding:ltrb"/>
+		<s:NumericStepper id="paddingLeft" minimum="0" maximum="30" value="0"/>
+		<s:NumericStepper id="paddingRight" minimum="0" maximum="30" value="0"/>
+		<s:NumericStepper id="paddingTop" minimum="0" maximum="30" value="0"/>
+		<s:NumericStepper id="paddingBottom" minimum="0" maximum="30" value="0"/>
+	</s:HGroup>
+
+	<s:Rect x="{container.x}" y="{container.y}" width="{container.width}" height="{container.height}">
+		<s:fill>
+			<s:SolidColor/>
+		</s:fill>
+	</s:Rect>
+
+	<s:Group id="container" left="10" right="10" top="70">
+		<s:layout>
+			<layouts:FlowLayout horizontalGap="{hgap.value}"
+								verticalGap="{vgap.value}"
+								paddingLeft="{paddingLeft.value}"
+								paddingRight="{paddingRight.value}"
+								paddingTop="{paddingTop.value}"
+								paddingBottom="{paddingBottom.value}"
+								horizontalAlign="{horizontalAligns.selectedValue}"
+								itemVerticalAlign="{itemVerticalAligns.selectedValue}"/>
+		</s:layout>
+
+		<s:Label width="100" height="40" backgroundColor="#aaaaaa" text="1"/>
+		<s:Label width="160" height="80" backgroundColor="#aaaaaa" text="2"/>
+		<s:Label width="30" height="60" backgroundColor="#aaaaaa" text="3"/>
+		<s:Label width="200" height="100" backgroundColor="#aaaaaa" text="4"/>
+		<s:Label width="80" height="50" backgroundColor="#aaaaaa" text="5"/>
+		<s:Label width="170" height="70" backgroundColor="#aaaaaa" text="6"/>
+		<s:Label width="300" height="20" backgroundColor="#aaaaaa" text="7"/>
+		<s:Label width="150" height="50" backgroundColor="#aaaaaa" text="8"/>
+		<s:Label width="50" height="10" backgroundColor="#aaaaaa" text="9"/>
+		<s:Label width="230" height="50" backgroundColor="#aaaaaa" text="10"/>
+		<s:Label width="100" height="30" backgroundColor="#aaaaaa" text="11"/>
+		<s:Label width="290" height="70" backgroundColor="#aaaaaa" text="12"/>
+		<s:Label width="110" height="40" backgroundColor="#aaaaaa" text="13"/>
+		<s:Label width="90" height="80" backgroundColor="#aaaaaa" text="14"/>
+		<s:Label width="520" height="40" backgroundColor="#aaaaaa" text="15"/>
+		<s:Label width="120" height="40" backgroundColor="#aaaaaa" text="16"/>
+		<s:Label width="70" height="50" backgroundColor="#aaaaaa" text="17"/>
+	</s:Group>
+</s:Group>
