@@ -19,7 +19,6 @@
 		<!-- @formatter:off -->
 		<devkit:Showcase type="ssen.components.layouts.Showcase__FlexibleTileLayout" description="Flexible Tile Layout"/>
 		<devkit:Showcase type="ssen.components.layouts.Showcase__FlowLayout" description="Flow Layout"/>
-		<devkit:Showcase type="ssen.components.layouts.Showcase__Layout" description="Layout"/>
 		<!--<devkit:Showcase type="ssen.datakit.serviceWorkers.Showcase__ServiceWorker" description="Service Worker"/>-->
 		<!--<devkit:Showcase type="ssen.animation.Showcase__DataTransition" description="Data Transition"/>-->
 		<!--<devkit:Showcase type="ssen.drawing.Showcase__Radian" description="Radian"/>-->

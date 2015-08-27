@@ -14,6 +14,8 @@ import spark.components.RichText;
 [Style(name="backgroundHoverAlpha", inherit="no", type="Number")]
 [Style(name="lineColor", inherit="no", type="uint")]
 
+[Deprecated(message="ssen.text 기반으로 변경")]
+
 public class RichTextItemRenderer extends RichText implements IItemRenderer {
 
 	//---------------------------------------------
