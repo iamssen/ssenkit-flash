@@ -209,6 +209,8 @@ public class FlowLayout extends LayoutBase {
 		var s:int;
 		var smax:int;
 
+		target.getElementAt(0).setLayoutBoundsSize(NaN, NaN);
+
 		while (++f < fmax) {
 			element = target.getElementAt(f);
 			nextElement = (f + 1 < target.numElements) ? target.getElementAt(f + 1) : null;

@@ -1,4 +1,6 @@
 package ssen.devkit {
+import ssen.common.StringUtils;
+
 public class CollectionPrinter {
 	public static function printTable(list:Array, properties:Vector.<String>):void {
 		var maxLengths:Vector.<int> = new Vector.<int>(properties.length, true);
@@ -61,7 +63,7 @@ public class CollectionPrinter {
 		fmax = properties.length;
 		while (++f < fmax) {
 			property = properties[f];
-			line.push(fillSpace(property, maxLengths[f]));
+			line.push(StringUtils.fillSpace(property, maxLengths[f]));
 		}
 		lines.push(line);
 
@@ -71,7 +73,7 @@ public class CollectionPrinter {
 		fmax = properties.length;
 		while (++f < fmax) {
 			property = properties[f];
-			line.push(squareString("-", maxLengths[f]));
+			line.push(StringUtils.multiply("-", maxLengths[f]));
 		}
 		lines.push(line);
 
@@ -86,7 +88,7 @@ public class CollectionPrinter {
 			s = -1;
 			smax = properties.length;
 			while (++s < smax) {
-				line.push(fillSpace(data[properties[s]], maxLengths[s]));
+				line.push(StringUtils.fillSpace(data[properties[s]], maxLengths[s]));
 			}
 			lines.push(line);
 		}
@@ -102,23 +104,6 @@ public class CollectionPrinter {
 			lineString = "|" + line.join("|") + "|";
 			trace(lineString);
 		}
-	}
-
-	private static function squareString(character:String, length:int):String {
-		var line:String = "";
-		var f:int = -1;
-		while (++f < length) {
-			line += character;
-		}
-		return line;
-	}
-
-	private static function fillSpace(str:String, length:int):String {
-		var f:int = str.length - 1;
-		while (++f < length) {
-			str += " ";
-		}
-		return str;
 	}
 }
 }

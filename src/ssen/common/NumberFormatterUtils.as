@@ -1,41 +1,41 @@
 package ssen.common {
 import mx.formatters.NumberFormatter;
 
-/** 각 종, 숫자들을 Formatting 시켜주는 Util */
+/** Number Formatting Utils */
 public class NumberFormatterUtils {
-	/*
-	TODO 포맷팅 개선
-	- n : Number
-	- precision : int = -1 (fluid) | 0 ~ (fixed)
-	- min : Number, max : Number, interval : Number, maxPrecision : int
-
-	억 : 100000000 = 10 ^ 8
-	 */
-
-	public static function __num(n:Number, precision:int = 0, minPrecision:uint = -1, maxPrecision:uint = -1):String {
-		var formatted:String;
-
-		if (precision > 0) {
-			n = Math.round(n * Math.pow(10, precision)) / Math.pow(10, precision);
-			formatted = n.toFixed(precision);
-		} else {
-			formatted = getFormatter().format(Math.round(n));
-		}
-
-		return wrap(formatted);
+	public static function __num(n:Number, precision:int = 0):String {
+		return __format(__round(n, precision));
 	}
 
-	public static function __fluidNum(n:Number, min:Number, max:Number, interval:Number, minPrecision:int = -1, maxPrecision:int = -1):String {
-		var dynamicPrecision:Number;
-		var decimalPoint:Number = Math.abs(interval) - Math.floor(Math.abs(interval));
-		dynamicPrecision = decimalPoint == 0 ? 1 : -Math.floor(Math.log(decimalPoint) / Math.LN10);
-		decimalPoint = Math.abs(min) - Math.floor(Math.abs(min));
-		dynamicPrecision = Math.max(dynamicPrecision, decimalPoint == 0 ? 1 : -Math.floor(Math.log(decimalPoint) / Math.LN10));
+	public static function __fluidNum(n:Number, min:Number, interval:Number, minPrecision:int = -1, maxPrecision:int = -1):String {
+		var precision:Number;
+		var points:Number;
 
-		var roundBase:Number = Math.pow(10, dynamicPrecision);
-		n = Math.round(n * roundBase) / roundBase;
+		// count 0 interval
+		points = Math.abs(interval) - Math.floor(Math.abs(interval));
+		precision = points == 0 ? 1 : -Math.floor(Math.log(points) / Math.LN10);
 
-		return "";
+		// count 0 min and compare maximum 0 by interval
+		points = Math.abs(min) - Math.floor(Math.abs(min));
+		precision = Math.max(precision, points == 0 ? 1 : -Math.floor(Math.log(points) / Math.LN10));
+
+		if (minPrecision > 0) {
+			precision = Math.min(precision, minPrecision);
+		} else if (maxPrecision > 0) {
+			precision = Math.max(precision, maxPrecision);
+		}
+
+		return __format(__round(n, precision));
+	}
+
+	private static function __format(n:Number):String {
+		return wrap(getFormatter().format(n));
+	}
+
+	public static function __round(n:Number, precision:Number = 0):Number {
+		if (precision < 1) return Math.round(n);
+		var base:Number = Math.pow(10, precision);
+		return Math.round(n * base) / base;
 	}
 
 	/**
@@ -44,6 +44,7 @@ public class NumberFormatterUtils {
 	 * @param n 대상 숫자
 	 * @param precision 강제로 유지시킬 소숫점 자리수
 	 */
+	[Deprecated(message="remove when end of project")]
 	public static function percentage(n:Number, precision:int = 0):String {
 		if (precision > 0) {
 			n = Math.round(n * Math.pow(10, precision)) / Math.pow(10, precision);
@@ -59,6 +60,7 @@ public class NumberFormatterUtils {
 	 * @param n 대상 숫자
 	 * @param precision 강제로 유지시킬 소숫점 자리수
 	 */
+	[Deprecated(message="remove when end of project")]
 	public static function hm(n:Number, precision:int = 0):String {
 		if (precision > 0) {
 			n = Math.round(n / (Math.pow(10, 8 - precision)));
@@ -76,6 +78,7 @@ public class NumberFormatterUtils {
 	 * @param max 범위 최대값
 	 * @param interval 범위내의 간격
 	 */
+	[Deprecated(message="remove when end of project")]
 	public static function fluidHm(n:Number, min:Number, max:Number, interval:Number):String {
 		return fluidNum(n / 100000000, min / 100000000, max / 100000000, interval / 100000000);
 	}
@@ -88,6 +91,7 @@ public class NumberFormatterUtils {
 	 * @param max 범위 최대값
 	 * @param interval 범위내의 간격
 	 */
+	[Deprecated(message="remove when end of project")]
 	public static function fluidM(n:Number, min:Number, max:Number, interval:Number):String {
 		return fluidNum(n / 1000000, min / 1000000, max / 1000000, interval / 1000000);
 	}
@@ -97,6 +101,7 @@ public class NumberFormatterUtils {
 	 *
 	 * @param n 대상 숫자
 	 */
+	[Deprecated(message="remove when end of project")]
 	public static function m(n:Number):String {
 		return getFormatter().format(Math.round(Number(n / 1000000)));
 	}
@@ -106,6 +111,7 @@ public class NumberFormatterUtils {
 	 *
 	 * @param n 대상 숫자
 	 */
+	[Deprecated(message="remove when end of project")]
 	public static function num(n:Number):String {
 		return wrap(getFormatter().format(n));
 	}
@@ -118,6 +124,7 @@ public class NumberFormatterUtils {
 	 * @param max 범위 최대값
 	 * @param interval 범위내의 간격
 	 */
+	[Deprecated(message="remove when end of project")]
 	public static function fluidNum(n:Number, min:Number, max:Number, interval:Number):String {
 		// TODO 관련된 공식들의 이론을 파악해야 한다.
 		// [ ] Math.LN10

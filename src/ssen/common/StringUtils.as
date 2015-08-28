@@ -77,11 +77,19 @@ public class StringUtils {
 	/** 특정 문자를 반복해서 곱한다 */
 	public static function multiply(char:String, count:int, delimiter:String = ""):String {
 		var str:Vector.<String> = new Vector.<String>(count, true);
-		var f:int = count;
-		while (--f >= 0) {
-			str[f] = char;
+		while (--count >= 0) {
+			str[count] = char;
 		}
 		return str.join(delimiter);
+	}
+
+	/** 문자열이 특정 길이가 되도록 빈공간을 채워준다 */
+	public static function fillSpace(text:String, toLength:int, fillCharacter:String = " "):String {
+		var f:int = text.length - 1;
+		while (++f < toLength) {
+			text += fillCharacter;
+		}
+		return text;
 	}
 }
 }
