@@ -20,12 +20,10 @@
 
 	<s:HGroup left="10" top="10" verticalAlign="middle">
 		<s:Label text="horizontal align"/>
-		<s:DropDownList dataProvider="{horizontalAligns.list}"
-						selectedIndex="@{horizontalAligns.selectedIndex}"/>
+		<s:DropDownList dataProvider="{horizontalAligns.list}" selectedIndex="@{horizontalAligns.selectedIndex}"/>
 
 		<s:Label text="vertical align"/>
-		<s:DropDownList dataProvider="{itemVerticalAligns.list}"
-						selectedIndex="@{itemVerticalAligns.selectedIndex}"/>
+		<s:DropDownList dataProvider="{itemVerticalAligns.list}" selectedIndex="@{itemVerticalAligns.selectedIndex}"/>
 	</s:HGroup>
 
 	<s:HGroup left="10" top="40" verticalAlign="middle">

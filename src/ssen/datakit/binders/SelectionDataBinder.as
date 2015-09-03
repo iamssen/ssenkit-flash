@@ -41,6 +41,8 @@ public class SelectionDataBinder extends EventDispatcher {
 			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "selectedIndex", oldSelectedIndex, _selectedIndex));
 			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "selectedValue", oldSelectedValue, _selectedValue));
 		}
+
+		if (changeHandler !== null) changeHandler();
 	}
 
 	//---------------------------------------------
@@ -63,6 +65,8 @@ public class SelectionDataBinder extends EventDispatcher {
 		}
 
 		set_selectedValue(_list.getItemAt(value));
+
+		if (changeHandler !== null) changeHandler();
 	}
 
 	//---------------------------------------------
@@ -85,10 +89,14 @@ public class SelectionDataBinder extends EventDispatcher {
 		}
 	}
 
-	public function SelectionDataBinder(list:* = null, selectedIndex:int = 0) {
+	private var changeHandler:Function;
+
+	public function SelectionDataBinder(list:* = null, selectedIndex:int = 0, changeHandler:Function = null) {
 		_list = (list is IList) ? list : (list is Array) ? new ArrayList(list) : null;
 		_selectedIndex = selectedIndex;
 		if (_list && _list.length > 0) _selectedValue = _list.getItemAt(_selectedIndex);
+
+		this.changeHandler = changeHandler;
 	}
 }
 }
