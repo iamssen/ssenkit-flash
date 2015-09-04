@@ -2,8 +2,8 @@ package ssen.components.base.sizeHelpers {
 import flash.events.Event;
 
 import mx.binding.utils.BindingUtils;
-import mx.core.IVisualElement;
 import mx.core.IVisualElementContainer;
+import mx.core.UIComponent;
 
 import org.osmf.layout.VerticalAlign;
 
@@ -15,14 +15,14 @@ import spark.components.VGroup;
 
 import ssen.datakit.binders.SelectionDataBinder;
 
-public class Showcase__ComponentSize extends Group {
+public class Showcase__ComponentSize2 extends Group {
 	// invalidate container
-	private var containerWidth:SelectionDataBinder = new SelectionDataBinder([150, 200, 350, 500, 800, "30%", "50%", "70%", "100%"], 1, invalidateContainer);
-	private var containerHeight:SelectionDataBinder = new SelectionDataBinder([150, 200, 350, 500, 800, "30%", "50%", "70%", "100%"], 1, invalidateContainer);
+	private var containerWidth:SelectionDataBinder = new SelectionDataBinder([NaN, 150, 200, 350, 500, 800, "30%", "50%", "70%", "100%"], 2, invalidateContainer);
+	private var containerHeight:SelectionDataBinder = new SelectionDataBinder([NaN, 150, 200, 350, 500, 800, "30%", "50%", "70%", "100%"], 2, invalidateContainer);
 
 	// invalidte components
-	private var componentWidth:SelectionDataBinder = new SelectionDataBinder([50, 200, 300, 500, "30%", "50%", "70%", "100%"], 1, invalidateComponent);
-	private var componentHeight:SelectionDataBinder = new SelectionDataBinder([50, 200, 300, 500, "30%", "50%", "70%", "100%"], 1, invalidateComponent);
+	private var componentWidth:SelectionDataBinder = new SelectionDataBinder([NaN, 50, 200, 300, 500, "30%", "50%", "70%", "100%"], 2, invalidateComponent);
+	private var componentHeight:SelectionDataBinder = new SelectionDataBinder([NaN, 50, 200, 300, 500, "30%", "50%", "70%", "100%"], 2, invalidateComponent);
 
 	// invalidte contents
 	private var contentsWidth:SelectionDataBinder = new SelectionDataBinder([100, 300, 500], 1, invalidateContents);
@@ -39,7 +39,7 @@ public class Showcase__ComponentSize extends Group {
 	private var container:Container;
 	private var component:Component;
 
-	public function Showcase__ComponentSize() {
+	public function Showcase__ComponentSize2() {
 		//---------------------------------------------
 		// initial options
 		//---------------------------------------------
@@ -79,8 +79,8 @@ public class Showcase__ComponentSize extends Group {
 		// initial container and component
 		//---------------------------------------------
 		component = new Component;
-		component.hsize = new ComponentSize(hOver.selectedValue, hUnder.selectedValue, hAlign.selectedValue);
-		component.vsize = new ComponentSize(vOver.selectedValue, vUnder.selectedValue, vAlign.selectedValue);
+		component.hsize = new ComponentSize2(hOver.selectedValue, hUnder.selectedValue, hAlign.selectedValue);
+		component.vsize = new ComponentSize2(vOver.selectedValue, vUnder.selectedValue, vAlign.selectedValue);
 		setWidth(component, componentWidth.selectedValue);
 		setHeight(component, componentHeight.selectedValue);
 		component.contentsWidth = contentsWidth;
@@ -139,18 +139,20 @@ public class Showcase__ComponentSize extends Group {
 		component.invalidateProperties();
 	}
 
-	private static function setWidth(element:IVisualElement, value:*):void {
+	private static function setWidth(element:UIComponent, value:*):void {
 		if (isNaN(value)) {
 			var str:String = String(value);
+			element.width = NaN;
 			element.percentWidth = Number(str.substr(0, str.length - 1));
 		} else {
 			element.width = value;
 		}
 	}
 
-	private static function setHeight(element:IVisualElement, value:*):void {
+	private static function setHeight(element:UIComponent, value:*):void {
 		if (isNaN(value)) {
 			var str:String = String(value);
+			element.height = NaN;
 			element.percentHeight = Number(str.substr(0, str.length - 1));
 		} else {
 			element.height = value;
@@ -163,12 +165,11 @@ import flash.display.Graphics;
 
 import mx.core.UIComponent;
 import mx.core.mx_internal;
-import mx.managers.ISystemManager;
 import mx.utils.StringUtil;
 
 import spark.components.Group;
 
-import ssen.components.base.sizeHelpers.ComponentSize;
+import ssen.components.base.sizeHelpers.ComponentSize2;
 import ssen.components.base.sizeHelpers.LinearPoint;
 import ssen.datakit.binders.SelectionDataBinder;
 import ssen.text.HtmlRichText;
@@ -184,7 +185,7 @@ class Container extends Group {
 		const stroke:int = 8;
 		const g:Graphics = graphics;
 		g.clear();
-		g.beginFill(0xcccccc);
+		g.beginFill(0xcccccc, 0.2);
 		g.drawRect(-stroke, -stroke, unscaledWidth + (stroke * 2), unscaledHeight + (stroke * 2));
 		g.drawRect(0, 0, unscaledWidth, unscaledHeight);
 		g.endFill();
@@ -197,8 +198,8 @@ class Component extends UIComponent {
 	internal var contentsMinWidth:SelectionDataBinder;
 	internal var contentsMinHeight:SelectionDataBinder;
 
-	internal var hsize:ComponentSize;
-	internal var vsize:ComponentSize;
+	internal var hsize:ComponentSize2;
+	internal var vsize:ComponentSize2;
 
 	private var label:HtmlRichText;
 
@@ -209,6 +210,30 @@ class Component extends UIComponent {
 		addChild(label);
 	}
 
+	override public function set explicitMaxWidth(value:Number):void {
+		hsize.userExplicitMaxSize = value;
+		if (hsize.canSkipSetExplicitMaxSize()) return;
+		super.explicitMaxWidth = value;
+	}
+
+	override public function set explicitMinWidth(value:Number):void {
+		hsize.userExplicitMinSize = value;
+		if (hsize.canSkipSetExplicitMinSize()) return;
+		super.explicitMinWidth = value;
+	}
+
+	override public function set explicitMaxHeight(value:Number):void {
+		vsize.userExplicitMaxSize = value;
+		if (vsize.canSkipSetExplicitMaxSize()) return;
+		super.explicitMaxHeight = value;
+	}
+
+	override public function set explicitMinHeight(value:Number):void {
+		vsize.userExplicitMinSize = value;
+		if (vsize.canSkipSetExplicitMinSize()) return;
+		super.explicitMinHeight = value;
+	}
+
 	override protected function commitProperties():void {
 		//		trace("Component.commitProperties()");
 
@@ -216,7 +241,12 @@ class Component extends UIComponent {
 		// content size 확정 구간
 		// commit properties 에서 content의 계산된 size를 입력해준다
 		hsize.commitProperties(contentsWidth.selectedValue, contentsMinWidth.selectedValue);
+		super.explicitMaxWidth = hsize.explicitMaxSize;
+		super.explicitMinWidth = hsize.explicitMinSize;
+
 		vsize.commitProperties(contentsHeight.selectedValue, contentsMinHeight.selectedValue);
+		super.explicitMaxHeight = vsize.explicitMaxSize;
+		super.explicitMinHeight = vsize.explicitMinSize;
 
 		invalidateSize();
 		invalidateDisplayList();
@@ -230,78 +260,14 @@ class Component extends UIComponent {
 		if (isNaN(explicitHeight)) measuredHeight = vsize.contentSize;
 	}
 
-	override public function validateDisplayList():void {
-		oldLayoutDirection = layoutDirection;
-		if (invalidateDisplayListFlag) {
-			// actual size 변조 구간
-			// cut 이거나 scroll 이 설정되어 있는 경우, actual size를 변조한다
-			trace("Component.validateDisplayList()", width, height);
-
-			invalidateDisplayListFlag = false;
-
-			var sm:ISystemManager = parent as ISystemManager;
-			if (sm) {
-				if (sm.isProxy || (sm == systemManager.topLevelSystemManager && sm.document != this)) {
-					setActualSize(hsize.computeSize(getExplicitOrMeasuredWidth()), vsize.computeSize(getExplicitOrMeasuredHeight()));
-				}
-			}
-
-			var unscaledWidth:Number = hsize.computeSize(width);
-			var unscaledHeight:Number = vsize.computeSize(height);
-
-			label.text = StringUtil.substitute([
-						'w({0}), cw({1}/{2}) --> {3}',
-						'h({4}), ch({5}/{6}) --> {7}',
-						'h({8}/{9}) + {10} --> {11}',
-						'v({12}/{13}) + {14} --> {15}'
-					].join('<br/>')
-					, width, hsize.contentSize, hsize.contentMinSize, unscaledWidth
-					, height, vsize.contentSize, vsize.contentMinSize, unscaledHeight
-					, hsize.underSizePolicy, hsize.overSizePolicy, sizeString(width, hsize.contentSize), getCurrentPolicy(width, hsize)
-					, vsize.underSizePolicy, vsize.overSizePolicy, sizeString(height, vsize.contentSize), getCurrentPolicy(height, vsize)
-			);
-
-			setActualSize(unscaledWidth, unscaledHeight);
-
-			trace("Component.validateDisplayList()", UIComponent(parent).invalidatePropertiesFlag);
-
-			if (!invalidateDisplayListFlag) updateDisplayList(unscaledWidth, unscaledHeight);
-		}
-	}
-
-	//	override public function setActualSize(w:Number, h:Number):void {
-	//
-	//		// actual size 변조 구간
-	//		// cut 이거나 scroll 이 설정되어 있는 경우, actual size를 변조한다
-	//		var w2:Number = hsize.getActualSize(w);
-	//		var h2:Number = vsize.getActualSize(h);
-	//
-	//		trace("Component.setActualSize()", w, h, w2, h2);
-	//
-	//		//		label.text = [
-	//		//			'h size: ' + w + "/" + hsize.contentSize + " --> " + w2,
-	//		//			'v size: ' + h + "/" + vsize.contentSize + " --> " + h2,
-	//		//
-	//		//			'h size state: ' + sizeString(w, hsize.contentSize),
-	//		//			'v size state: ' + sizeString(h, vsize.contentSize),
-	//		//
-	//		//			'h policy: ' + hsize.getCurrentPolicy(w),
-	//		//			'v policy: ' + vsize.getCurrentPolicy(h)
-	//		//		].join('<br/>');
-	//
-	//		super.setActualSize(w2, h2);
-	//	}
-
 	override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
-		trace("Component.updateDisplayList()", width, unscaledWidth, height, unscaledHeight);
-
 		super.updateDisplayList(unscaledWidth, unscaledHeight);
 
 		// draw component
 		var stroke:int = 4;
 		const g:Graphics = graphics;
 		g.clear();
-		g.beginFill(0x7B81E4);
+		g.beginFill(0x7B81E4, 0.4);
 		g.drawRect(-stroke, -stroke, unscaledWidth + (stroke * 2), unscaledHeight + (stroke * 2));
 		g.drawRect(0, 0, unscaledWidth, unscaledHeight);
 		g.endFill();
@@ -330,16 +296,28 @@ class Component extends UIComponent {
 		label.y = vRenderPoint.p + 10;
 		label.width = hRenderPoint.size - 20;
 		label.height = vRenderPoint.size - 20;
+		label.text = StringUtil.substitute([
+					'w({0}), cw({1}/{2}) <br/>--> {3}',
+					'h({4}), ch({5}/{6}) <br/>--> {7}',
+					'h({8}/{9}) + {10} <br/>--> {11}',
+					'v({12}/{13}) + {14} <br/>--> {15}'
+				].join('<br/>')
+				, width, hsize.contentSize, hsize.contentMinSize, unscaledWidth
+				, height, vsize.contentSize, vsize.contentMinSize, unscaledHeight
+				, hsize.underSizePolicy, hsize.overSizePolicy, sizeString(width, hsize.contentSize), getCurrentPolicy(width, hsize)
+				, vsize.underSizePolicy, vsize.overSizePolicy, sizeString(height, vsize.contentSize), getCurrentPolicy(height, vsize)
+		);
 
-		//		trace("size", width, height);
-		//		trace("unscaled", unscaledWidth, unscaledHeight);
-		//		trace("measured", measuredWidth, measuredHeight);
-		//		trace("measured min", measuredMinWidth, measuredMinHeight);
-		//		trace("explicit", explicitWidth, explicitHeight);
-		//		trace("explicit min", explicitMinWidth, explicitMinHeight);
-		//		trace("explicit max", explicitMaxWidth, explicitMaxHeight);
-		//		trace("content size", hsize.contentSize);
-		//		trace("content min size", hsize.contentMinSize);
+		trace("---------------------------------------------------------");
+		trace("size", width, height);
+		trace("unscaled", unscaledWidth, unscaledHeight);
+		trace("measured", measuredWidth, measuredHeight);
+		trace("measured min", measuredMinWidth, measuredMinHeight);
+		trace("explicit", explicitWidth, explicitHeight);
+		trace("explicit min", explicitMinWidth, explicitMinHeight);
+		trace("explicit max", explicitMaxWidth, explicitMaxHeight);
+		trace("content size", hsize.contentSize);
+		trace("content min size", hsize.contentMinSize);
 		//		trace();
 		//		trace();
 	}
@@ -353,7 +331,7 @@ class Component extends UIComponent {
 		return "equal";
 	}
 
-	public static function getCurrentPolicy(unscaledSize:Number, size:ComponentSize):String {
+	public static function getCurrentPolicy(unscaledSize:Number, size:ComponentSize2):String {
 		if (unscaledSize > size.contentSize) {
 			return size.overSizePolicy;
 		} else if (unscaledSize < size.contentSize) {

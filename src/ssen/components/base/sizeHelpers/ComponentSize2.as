@@ -1,9 +1,5 @@
 package ssen.components.base.sizeHelpers {
-import mx.core.mx_internal;
-
-use namespace mx_internal;
-
-public class ComponentSize {
+public class ComponentSize2 {
 	public var contentSize:Number;
 	public var contentMinSize:Number;
 
@@ -16,7 +12,45 @@ public class ComponentSize {
 	[Inspectable(type="Array", enumeration="front,center,back", defaultValue="center")]
 	public var align:String = "center";
 
-	public function ComponentSize(overSizePolicy:String = "resize", underSizePolicy:String = "resize", align:String = "center") {
+	public var userExplicitMaxSize:Number;
+
+	public var userExplicitMinSize:Number;
+
+	public function get explicitMaxSize():Number {
+		if (overSizePolicy === "cut") {
+			if (!isNaN(userExplicitMaxSize)) {
+				return Math.min(userExplicitMaxSize, contentSize);
+			}
+			return contentSize;
+		}
+		return userExplicitMaxSize;
+	}
+
+	public function get explicitMinSize():Number {
+		if (underSizePolicy === "scroll") {
+			if (!isNaN(userExplicitMinSize)) {
+				return Math.max(userExplicitMinSize, contentMinSize);
+			}
+			return contentMinSize;
+		}
+		return userExplicitMinSize;
+	}
+
+	public function canSkipSetExplicitMaxSize():Boolean {
+		if (overSizePolicy === "cut") {
+			return isNaN(contentSize) || userExplicitMaxSize > contentSize;
+		}
+		return false;
+	}
+
+	public function canSkipSetExplicitMinSize():Boolean {
+		if (underSizePolicy === "scroll") {
+			return isNaN(contentMinSize) || userExplicitMinSize < contentMinSize;
+		}
+		return false;
+	}
+
+	public function ComponentSize2(overSizePolicy:String = "resize", underSizePolicy:String = "resize", align:String = "center") {
 		this.overSizePolicy = overSizePolicy;
 		this.underSizePolicy = underSizePolicy;
 		this.align = align;
@@ -57,5 +91,3 @@ public class ComponentSize {
 	}
 }
 }
-
-

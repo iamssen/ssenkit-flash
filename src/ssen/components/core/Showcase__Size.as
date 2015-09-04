@@ -20,7 +20,8 @@ public class Showcase__Size extends Group {
 
 		var test:Test = new Test;
 		test.percentWidth = 100;
-		test.percentHeight = 100;
+		test.height = 200;
+//		test.percentHeight = 100;
 		addElement(test);
 
 		var rect2:Rect = new Rect;
@@ -73,7 +74,7 @@ class Test extends UIComponent {
 //	}
 
 	override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
-		trace("Test.updateDisplayList()", unscaledWidth, unscaledHeight);
+		trace("Test.updateDisplayList()", unscaledWidth, unscaledHeight, explicitMaxHeight, explicitHeight);
 
 		super.updateDisplayList(unscaledWidth, unscaledHeight);
 
