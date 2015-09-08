@@ -19,10 +19,10 @@
 		<!-- @formatter:off -->
 		<!--<devkit:Showcase type="ssen.components.layouts.Showcase__FlexibleTileLayout" description="Flexible Tile Layout"/>-->
 		<!--<devkit:Showcase type="ssen.components.layouts.Showcase__FlowLayout" description="Flow Layout"/>-->
-		<devkit:Showcase type="ssen.components.core.Showcase__Size" description="Size"/>
+		<devkit:Showcase type="ssen.components.base.Showcase__Size" description="Size"/>
 		<!--<devkit:Showcase type="ssen.components.core.Showcase__SizeProperties" description="Size Properties"/>-->
 		<!--<devkit:Showcase type="ssen.components.base.sizeHelpers.Showcase__ComponentSize" description="Component Size"/>-->
-		<devkit:Showcase type="ssen.components.base.sizeHelpers.Showcase__ComponentSize2" description="Component Size 2"/>
+		<devkit:Showcase type="ssen.components.base.Showcase__ComponentSizeHelper" description="Component Size Helper"/>
 		<!--<devkit:Showcase type="ssen.datakit.serviceWorkers.Showcase__ServiceWorker" description="Service Worker"/>-->
 		<!--<devkit:Showcase type="ssen.animation.Showcase__DataTransition" description="Data Transition"/>-->
 		<!--<devkit:Showcase type="ssen.drawing.Showcase__Radian" description="Radian"/>-->

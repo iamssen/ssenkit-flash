@@ -1,4 +1,4 @@
-package ssen.components.core {
+package ssen.components.base {
 import mx.core.mx_internal;
 
 import spark.components.Group;

@@ -1,4 +1,4 @@
-package ssen.components.base.sizeHelpers {
+package ssen.drawing {
 import mx.utils.StringUtil;
 
 public class LinearPoint {

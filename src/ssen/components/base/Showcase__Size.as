@@ -1,4 +1,4 @@
-package ssen.components.core {
+package ssen.components.base {
 import mx.graphics.SolidColor;
 
 import spark.components.Group;

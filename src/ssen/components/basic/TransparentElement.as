@@ -9,6 +9,7 @@ public class TransparentElement extends UIComponent {
 		super.updateDisplayList(unscaledWidth, unscaledHeight);
 
 		var g:Graphics = graphics;
+		g.clear();
 		g.beginFill(0, 0);
 		g.drawRect(0, 0, unscaledWidth, unscaledHeight);
 		g.endFill();

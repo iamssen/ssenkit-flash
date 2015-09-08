@@ -1,4 +1,4 @@
-package ssen.components.core {
+package ssen.components.base {
 import flash.events.MouseEvent;
 
 import spark.components.Button;
