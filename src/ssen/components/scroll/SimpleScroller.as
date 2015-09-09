@@ -19,8 +19,9 @@ import ssen.components.scroll.snippets.SimpleScrollerSkin;
 [Style(name="trackPosition", inherit="yes", type="String", enumeration="inside,outside")]
 
 public class SimpleScroller extends Scroller {
-	public function SimpleScroller() {
-		setStyle("skinClass", SimpleScrollerSkin);
+	override protected function createChildren():void {
+		if (!getStyle("skinClass") && !getStyle("skinFactory")) setStyle("skinClass", SimpleScrollerSkin);
+		super.createChildren();
 	}
 }
 }

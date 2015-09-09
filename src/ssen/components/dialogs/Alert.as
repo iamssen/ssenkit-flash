@@ -96,8 +96,9 @@ public class Alert extends RichTextAlertBase {
 		close();
 	}
 
-	public function Alert() {
-		setStyle("skinClass", AlertSkin);
+	override protected function createChildren():void {
+		if (!getStyle("skinClass") && !getStyle("skinFactory")) setStyle("skinClass", AlertSkin);
+		super.createChildren();
 	}
 
 	//==========================================================================================

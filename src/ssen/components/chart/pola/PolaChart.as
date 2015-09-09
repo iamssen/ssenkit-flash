@@ -155,8 +155,9 @@ public class PolaChart extends SkinnableComponent {
 	//==========================================================================================
 	// internal containers
 	//==========================================================================================
-	public function PolaChart() {
-		setStyle("skinClass", PolaChartSkin);
+	override protected function createChildren():void {
+		if (!getStyle("skinClass") && !getStyle("skinFactory")) setStyle("skinClass", PolaChartSkin);
+		super.createChildren();
 	}
 
 	//==========================================================================================

@@ -20,8 +20,9 @@ public class GridElement extends SkinnableComponent {
 	[SkinPart(required="true")]
 	public var scrollBar:VScrollBar;
 
-	public function GridElement() {
-		setStyle("skinClass", GridElementSkin);
+	override protected function createChildren():void {
+		if (!getStyle("skinClass") && !getStyle("skinFactory")) setStyle("skinClass", GridElementSkin);
+		super.createChildren();
 	}
 
 	public function getBlock(block:int):Group {

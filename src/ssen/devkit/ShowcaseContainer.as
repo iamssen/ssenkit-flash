@@ -108,9 +108,13 @@ public class ShowcaseContainer extends SkinnableComponent {
 	}
 
 	public function ShowcaseContainer() {
-		setStyle("skinClass", ShowcaseContainerSkin);
 		percentWidth = 100;
 		percentHeight = 100;
+	}
+
+	override protected function createChildren():void {
+		if (!getStyle("skinClass") && !getStyle("skinFactory")) setStyle("skinClass", ShowcaseContainerSkin);
+		super.createChildren();
 	}
 
 	//==========================================================================================

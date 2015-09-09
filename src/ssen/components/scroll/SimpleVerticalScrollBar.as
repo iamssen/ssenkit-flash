@@ -18,8 +18,9 @@ import ssen.components.scroll.snippets.SimpleVerticalScrollBarSkin;
 [Style(name="thumbEndMargin", inherit="yes", type="uint")]
 
 public class SimpleVerticalScrollBar extends VScrollBar {
-	public function SimpleVerticalScrollBar() {
-		setStyle("skinClass", SimpleVerticalScrollBarSkin);
+	override protected function createChildren():void {
+		if (!getStyle("skinClass") && !getStyle("skinFactory")) setStyle("skinClass", SimpleVerticalScrollBarSkin);
+		super.createChildren();
 	}
 }
 }

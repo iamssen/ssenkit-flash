@@ -11,8 +11,9 @@ public class CartesianChartAxisWrapper extends SkinnableContainer {
 	[Bindable]
 	public var verticalAxisLabel:String;
 
-	public function CartesianChartAxisWrapper() {
-		setStyle("skinClass", CartesianChartAxisWrapperSkin);
+	override protected function createChildren():void {
+		if (!getStyle("skinClass") && !getStyle("skinFactory")) setStyle("skinClass", CartesianChartAxisWrapperSkin);
+		super.createChildren();
 	}
 }
 }

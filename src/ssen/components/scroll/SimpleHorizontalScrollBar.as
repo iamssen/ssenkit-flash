@@ -18,8 +18,9 @@ import ssen.components.scroll.snippets.SimpleHorizontalScrollBarSkin;
 [Style(name="thumbEndMargin", inherit="yes", type="uint")]
 
 public class SimpleHorizontalScrollBar extends HScrollBar {
-	public function SimpleHorizontalScrollBar() {
-		setStyle("skinClass", SimpleHorizontalScrollBarSkin);
+	override protected function createChildren():void {
+		if (!getStyle("skinClass") && !getStyle("skinFactory")) setStyle("skinClass", SimpleHorizontalScrollBarSkin);
+		super.createChildren();
 	}
 }
 }

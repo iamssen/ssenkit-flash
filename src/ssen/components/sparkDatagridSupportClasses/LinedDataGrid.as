@@ -17,9 +17,12 @@ public class LinedDataGrid extends DataGrid {
 		itemRenderer = new ClassFactory(GridRenderer);
 		itemEditor = new ClassFactory(TextGridEditor);
 
-		setStyle("skinClass", LinedDataGridSkin);
-
 		rowHeight = 34;
+	}
+
+	override protected function createChildren():void {
+		if (!getStyle("skinClass") && !getStyle("skinFactory")) setStyle("skinClass", LinedDataGridSkin);
+		super.createChildren();
 	}
 
 	override protected function partAdded(partName:String, instance:Object):void {

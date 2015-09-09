@@ -46,8 +46,12 @@ public class GridAndChartWeaver extends SkinnableContainer {
 	// 내부 Chart와 Grid 수집
 	//==========================================================================================
 	public function GridAndChartWeaver() {
-		setStyle("skinClass", GridAndChartWeaverSkin);
 		addEventListener(FlexEvent.CONTENT_CREATION_COMPLETE, mxmlContentCreationComplete, false, 0, true);
+	}
+
+	override protected function createChildren():void {
+		if (!getStyle("skinClass") && !getStyle("skinFactory")) setStyle("skinClass", GridAndChartWeaverSkin);
+		super.createChildren();
 	}
 
 	// 설정된 mxml content를 수집한다.

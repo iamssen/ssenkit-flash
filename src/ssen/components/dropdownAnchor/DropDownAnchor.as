@@ -6,6 +6,8 @@ import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.geom.Point;
 
+import mx.core.ClassFactory;
+
 import mx.core.FlexGlobals;
 import mx.core.IFactory;
 import mx.core.UIComponent;
@@ -79,8 +81,30 @@ public class DropDownAnchor extends SkinnableComponent implements IDisposable {
 	//==========================================================================================
 	// construct
 	//==========================================================================================
-	public function DropDownAnchor() {
-		setStyle("skinClass", DropDownAnchorSkin);
+	//	public function DropDownAnchor() {
+	//		setStyle("skinClass", DropDownAnchorSkin);
+	//	}
+
+	//	[Bindable(style="true")]
+	//	override public function getStyle(styleProp:String):* {
+	//		var value:* = super.getStyle(styleProp);
+	//
+	//		if (!value) {
+	//			switch (styleProp) {
+	//				case "skinClass":
+	//					return DropDownAnchorSkin;
+	//				case "skinFactory":
+	//					return new ClassFactory(DropDownAnchorSkin);
+	//			}
+	//		}
+	//
+	//		return value;
+	//	}
+
+
+	override protected function createChildren():void {
+		if (!getStyle("skinClass") && !getStyle("skinFactory")) setStyle("skinClass", DropDownAnchorSkin);
+		super.createChildren();
 	}
 
 	//==========================================================================================
@@ -110,7 +134,10 @@ public class DropDownAnchor extends SkinnableComponent implements IDisposable {
 
 			if (hasTween) {
 				popupAnchorContainer.alpha = 0;
-				TweenLite.to(popupAnchorContainer, openDuration, {alpha: 1, onComplete: popupAnchorContainerCompleteOpenTween});
+				TweenLite.to(popupAnchorContainer, openDuration, {
+					alpha     : 1,
+					onComplete: popupAnchorContainerCompleteOpenTween
+				});
 			} else {
 				popupAnchorContainer.alpha = 1;
 				callLater(popupAnchorContainerCompleteOpenTween);
@@ -180,7 +207,10 @@ public class DropDownAnchor extends SkinnableComponent implements IDisposable {
 			}
 		} else {
 			if (hasTween) {
-				TweenLite.to(popupAnchorContainer, closeDuration, {alpha: 0, onComplete: popupAnchorContainerCompleteCloseTween});
+				TweenLite.to(popupAnchorContainer, closeDuration, {
+					alpha     : 0,
+					onComplete: popupAnchorContainerCompleteCloseTween
+				});
 			} else {
 				popupAnchorContainerCompleteCloseTween();
 			}
