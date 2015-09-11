@@ -2,6 +2,7 @@ package ssen.components.scroll {
 
 import spark.components.Scroller;
 
+import ssen.components.base.setDefaultSkin;
 import ssen.components.scroll.snippets.SimpleScrollerSkin;
 
 [Style(name="thumbColor", inherit="yes", type="uint", format="Color")]
@@ -19,9 +20,13 @@ import ssen.components.scroll.snippets.SimpleScrollerSkin;
 [Style(name="trackPosition", inherit="yes", type="String", enumeration="inside,outside")]
 
 public class SimpleScroller extends Scroller {
-	override protected function createChildren():void {
+	public function SimpleScroller() {
+		setDefaultSkin(styleManager, SimpleScroller, SimpleScrollerSkin);
+	}
+
+	override protected function attachSkin():void {
 		if (!getStyle("skinClass") && !getStyle("skinFactory")) setStyle("skinClass", SimpleScrollerSkin);
-		super.createChildren();
+		super.attachSkin();
 	}
 }
 }

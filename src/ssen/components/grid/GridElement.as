@@ -4,6 +4,8 @@ import spark.components.Group;
 import spark.components.VScrollBar;
 import spark.components.supportClasses.SkinnableComponent;
 
+import ssen.components.base.setDefaultSkin;
+
 public class GridElement extends SkinnableComponent {
 	//==========================================================================================
 	// skin parts
@@ -20,9 +22,13 @@ public class GridElement extends SkinnableComponent {
 	[SkinPart(required="true")]
 	public var scrollBar:VScrollBar;
 
-	override protected function createChildren():void {
+	public function GridElement() {
+		setDefaultSkin(styleManager, GridElement, GridElementSkin);
+	}
+
+	override protected function attachSkin():void {
 		if (!getStyle("skinClass") && !getStyle("skinFactory")) setStyle("skinClass", GridElementSkin);
-		super.createChildren();
+		super.attachSkin();
 	}
 
 	public function getBlock(block:int):Group {

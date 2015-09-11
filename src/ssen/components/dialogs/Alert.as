@@ -4,6 +4,7 @@ import flash.events.MouseEvent;
 
 import spark.components.Button;
 
+import ssen.components.base.setDefaultSkin;
 import ssen.components.dialogs.snippets.AlertSkin;
 
 public class Alert extends RichTextAlertBase {
@@ -96,9 +97,13 @@ public class Alert extends RichTextAlertBase {
 		close();
 	}
 
-	override protected function createChildren():void {
+	public function Alert() {
+		setDefaultSkin(styleManager, Alert, AlertSkin);
+	}
+
+	override protected function attachSkin():void {
 		if (!getStyle("skinClass") && !getStyle("skinFactory")) setStyle("skinClass", AlertSkin);
-		super.createChildren();
+		super.attachSkin();
 	}
 
 	//==========================================================================================

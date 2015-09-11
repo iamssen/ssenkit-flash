@@ -4,6 +4,7 @@ import mx.core.ClassFactory;
 
 import spark.components.DataGrid;
 
+import ssen.components.base.setDefaultSkin;
 import ssen.components.sparkDatagridSupportClasses.editors.TextGridEditor;
 import ssen.components.sparkDatagridSupportClasses.elements.IDataGridRowElement;
 import ssen.components.sparkDatagridSupportClasses.renderers.GridRenderer;
@@ -14,15 +15,17 @@ public class LinedDataGrid extends DataGrid {
 	public var columnFooterElement:IDataGridRowElement;
 
 	public function LinedDataGrid() {
+		setDefaultSkin(styleManager, LinedDataGrid, LinedDataGridSkin);
+
 		itemRenderer = new ClassFactory(GridRenderer);
 		itemEditor = new ClassFactory(TextGridEditor);
 
 		rowHeight = 34;
 	}
 
-	override protected function createChildren():void {
+	override protected function attachSkin():void {
 		if (!getStyle("skinClass") && !getStyle("skinFactory")) setStyle("skinClass", LinedDataGridSkin);
-		super.createChildren();
+		super.attachSkin();
 	}
 
 	override protected function partAdded(partName:String, instance:Object):void {

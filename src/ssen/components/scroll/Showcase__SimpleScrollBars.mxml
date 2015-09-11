@@ -6,13 +6,13 @@
 		<s:layout>
 			<s:TileLayout requestedRowCount="2" requestedColumnCount="2"
 						  horizontalGap="5" verticalGap="5"
-						  columnWidth="200" rowHeight="200" />
+						  columnWidth="200" rowHeight="200"/>
 		</s:layout>
 
 		<s:Group>
 			<scroll:SimpleScroller width="100%" height="100%">
 				<s:Group>
-					<scroll:Showcase__SimpleScrollBars_Content width="500" height="500" />
+					<scroll:Showcase__SimpleScrollBars_Content width="500" height="500"/>
 				</s:Group>
 			</scroll:SimpleScroller>
 		</s:Group>
@@ -30,9 +30,11 @@
 								   thumbOverColor="#ffffff"
 								   thumbOverAlpha="0.8"
 								   thumbDownColor="#ffffff"
-								   thumbDownAlpha="1">
+								   thumbDownAlpha="1"
+
+								   skinClass="spark.skins.spark.ScrollerSkin">
 				<s:Group>
-					<scroll:Showcase__SimpleScrollBars_Content width="500" height="500" />
+					<scroll:Showcase__SimpleScrollBars_Content width="500" height="500"/>
 				</s:Group>
 			</scroll:SimpleScroller>
 		</s:Group>
@@ -45,7 +47,7 @@
 								   thumbStartMargin="0"
 								   thumbEndMargin="0">
 				<s:Group>
-					<scroll:Showcase__SimpleScrollBars_Content width="500" height="500" />
+					<scroll:Showcase__SimpleScrollBars_Content width="500" height="500"/>
 				</s:Group>
 			</scroll:SimpleScroller>
 		</s:Group>
@@ -63,7 +65,7 @@
 								   thumbDownColor="#000000"
 								   thumbDownAlpha="1">
 				<s:Group>
-					<scroll:Showcase__SimpleScrollBars_Content width="500" height="500" />
+					<scroll:Showcase__SimpleScrollBars_Content width="500" height="500"/>
 				</s:Group>
 			</scroll:SimpleScroller>
 		</s:Group>

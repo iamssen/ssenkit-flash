@@ -2,6 +2,7 @@ package ssen.components.scroll {
 
 import spark.components.HScrollBar;
 
+import ssen.components.base.setDefaultSkin;
 import ssen.components.scroll.snippets.SimpleHorizontalScrollBarSkin;
 
 [Style(name="thumbColor", inherit="yes", type="uint", format="Color")]
@@ -18,9 +19,13 @@ import ssen.components.scroll.snippets.SimpleHorizontalScrollBarSkin;
 [Style(name="thumbEndMargin", inherit="yes", type="uint")]
 
 public class SimpleHorizontalScrollBar extends HScrollBar {
-	override protected function createChildren():void {
+	public function SimpleHorizontalScrollBar() {
+		setDefaultSkin(styleManager, SimpleHorizontalScrollBar, SimpleHorizontalScrollBarSkin);
+	}
+
+	override protected function attachSkin():void {
 		if (!getStyle("skinClass") && !getStyle("skinFactory")) setStyle("skinClass", SimpleHorizontalScrollBarSkin);
-		super.createChildren();
+		super.attachSkin();
 	}
 }
 }

@@ -6,8 +6,6 @@ import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.geom.Point;
 
-import mx.core.ClassFactory;
-
 import mx.core.FlexGlobals;
 import mx.core.IFactory;
 import mx.core.UIComponent;
@@ -23,6 +21,7 @@ import spark.components.supportClasses.SkinnableComponent;
 
 import ssen.common.IDisposable;
 import ssen.common.NullUtils;
+import ssen.components.base.setDefaultSkin;
 import ssen.components.dropdownAnchor.snippets.DropDownAnchorSkin;
 
 [Event(name="open", type="flash.events.Event")]
@@ -81,30 +80,13 @@ public class DropDownAnchor extends SkinnableComponent implements IDisposable {
 	//==========================================================================================
 	// construct
 	//==========================================================================================
-	//	public function DropDownAnchor() {
-	//		setStyle("skinClass", DropDownAnchorSkin);
-	//	}
+	public function DropDownAnchor() {
+		setDefaultSkin(styleManager, DropDownAnchor, DropDownAnchorSkin);
+	}
 
-	//	[Bindable(style="true")]
-	//	override public function getStyle(styleProp:String):* {
-	//		var value:* = super.getStyle(styleProp);
-	//
-	//		if (!value) {
-	//			switch (styleProp) {
-	//				case "skinClass":
-	//					return DropDownAnchorSkin;
-	//				case "skinFactory":
-	//					return new ClassFactory(DropDownAnchorSkin);
-	//			}
-	//		}
-	//
-	//		return value;
-	//	}
-
-
-	override protected function createChildren():void {
+	override protected function attachSkin():void {
 		if (!getStyle("skinClass") && !getStyle("skinFactory")) setStyle("skinClass", DropDownAnchorSkin);
-		super.createChildren();
+		super.attachSkin();
 	}
 
 	//==========================================================================================

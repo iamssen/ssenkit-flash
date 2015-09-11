@@ -1,6 +1,8 @@
 package ssen.components.mxChartSupportClasses._showcase_.views.charts {
 import spark.components.SkinnableContainer;
 
+import ssen.components.base.setDefaultSkin;
+
 /** Cartesian Chart 외부에 Axis Label 처리를 하기 위한 Container 형태의 Label */
 public class CartesianChartAxisWrapper extends SkinnableContainer {
 	/** 가로축 라벨 텍스트 */
@@ -11,9 +13,13 @@ public class CartesianChartAxisWrapper extends SkinnableContainer {
 	[Bindable]
 	public var verticalAxisLabel:String;
 
-	override protected function createChildren():void {
+	public function CartesianChartAxisWrapper() {
+		setDefaultSkin(styleManager, CartesianChartAxisWrapper, CartesianChartAxisWrapperSkin);
+	}
+
+	override protected function attachSkin():void {
 		if (!getStyle("skinClass") && !getStyle("skinFactory")) setStyle("skinClass", CartesianChartAxisWrapperSkin);
-		super.createChildren();
+		super.attachSkin();
 	}
 }
 }

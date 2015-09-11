@@ -5,6 +5,7 @@ import mx.core.mx_internal;
 import spark.components.supportClasses.SkinnableComponent;
 
 import ssen.common.DisposableUtils;
+import ssen.components.base.setDefaultSkin;
 import ssen.ssen_internal;
 
 use namespace mx_internal;
@@ -155,9 +156,13 @@ public class PolaChart extends SkinnableComponent {
 	//==========================================================================================
 	// internal containers
 	//==========================================================================================
-	override protected function createChildren():void {
+	public function PolaChart() {
+		setDefaultSkin(styleManager, PolaChart, PolaChartSkin);
+	}
+
+	override protected function attachSkin():void {
 		if (!getStyle("skinClass") && !getStyle("skinFactory")) setStyle("skinClass", PolaChartSkin);
-		super.createChildren();
+		super.attachSkin();
 	}
 
 	//==========================================================================================

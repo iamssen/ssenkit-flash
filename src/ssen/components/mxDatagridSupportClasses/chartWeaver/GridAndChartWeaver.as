@@ -17,6 +17,7 @@ import mx.events.ScrollEvent;
 
 import spark.components.SkinnableContainer;
 
+import ssen.components.base.setDefaultSkin;
 import ssen.ssen_internal;
 
 use namespace ssen_internal;
@@ -32,7 +33,7 @@ public class GridAndChartWeaver extends SkinnableContainer {
 	ssen_internal var error:Error;
 
 	[Bindable]
-	ssen_internal var disableMessage:String="LOADING";
+	ssen_internal var disableMessage:String = "LOADING";
 
 	private var clear:Boolean;
 
@@ -40,18 +41,19 @@ public class GridAndChartWeaver extends SkinnableContainer {
 	// properties
 	//==========================================================================================
 	/** chart rendering을 빠르게 진행한다 (속도 문제가 있으면 false로 돌린다) */
-	public var renderDirect:Boolean=true;
+	public var renderDirect:Boolean = true;
 
 	//==========================================================================================
 	// 내부 Chart와 Grid 수집
 	//==========================================================================================
 	public function GridAndChartWeaver() {
+		setDefaultSkin(styleManager, GridAndChartWeaver, GridAndChartWeaverSkin);
 		addEventListener(FlexEvent.CONTENT_CREATION_COMPLETE, mxmlContentCreationComplete, false, 0, true);
 	}
 
-	override protected function createChildren():void {
+	override protected function attachSkin():void {
 		if (!getStyle("skinClass") && !getStyle("skinFactory")) setStyle("skinClass", GridAndChartWeaverSkin);
-		super.createChildren();
+		super.attachSkin();
 	}
 
 	// 설정된 mxml content를 수집한다.
@@ -61,26 +63,26 @@ public class GridAndChartWeaver extends SkinnableContainer {
 		removeEventListener(FlexEvent.CONTENT_CREATION_COMPLETE, mxmlContentCreationComplete);
 
 		if (numElements != 2) {
-			error=new Error("AdvancedDataGrid 하나와 ColumnChart 하나가 필요합니다.");
+			error = new Error("AdvancedDataGrid 하나와 ColumnChart 하나가 필요합니다.");
 			invalidateState();
 			return;
 		}
 
-		var f:int=-1;
-		var fmax:int=numElements;
+		var f:int = -1;
+		var fmax:int = numElements;
 		var element:IVisualElement;
 
 		while (++f < fmax) {
-			element=getElementAt(f);
+			element = getElementAt(f);
 
 			if (element is AdvancedDataGrid) {
 				//----------------------------------------------------------------
 				// Grid 초기화
 				//----------------------------------------------------------------
-				grid=element as AdvancedDataGrid;
-				grid.horizontalScrollPolicy=ScrollPolicy.AUTO;
-				grid.verticalScrollPolicy=ScrollPolicy.AUTO;
-				grid.draggableColumns=false;
+				grid = element as AdvancedDataGrid;
+				grid.horizontalScrollPolicy = ScrollPolicy.AUTO;
+				grid.verticalScrollPolicy = ScrollPolicy.AUTO;
+				grid.draggableColumns = false;
 
 				// 데이터의 변화
 				grid.addEventListener(FlexEvent.DATA_CHANGE, gridDataChange, false, 0, true);
@@ -97,12 +99,12 @@ public class GridAndChartWeaver extends SkinnableContainer {
 				// Cell 선택됨
 				grid.addEventListener(ListEvent.CHANGE, gridSelectionChanged, false, 0, true);
 
-					//				trace("GridAndChartWeaver.mxmlContentCreationComplete(grid initlaized)");
+				//				trace("GridAndChartWeaver.mxmlContentCreationComplete(grid initlaized)");
 			} else if (element is ColumnChart) {
 				//---------------------------------------------
 				// Chart 초기화
 				//---------------------------------------------
-				chart=element as ColumnChart;
+				chart = element as ColumnChart;
 				chart.setStyle("paddingLeft", 0);
 				chart.setStyle("paddingRight", 0);
 				chart.setStyle("paddingTop", 0);
@@ -117,10 +119,10 @@ public class GridAndChartWeaver extends SkinnableContainer {
 				// Series 정보의 변화
 				chart.addEventListener("legendDataChanged", legendDataChanged, false, 0, true);
 
-					// chart.addEventListener(FlexEvent.UPDATE_COMPLETE, chartUpdateComplete, false, 0, true);
-					//				trace("GridAndChartWeaver.mxmlContentCreationComplete(chart initlaized)");
+				// chart.addEventListener(FlexEvent.UPDATE_COMPLETE, chartUpdateComplete, false, 0, true);
+				//				trace("GridAndChartWeaver.mxmlContentCreationComplete(chart initlaized)");
 			} else {
-				error=new Error("AdvancedDataGrid 또는 ColumnChart만 집어넣을 수 있습니다");
+				error = new Error("AdvancedDataGrid 또는 ColumnChart만 집어넣을 수 있습니다");
 				invalidateState();
 				return;
 			}
@@ -192,18 +194,18 @@ public class GridAndChartWeaver extends SkinnableContainer {
 	private var selectedColumnDataField:String;
 
 	protected function invalidateState():void {
-		stateDirty=true;
+		stateDirty = true;
 		invalidateSkinState();
 		invalidateProperties();
 	}
 
 	protected function invalidateHighlight():void {
-		highlightDirty=true;
+		highlightDirty = true;
 		invalidateProperties();
 	}
 
 	protected function invalidateLayout():void {
-		layoutDirty=true;
+		layoutDirty = true;
 		invalidateProperties();
 	}
 
@@ -214,38 +216,38 @@ public class GridAndChartWeaver extends SkinnableContainer {
 
 		if (stateDirty) {
 			if (error) {
-				clear=false;
+				clear = false;
 			} else if (!chart.dataProvider || chart.dataProvider.length === 0) {
-				disableMessage="NO DATA";
-				clear=false;
+				disableMessage = "NO DATA";
+				clear = false;
 			} else if (!hasGridColumns(grid) || !chart.series || chart.series.length === 0) {
-				disableMessage="LOADING";
-				clear=false;
+				disableMessage = "LOADING";
+				clear = false;
 			} else if (grid.lockedColumnCount === 0) {
-				disableMessage="LOADING";
-				clear=false;
+				disableMessage = "LOADING";
+				clear = false;
 			} else if (!(chart.horizontalAxis is LinearAxis)) {
-				error=new Error("ColumnChart.horizontalAxis는 LinearAxis 이어야 합니다.");
-				clear=false;
+				error = new Error("ColumnChart.horizontalAxis는 LinearAxis 이어야 합니다.");
+				clear = false;
 			} else {
-				clear=true;
+				clear = true;
 			}
 
 			if (clear) {
-				layoutDirty=true;
+				layoutDirty = true;
 			}
 
-			stateDirty=false;
+			stateDirty = false;
 		}
 
 		if (layoutDirty) {
 			invalidateDisplayList();
-			layoutDirty=false;
+			layoutDirty = false;
 		}
 
 		if (highlightDirty) {
 			processHighlight();
-			highlightDirty=false;
+			highlightDirty = false;
 		}
 
 		super.commitProperties();
@@ -254,58 +256,58 @@ public class GridAndChartWeaver extends SkinnableContainer {
 	private function processHighlight():void {
 		var f:int;
 
-		var selectedCells:Array=grid.selectedCells;
+		var selectedCells:Array = grid.selectedCells;
 
-		selectedRowIndex=-1;
-		selectedColumnIndex=-1;
-		selectedColumnDataField=null;
+		selectedRowIndex = -1;
+		selectedColumnIndex = -1;
+		selectedColumnDataField = null;
 
 		if (selectedCells && selectedCells.length > 0) {
-			var cell:Object=grid.selectedCells[0];
-			selectedRowIndex=cell["rowIndex"];
-			selectedColumnIndex=cell["columnIndex"];
+			var cell:Object = grid.selectedCells[0];
+			selectedRowIndex = cell["rowIndex"];
+			selectedColumnIndex = cell["columnIndex"];
 
 
 			if (selectedColumnIndex < grid.lockedColumnCount) {
-				selectedRowIndex=-1;
-				selectedColumnIndex=-1;
+				selectedRowIndex = -1;
+				selectedColumnIndex = -1;
 			}
 		}
 
 		if (selectedColumnIndex > -1) {
-			var columns:Array=DataGridUtils.getGridColumns(grid);
-			var column:AdvancedDataGridColumn=columns[selectedColumnIndex];
-			selectedColumnDataField=column.dataField;
+			var columns:Array = DataGridUtils.getGridColumns(grid);
+			var column:AdvancedDataGridColumn = columns[selectedColumnIndex];
+			selectedColumnDataField = column.dataField;
 		}
 
 		//		trace("GridAndChartWeaver.processHighlight(", grid.lockedColumnCount, selectedRowIndex, selectedColumnIndex - grid.lockedColumnCount, selectedColumnDataField, ")");
 
-		var selectedChartDataIndex:int=selectedColumnIndex - grid.lockedColumnCount;
-		var chartData:IList=chart.dataProvider as IList;
-		var gridData:IList=grid.dataProvider as IList;
+		var selectedChartDataIndex:int = selectedColumnIndex - grid.lockedColumnCount;
+		var chartData:IList = chart.dataProvider as IList;
+		var gridData:IList = grid.dataProvider as IList;
 		var chartVO:IGridAndChartWeaverChartValueObject;
 		var gridVO:IGridAndChartWeaverGridValueObject;
 
 		if (chartData) {
-			f=chartData.length;
+			f = chartData.length;
 
 			while (--f >= 0) {
-				chartVO=chartData.getItemAt(f) as IGridAndChartWeaverChartValueObject;
+				chartVO = chartData.getItemAt(f) as IGridAndChartWeaverChartValueObject;
 
 				if (chartVO) {
-					chartVO.highlighted=f === selectedChartDataIndex;
+					chartVO.highlighted = f === selectedChartDataIndex;
 				}
 			}
 		}
 
 		if (gridData) {
-			f=gridData.length;
+			f = gridData.length;
 
 			while (--f >= 0) {
-				gridVO=gridData.getItemAt(f) as IGridAndChartWeaverGridValueObject;
+				gridVO = gridData.getItemAt(f) as IGridAndChartWeaverGridValueObject;
 
 				if (gridVO) {
-					gridVO.highlightedField=selectedColumnDataField;
+					gridVO.highlightedField = selectedColumnDataField;
 				}
 			}
 		}
@@ -316,8 +318,8 @@ public class GridAndChartWeaver extends SkinnableContainer {
 			return false;
 		}
 
-		var hasNotColumns:Boolean=!grid.columns || grid.columns.length === 0;
-		var hasNotGroupedColumns:Boolean=!grid.groupedColumns || grid.groupedColumns.length === 0;
+		var hasNotColumns:Boolean = !grid.columns || grid.columns.length === 0;
+		var hasNotGroupedColumns:Boolean = !grid.groupedColumns || grid.groupedColumns.length === 0;
 
 		return !hasNotColumns || !hasNotGroupedColumns;
 	}
@@ -329,8 +331,8 @@ public class GridAndChartWeaver extends SkinnableContainer {
 			return;
 		}
 
-		var gridInfo:GridInfo=getGridInfo();
-		var haxis:LinearAxis=chart.horizontalAxis as LinearAxis;
+		var gridInfo:GridInfo = getGridInfo();
+		var haxis:LinearAxis = chart.horizontalAxis as LinearAxis;
 
 		//----------------------------------------------------------------
 		// chart 에 locked columns 적용
@@ -341,8 +343,8 @@ public class GridAndChartWeaver extends SkinnableContainer {
 		// chart 에 unlocked columns 적용
 		//----------------------------------------------------------------
 		// horizontal axis의 절대 공간 = 0 ~ 1
-		haxis.minimum=gridInfo.visibleColumnStartRatio;
-		haxis.maximum=gridInfo.visibleColumnEndRatio;
+		haxis.minimum = gridInfo.visibleColumnStartRatio;
+		haxis.maximum = gridInfo.visibleColumnEndRatio;
 		//		trace("GridAndChartWeaver.updateDisplayList(", gridInfo.visibleColumnStartRatio, gridInfo.visibleColumnEndRatio, ")");
 		//		trace("GridAndChartWeaver.updateDisplayList(", haxis.minimum, haxis.maximum, ")");
 		setChartHorizontalPosition(chart.dataProvider as IList, gridInfo.unlockedColumnsInfo.columnsRatioList);
@@ -357,22 +359,22 @@ public class GridAndChartWeaver extends SkinnableContainer {
 	private function drawChartHighlight(gridInfo:GridInfo):void {
 		var bgelement:DisplayObject;
 		var highlightElement:GridAndChartWeaverChartHighlightElement;
-		var f:int=chart.backgroundElements.length;
+		var f:int = chart.backgroundElements.length;
 		var index:int;
 
 		while (--f >= 0) {
-			bgelement=chart.backgroundElements[f];
+			bgelement = chart.backgroundElements[f];
 
 			if (bgelement is GridAndChartWeaverChartHighlightElement) {
-				highlightElement=bgelement as GridAndChartWeaverChartHighlightElement;
+				highlightElement = bgelement as GridAndChartWeaverChartHighlightElement;
 
 				if (selectedColumnIndex > -1) {
-					index=selectedColumnIndex - grid.lockedColumnCount;
-					highlightElement.highlighted=true;
-					highlightElement.highlightStartX=sumNumbers(gridInfo.unlockedColumnsInfo.columnsWidthList.slice(grid.horizontalScrollPosition, index));
-					highlightElement.highlightEndX=sumNumbers(gridInfo.unlockedColumnsInfo.columnsWidthList.slice(grid.horizontalScrollPosition, index + 1));
+					index = selectedColumnIndex - grid.lockedColumnCount;
+					highlightElement.highlighted = true;
+					highlightElement.highlightStartX = sumNumbers(gridInfo.unlockedColumnsInfo.columnsWidthList.slice(grid.horizontalScrollPosition, index));
+					highlightElement.highlightEndX = sumNumbers(gridInfo.unlockedColumnsInfo.columnsWidthList.slice(grid.horizontalScrollPosition, index + 1));
 				} else {
-					highlightElement.highlighted=false;
+					highlightElement.highlighted = false;
 				}
 			}
 		}
@@ -380,21 +382,21 @@ public class GridAndChartWeaver extends SkinnableContainer {
 
 	private function setChartHorizontalPosition(vos:IList, ratios:Vector.<Number>):void {
 		var vo:IGridAndChartWeaverChartValueObject;
-		var nx:Number=0;
+		var nx:Number = 0;
 		var nr:Number;
 
-		var f:int=-1;
-		var fmax:int=vos.length;
+		var f:int = -1;
+		var fmax:int = vos.length;
 
 		while (++f < fmax) {
-			nr=ratios[f];
+			nr = ratios[f];
 
-			vo=vos.getItemAt(f) as IGridAndChartWeaverChartValueObject;
-			vo.horizontalPosition=nx + (nr / 2);
+			vo = vos.getItemAt(f) as IGridAndChartWeaverChartValueObject;
+			vo.horizontalPosition = nx + (nr / 2);
 
 			//			trace("GridAndChartWeaver.setChartHorizontalPosition(", f, nx, ")");
 
-			nx+=nr;
+			nx += nr;
 		}
 	}
 
@@ -403,24 +405,24 @@ public class GridAndChartWeaver extends SkinnableContainer {
 		var fmax:int;
 
 		// Columns
-		var columns:Array=DataGridUtils.getGridColumns(grid);
-		var lockedColumnCount:int=grid.lockedColumnCount;
-		var lockedColumns:Array=columns.slice(0, lockedColumnCount);
-		var unlockedColumns:Array=columns.slice(lockedColumnCount);
+		var columns:Array = DataGridUtils.getGridColumns(grid);
+		var lockedColumnCount:int = grid.lockedColumnCount;
+		var lockedColumns:Array = columns.slice(0, lockedColumnCount);
+		var unlockedColumns:Array = columns.slice(lockedColumnCount);
 
 		// 잠겨있는 Column의 정보 
-		var lockedColumnsInfo:ColumnsWidthInfo=collectColumnsWidthInfo(lockedColumns);
+		var lockedColumnsInfo:ColumnsWidthInfo = collectColumnsWidthInfo(lockedColumns);
 
 		// 잠겨있지 않은 column의 정보
-		var unlockedColumnsInfo:ColumnsWidthInfo=collectColumnsWidthInfo(unlockedColumns);
+		var unlockedColumnsInfo:ColumnsWidthInfo = collectColumnsWidthInfo(unlockedColumns);
 
 		// Grid 전체의 정보
-		var borderWeight:int=grid.getStyle("borderVisible") ? 1 : 0;
+		var borderWeight:int = grid.getStyle("borderVisible") ? 1 : 0;
 
 		// Scroll 정보를 바탕으로 현재 눈에 보이는 Column들의 정보
-		var visibleWidth:Number=grid.width - lockedColumnsInfo.columnsWidthTotal - (borderWeight * 2);
-		var visibleColumnStartRatio:Number=sumNumbers(unlockedColumnsInfo.columnsRatioList.slice(0, grid.horizontalScrollPosition));
-		var visibleColumnEndRatio:Number=(visibleWidth / unlockedColumnsInfo.columnsWidthTotal) + visibleColumnStartRatio;
+		var visibleWidth:Number = grid.width - lockedColumnsInfo.columnsWidthTotal - (borderWeight * 2);
+		var visibleColumnStartRatio:Number = sumNumbers(unlockedColumnsInfo.columnsRatioList.slice(0, grid.horizontalScrollPosition));
+		var visibleColumnEndRatio:Number = (visibleWidth / unlockedColumnsInfo.columnsWidthTotal) + visibleColumnStartRatio;
 
 
 		//		trace("GridAndChartWeaver.getGridInfo(", grid.horizontalScrollPosition, visibleColumnStartRatio, visibleColumnEndRatio, ")");
@@ -432,12 +434,11 @@ public class GridAndChartWeaver extends SkinnableContainer {
 		//		trace("GridAndChartWeaver.getGridInfo(", visibleColumnStartRatio, ")");
 
 
-
-		var gridInfo:GridInfo=new GridInfo;
-		gridInfo.lockedColumnsInfo=lockedColumnsInfo;
-		gridInfo.unlockedColumnsInfo=unlockedColumnsInfo;
-		gridInfo.visibleColumnStartRatio=visibleColumnStartRatio;
-		gridInfo.visibleColumnEndRatio=visibleColumnEndRatio;
+		var gridInfo:GridInfo = new GridInfo;
+		gridInfo.lockedColumnsInfo = lockedColumnsInfo;
+		gridInfo.unlockedColumnsInfo = unlockedColumnsInfo;
+		gridInfo.visibleColumnStartRatio = visibleColumnStartRatio;
+		gridInfo.visibleColumnEndRatio = visibleColumnEndRatio;
 
 
 		//		var column:AdvancedDataGridColumn;
@@ -460,41 +461,41 @@ public class GridAndChartWeaver extends SkinnableContainer {
 			return 0;
 		}
 
-		var sum:Number=0;
-		var f:int=numbers.length;
+		var sum:Number = 0;
+		var f:int = numbers.length;
 		while (--f >= 0) {
-			sum+=numbers[f];
+			sum += numbers[f];
 		}
 		return sum;
 	}
 
 	private function collectColumnsWidthInfo(columns:Array):ColumnsWidthInfo {
 		var column:AdvancedDataGridColumn;
-		var columnsWidthList:Vector.<Number>=new Vector.<Number>(columns.length, true);
-		var columnsRatioList:Vector.<Number>=new Vector.<Number>(columns.length, true);
-		var columnsWidthTotal:Number=0;
+		var columnsWidthList:Vector.<Number> = new Vector.<Number>(columns.length, true);
+		var columnsRatioList:Vector.<Number> = new Vector.<Number>(columns.length, true);
+		var columnsWidthTotal:Number = 0;
 		var columnWidth:Number;
 
-		var f:int=-1;
-		var fmax:int=columns.length;
+		var f:int = -1;
+		var fmax:int = columns.length;
 		while (++f < fmax) {
-			column=columns[f];
-			columnWidth=column.width;
+			column = columns[f];
+			columnWidth = column.width;
 
-			columnsWidthList[f]=columnWidth;
-			columnsWidthTotal+=columnWidth;
+			columnsWidthList[f] = columnWidth;
+			columnsWidthTotal += columnWidth;
 		}
 
-		f=-1;
-		fmax=columns.length;
+		f = -1;
+		fmax = columns.length;
 		while (++f < fmax) {
-			columnsRatioList[f]=columnsWidthList[f] / columnsWidthTotal;
+			columnsRatioList[f] = columnsWidthList[f] / columnsWidthTotal;
 		}
 
-		var columnWidthInfo:ColumnsWidthInfo=new ColumnsWidthInfo;
-		columnWidthInfo.columnsWidthList=columnsWidthList;
-		columnWidthInfo.columnsWidthTotal=columnsWidthTotal;
-		columnWidthInfo.columnsRatioList=columnsRatioList;
+		var columnWidthInfo:ColumnsWidthInfo = new ColumnsWidthInfo;
+		columnWidthInfo.columnsWidthList = columnsWidthList;
+		columnWidthInfo.columnsWidthTotal = columnsWidthTotal;
+		columnWidthInfo.columnsRatioList = columnsRatioList;
 
 		return columnWidthInfo;
 	}
@@ -503,7 +504,7 @@ public class GridAndChartWeaver extends SkinnableContainer {
 	// skin
 	//==========================================================================================
 	override protected function getCurrentSkinState():String {
-		var state:String=(error) ? "error" : !clear ? "disabled" : "normal";
+		var state:String = (error) ? "error" : !clear ? "disabled" : "normal";
 		//		trace("!!!!GridAndChartWeaver.getCurrentSkinState(", state, ")");
 		return state;
 	}
@@ -521,7 +522,7 @@ class ColumnsWidthInfo {
 
 	public function toString():String {
 		return StringUtils.formatToString("[ColumnWidthInfo]\ncolumnWidthList={0}\ncolumnRatioList={1}\ncolumnWidthTotal={2}\n[/ColumnWidthInfo]", columnsWidthList,
-										  columnsRatioList, columnsWidthTotal);
+				columnsRatioList, columnsWidthTotal);
 	}
 }
 

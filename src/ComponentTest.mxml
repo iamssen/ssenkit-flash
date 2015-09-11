@@ -23,6 +23,7 @@
 		<!--<devkit:Showcase type="ssen.components.core.Showcase__SizeProperties" description="Size Properties"/>-->
 		<!--<devkit:Showcase type="ssen.components.base.sizeHelpers.Showcase__ComponentSize" description="Component Size"/>-->
 		<devkit:Showcase type="ssen.components.base.Showcase__ComponentSizeHelper" description="Component Size Helper"/>
+		<devkit:Showcase type="ssen.components.scroll.Showcase__SimpleScrollBars" description="ScrollBars"/>
 		<!--<devkit:Showcase type="ssen.datakit.serviceWorkers.Showcase__ServiceWorker" description="Service Worker"/>-->
 		<!--<devkit:Showcase type="ssen.animation.Showcase__DataTransition" description="Data Transition"/>-->
 		<!--<devkit:Showcase type="ssen.drawing.Showcase__Radian" description="Radian"/>-->
