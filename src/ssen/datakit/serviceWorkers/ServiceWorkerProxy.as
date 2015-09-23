@@ -5,6 +5,9 @@ import flash.system.Worker;
 import flash.system.WorkerDomain;
 import flash.system.WorkerState;
 import flash.utils.ByteArray;
+import flash.utils.getQualifiedClassName;
+
+import mx.utils.StringUtil;
 
 import ssen.common.IDisposable;
 
@@ -17,6 +20,9 @@ final public class ServiceWorkerProxy implements IDisposable {
 	private var _suspendChannel:MessageChannel;
 	private var _errorChannel:MessageChannel;
 
+	public var __id:String;
+	private static var __next:int = 0;
+
 	//==========================================================================================
 	// worker management
 	//==========================================================================================
@@ -26,6 +32,10 @@ final public class ServiceWorkerProxy implements IDisposable {
 	}
 
 	public function ServiceWorkerProxy(swfBytes:ByteArray) {
+		__id = StringUtil.substitute('[[id={1}]]', getQualifiedClassName(this), __next);
+		trace(__id, "ServiceWorkerProxy.ServiceWorkerProxy()");
+		__next++;
+
 		_worker = WorkerDomain.current.createWorker(swfBytes, true);
 
 		_startChannel = Worker.current.createMessageChannel(_worker);
@@ -39,7 +49,12 @@ final public class ServiceWorkerProxy implements IDisposable {
 		_worker.setSharedProperty("errorChannel", _errorChannel);
 
 		_resultChannel.addEventListener(Event.CHANNEL_MESSAGE, resultMessageHandler);
+		_resultChannel.addEventListener(Event.CHANNEL_STATE, resultChannelStateHandler);
 		_errorChannel.addEventListener(Event.CHANNEL_MESSAGE, errorMessageHandler);
+	}
+
+	private function resultChannelStateHandler(event:Event):void {
+		trace(__id, "ServiceWorkerProxy.resultChannelStateHandler()", event, _resultChannel.state);
 	}
 
 	private var _callback:Function;
@@ -77,19 +92,25 @@ final public class ServiceWorkerProxy implements IDisposable {
 	public function suspend():void {
 		if (!_activated) return;
 		_activated = false;
-		_suspendChannel.send(null);
+		_suspendChannel.send({});
 	}
 
 	private function resultMessageHandler(event:Event):void {
-		_activated = false;
-		resultHandler(_resultChannel.receive());
+		trace(__id, "ServiceWorkerProxy.resultMessageHandler()", event);
+		if (!_resultChannel.messageAvailable) return;
+		var receive:* = _resultChannel.receive();
+		trace(__id, "ServiceWorkerProxy.resultMessageHandler() -->", receive);
+		if (resultHandler !== null) resultHandler(receive);
 		resultHandler = null;
 		errorHandler = null;
 	}
 
 	private function errorMessageHandler(event:Event):void {
-		_activated = false;
-		errorHandler(_errorChannel.receive());
+		trace(__id, "ServiceWorkerProxy.errorMessageHandler()", event);
+		if (!_errorChannel.messageAvailable) return;
+		var receive:* = _errorChannel.receive();
+		trace(__id, "ServiceWorkerProxy.errorMessageHandler() -->", receive);
+		if (errorHandler !== null) errorHandler(receive);
 		resultHandler = null;
 		errorHandler = null;
 	}
@@ -98,7 +119,10 @@ final public class ServiceWorkerProxy implements IDisposable {
 	// dispose
 	//==========================================================================================
 	public function dispose():void {
-		_activated = false;
+		trace(__id, "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& ServiceWorkerProxy.dispose()");
+
+		if (!_resultChannel.messageAvailable) _resultChannel.receive();
+		if (!_errorChannel.messageAvailable) _errorChannel.receive();
 
 		_resultChannel.removeEventListener(Event.CHANNEL_MESSAGE, resultMessageHandler);
 		_errorChannel.removeEventListener(Event.CHANNEL_MESSAGE, errorMessageHandler);
@@ -107,6 +131,13 @@ final public class ServiceWorkerProxy implements IDisposable {
 		_suspendChannel.close();
 		_resultChannel.close();
 		_errorChannel.close();
+
+		_startChannel = null;
+		_suspendChannel = null;
+		_resultChannel = null;
+		_errorChannel = null;
+
+		_activated = false;
 
 		_worker.terminate();
 		_worker = null;

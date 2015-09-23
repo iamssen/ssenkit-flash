@@ -98,10 +98,7 @@ public class URLStreamAsyncUnit implements IAsyncUnit {
 
 	/** @inheritDoc */
 	public function dispose():void {
-		if (_worker) {
-			_worker.suspend();
-			pool.put(_worker);
-		}
+		if (_worker) pool.put(_worker);
 
 		_worker = null;
 		_result = null;

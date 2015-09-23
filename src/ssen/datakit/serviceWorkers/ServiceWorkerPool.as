@@ -16,6 +16,13 @@ public class ServiceWorkerPool extends EventDispatcher {
 	private var worker:ByteArray;
 	private var stream:URLStream;
 
+	private var minimum:int;
+	private var created:int;
+
+	public function ServiceWorkerPool(minimumSize:int = 5) {
+		minimum = minimumSize;
+	}
+
 	public function load(workerRequest:URLRequest):void {
 		stream = new URLStream;
 		stream.addEventListener(Event.COMPLETE, completeHandler);
@@ -44,14 +51,16 @@ public class ServiceWorkerPool extends EventDispatcher {
 	}
 
 	public function get(callback:Function):void {
-		if (workers.length > 0) {
-			callback(workers.pop());
-		} else {
+		if (workers.length === 0 || created < minimum) {
 			ServiceWorkerProxy.createWorker(worker, callback);
+			created++;
+		} else {
+			callback(workers.shift());
 		}
 	}
 
 	public function put(worker:ServiceWorkerProxy):void {
+		worker.suspend();
 		workers.push(worker);
 	}
 }

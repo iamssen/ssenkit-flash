@@ -2,6 +2,7 @@ package ssen.datakit.serviceWorkers {
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.system.MessageChannel;
+import flash.system.MessageChannelState;
 import flash.system.Worker;
 
 public class ServiceWorker extends Sprite {
@@ -12,21 +13,29 @@ public class ServiceWorker extends Sprite {
 
 	public function ServiceWorker() {
 		startChannel = Worker.current.getSharedProperty("startChannel") as MessageChannel;
-		resultChannel = Worker.current.getSharedProperty("resultChannel") as MessageChannel;
 		suspendChannel = Worker.current.getSharedProperty("suspendChannel") as MessageChannel;
+		resultChannel = Worker.current.getSharedProperty("resultChannel") as MessageChannel;
 		errorChannel = Worker.current.getSharedProperty("errorChannel") as MessageChannel;
 
-		startChannel.addEventListener(Event.CHANNEL_MESSAGE, startMessageHandler);
-		suspendChannel.addEventListener(Event.CHANNEL_MESSAGE, suspendMessageHandler);
+		if (startChannel) startChannel.addEventListener(Event.CHANNEL_MESSAGE, startMessageHandler);
+		if (suspendChannel) suspendChannel.addEventListener(Event.CHANNEL_MESSAGE, suspendMessageHandler);
 	}
 
 	private function startMessageHandler(event:Event):void {
 		if (!startChannel.messageAvailable) return;
-		start(startChannel.receive());
+		var receive:Object = startChannel.receive();
+		trace(__id__, "ServiceWorker.startMessageHandler()", receive);
+		start(receive);
+	}
+
+	private function resultChannelStateHandler(event:Event):void {
+		trace(__id__, "ServiceWorker.resultChannelStateHandler()", resultChannel.state, resultChannel.messageAvailable);
 	}
 
 	private function suspendMessageHandler(event:Event):void {
 		if (!suspendChannel.messageAvailable) return;
+		var receive:Object = suspendChannel.receive();
+		trace(__id__, "ServiceWorker.suspendMessageHandler()", receive);
 		suspend();
 	}
 
@@ -39,11 +48,27 @@ public class ServiceWorker extends Sprite {
 	}
 
 	final protected function result(result:Object):void {
-		resultChannel.send(result);
+		if (resultChannel.state === MessageChannelState.OPEN) {
+			resultChannel.send(result);
+		} else {
+			trace(__id__, "ServiceWorker.result()", startChannel.messageAvailable, startChannel.state);
+			trace(__id__, "ServiceWorker.result()", suspendChannel.messageAvailable, suspendChannel.state);
+			trace(__id__, "ServiceWorker.result()", resultChannel.messageAvailable, resultChannel.state);
+		}
 	}
 
 	final protected function error(error:Error):void {
-		errorChannel.send(error);
+		if (errorChannel.state === MessageChannelState.OPEN) {
+			errorChannel.send(error);
+		} else {
+			trace(__id__, "ServiceWorker.error()", startChannel.messageAvailable, startChannel.state);
+			trace(__id__, "ServiceWorker.error()", suspendChannel.messageAvailable, suspendChannel.state);
+			trace(__id__, "ServiceWorker.error()", errorChannel.messageAvailable, errorChannel.state);
+		}
+	}
+
+	protected function get __id__():String {
+		return "";
 	}
 }
 }
