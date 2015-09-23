@@ -59,6 +59,10 @@ final public class ServiceWorkerProxy implements IDisposable {
 
 	private var _callback:Function;
 
+	public function get channelState():String {
+		return _resultChannel.state;
+	}
+
 	private function workerStart(callback:Function):void {
 		_callback = callback;
 
@@ -98,9 +102,10 @@ final public class ServiceWorkerProxy implements IDisposable {
 	private function resultMessageHandler(event:Event):void {
 		trace(__id, "ServiceWorkerProxy.resultMessageHandler()", event);
 		if (!_resultChannel.messageAvailable) return;
-		var receive:* = _resultChannel.receive();
-		trace(__id, "ServiceWorkerProxy.resultMessageHandler() -->", receive);
-		if (resultHandler !== null) resultHandler(receive);
+		var receive:ByteArray = _resultChannel.receive();
+		var result:Object = receive.readObject();
+		trace(__id, "ServiceWorkerProxy.resultMessageHandler() -->", result);
+		if (resultHandler !== null) resultHandler(result);
 		resultHandler = null;
 		errorHandler = null;
 	}

@@ -4,6 +4,7 @@ import flash.events.Event;
 import flash.system.MessageChannel;
 import flash.system.MessageChannelState;
 import flash.system.Worker;
+import flash.utils.ByteArray;
 
 public class ServiceWorker extends Sprite {
 	private var startChannel:MessageChannel;
@@ -24,8 +25,8 @@ public class ServiceWorker extends Sprite {
 	private function startMessageHandler(event:Event):void {
 		if (!startChannel.messageAvailable) return;
 		var receive:Object = startChannel.receive();
-		trace(__id__, "ServiceWorker.startMessageHandler()", receive);
 		start(receive);
+		trace(__id__, "ServiceWorker.startMessageHandler()", receive, channelState);
 	}
 
 	private function resultChannelStateHandler(event:Event):void {
@@ -49,7 +50,15 @@ public class ServiceWorker extends Sprite {
 
 	final protected function result(result:Object):void {
 		if (resultChannel.state === MessageChannelState.OPEN) {
-			resultChannel.send(result);
+			trace(__id__, "ServiceWorker.result() 1", channelState);
+			var bytes:ByteArray = new ByteArray;
+			bytes.writeObject(result);
+			try {
+				resultChannel.send(bytes);
+			} catch (error:Error) {
+				trace(__id__, "ServiceWorker.result() Catch Error!!!!!", channelState, error);
+			}
+			trace(__id__, "ServiceWorker.result() 2", channelState);
 		} else {
 			trace(__id__, "ServiceWorker.result()", startChannel.messageAvailable, startChannel.state);
 			trace(__id__, "ServiceWorker.result()", suspendChannel.messageAvailable, suspendChannel.state);
@@ -69,6 +78,10 @@ public class ServiceWorker extends Sprite {
 
 	protected function get __id__():String {
 		return "";
+	}
+
+	protected function get channelState():String {
+		return resultChannel.state;
 	}
 }
 }

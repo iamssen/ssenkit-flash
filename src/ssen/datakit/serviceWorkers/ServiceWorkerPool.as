@@ -6,6 +6,7 @@ import flash.events.IOErrorEvent;
 import flash.events.SecurityErrorEvent;
 import flash.net.URLRequest;
 import flash.net.URLStream;
+import flash.system.MessageChannelState;
 import flash.utils.ByteArray;
 
 [Event(type="flash.events.Event", name="init")]
@@ -51,12 +52,22 @@ public class ServiceWorkerPool extends EventDispatcher {
 	}
 
 	public function get(callback:Function):void {
-		if (workers.length === 0 || created < minimum) {
-			ServiceWorkerProxy.createWorker(worker, callback);
-			created++;
-		} else {
-			callback(workers.shift());
+		var w:ServiceWorkerProxy;
+		while (true) {
+			if (workers.length === 0 || created < minimum) {
+				ServiceWorkerProxy.createWorker(worker, callback);
+				created++;
+				break;
+			} else {
+				w = workers.shift();
+				trace("????????????????????????? ServiceWorkerPool.get()", w.__id, w.channelState);
+				if (w.channelState === MessageChannelState.OPEN) {
+					callback(w);
+					break;
+				}
+			}
 		}
+
 	}
 
 	public function put(worker:ServiceWorkerProxy):void {
