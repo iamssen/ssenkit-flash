@@ -1,2 +1,3 @@
-ssenkit.common
-==============
+- Flash / Flex 작업에서 사용하던 가장 중요한 Library
+- flbuild 등으로 빌드를 Node.js Script로 처리했었다
+- [ ] 그 당시의 Project 구조가 (Library 프로젝트) ← (Library 프로젝트를 참조해서 실제 테스트를 진행하는 프로젝트) 이랬어서 이 Libarary를 실제로 테스트 구동시키던 프로젝트가 있을 것이다. 그걸 찾아서 연결시켜 놓아야 한다.
